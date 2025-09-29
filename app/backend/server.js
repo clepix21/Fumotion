@@ -10,7 +10,7 @@ app.use(express.json());
 
 // Routes
 app.get('/', (req, res) => {
-  res.json({ message: 'Backend Fumotion is running! 🚗💨' });
+  res.json({ message: 'Backend Fumotion OK' });
 });
 
 app.get('/api/health', (req, res) => {
