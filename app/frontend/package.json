@@ -1,5 +1,5 @@
 {
-  "name": "fumotion",
+  "name": "fumotion-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -16,12 +16,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "install-all": "npm install && cd app/frontend && npm install && cd ../backend && npm install",
-    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
-    "backend": "cd app/backend && npm run dev",
-    "frontend": "cd app/frontend && npm start",
-    "start-all": "concurrently \"npm run backend\" \"npm run frontend\""
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -40,8 +35,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "concurrently": "^9.2.1"
   }
 }
