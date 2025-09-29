@@ -1,5 +1,5 @@
-import logo from './Sakuya.png';
-import './App.css';
+import logo from '../assets/images/Sakuya.png';
+import '../styles/App.css';
 
 function App() {
   return (
