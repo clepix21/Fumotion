@@ -1,71 +1,86 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { post } from '../../services/api';
+
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { post } from "../../services/api"
+import "../../../styles/auth.css"
 
 export default function LoginPage() {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const navigate = useNavigate()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
 
   const onSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
+    e.preventDefault()
+    setError("")
     if (!email || !password) {
-      setError('Veuillez remplir tous les champs.');
-      return;
+      setError("Veuillez remplir tous les champs.")
+      return
     }
     try {
-      setLoading(true);
-      // Appel API (à implémenter côté backend)
-      await post('/api/auth/login', { email, password });
-      navigate('/');
+      setLoading(true)
+      await post("/api/auth/login", { email, password })
+      navigate("/")
     } catch (err) {
-      setError(err.message || 'Identifiants invalides');
+      setError(err.message || "Identifiants invalides")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <div style={{ maxWidth: 400, margin: '40px auto' }}>
-      <h1>Connexion</h1>
-      <form onSubmit={onSubmit}>
-        <div style={{ marginBottom: 12 }}>
-          <label>
-            Email
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h1 className="auth-title">Bon retour !</h1>
+          <p className="auth-subtitle">Connectez-vous pour continuer</p>
+        </div>
+
+        <form onSubmit={onSubmit} className="auth-form">
+          <div className="form-group">
+            <label className="form-label">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="vous@exemple.com"
-              style={{ width: '100%', padding: 8, marginTop: 4 }}
+              className="form-input"
             />
-          </label>
-        </div>
-        <div style={{ marginBottom: 12 }}>
-          <label>
-            Mot de passe
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Mot de passe</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              style={{ width: '100%', padding: 8, marginTop: 4 }}
+              className="form-input"
             />
-          </label>
+          </div>
+
+          {error && (
+            <div className="error-message">
+              <span>⚠️</span>
+              <span>{error}</span>
+            </div>
+          )}
+
+          <button type="submit" disabled={loading} className="submit-button">
+            {loading ? "Connexion en cours..." : "Se connecter"}
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          <p className="auth-footer-text">
+            Pas encore de compte ?{" "}
+            <Link to="/register" className="auth-link">
+              Créer un compte
+            </Link>
+          </p>
         </div>
-        {error && (
-          <div style={{ color: 'red', marginBottom: 12 }}>{error}</div>
-        )}
-        <button type="submit" disabled={loading} style={{ width: '100%', padding: 10 }}>
-          {loading ? 'Connexion...' : 'Se connecter'}
-        </button>
-      </form>
-      <p style={{ marginTop: 16 }}>
-        Pas de compte ? <Link to="/register">Créer un compte</Link>
-      </p>
+      </div>
     </div>
-  );
+  )
 }
