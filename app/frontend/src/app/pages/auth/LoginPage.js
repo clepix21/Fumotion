@@ -20,8 +20,8 @@ export default function LoginPage() {
     }
     try {
       setLoading(true)
-      await post("/api/auth/login", { email, password })
-      navigate("/")
+  await post("/api/auth/login", { email, password })
+  navigate("/home")
     } catch (err) {
       setError(err.message || "Identifiants invalides")
     } finally {
@@ -33,7 +33,7 @@ export default function LoginPage() {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <h1 className="auth-title">Bon retour !</h1>
+          <h1 className="auth-title">Connexion</h1>
           <p className="auth-subtitle">Connectez-vous pour continuer</p>
         </div>
 
