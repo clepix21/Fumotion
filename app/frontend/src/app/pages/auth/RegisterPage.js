@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { post } from '../../services/api';
+import '../../../styles/auth.css';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -33,55 +34,68 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: '40px auto' }}>
-      <h1>Créer un compte</h1>
-      <form onSubmit={onSubmit}>
-        <div style={{ marginBottom: 12 }}>
-          <label>
-            Email
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h1 className="auth-title">Bienvenue !</h1>
+          <p className="auth-subtitle">Créez votre compte pour commencer</p>
+        </div>
+
+        <form onSubmit={onSubmit} className="auth-form">
+          <div className="form-group">
+            <label className="form-label">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="vous@exemple.com"
-              style={{ width: '100%', padding: 8, marginTop: 4 }}
+              className="form-input"
             />
-          </label>
-        </div>
-        <div style={{ marginBottom: 12 }}>
-          <label>
-            Mot de passe
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Mot de passe</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              style={{ width: '100%', padding: 8, marginTop: 4 }}
+              className="form-input"
             />
-          </label>
-        </div>
-        <div style={{ marginBottom: 12 }}>
-          <label>
-            Confirmer le mot de passe
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Confirmer le mot de passe</label>
             <input
               type="password"
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
               placeholder="••••••••"
-              style={{ width: '100%', padding: 8, marginTop: 4 }}
+              className="form-input"
             />
-          </label>
+          </div>
+
+          {error && (
+            <div className="error-message">
+              <span>⚠️</span>
+              <span>{error}</span>
+            </div>
+          )}
+
+          <button type="submit" disabled={loading} className="submit-button">
+            {loading ? 'Création en cours...' : 'Créer mon compte'}
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          <p className="auth-footer-text">
+            Vous avez déjà un compte ?{' '}
+            <Link to="/login" className="auth-link">
+              Se connecter
+            </Link>
+          </p>
         </div>
-        {error && (
-          <div style={{ color: 'red', marginBottom: 12 }}>{error}</div>
-        )}
-        <button type="submit" disabled={loading} style={{ width: '100%', padding: 10 }}>
-          {loading ? 'Création...' : 'Créer mon compte'}
-        </button>
-      </form>
-      <p style={{ marginTop: 16 }}>
-        Déjà un compte ? <Link to="/login">Se connecter</Link>
-      </p>
+      </div>
     </div>
   );
 }
