@@ -1,7 +1,8 @@
-import logo from '../assets/images/Sakuya.png';
+import logo from '../assets/images/oguri-cap.gif';
 import '../styles/App.css';
-import { Routes, Route, useNavigate } from 'react-router-dom';
-import ImagePage from './pages/ImagePage';
+import { Routes, Route, useNavigate} from 'react-router-dom';
+import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/auth/RegisterPage';
 
 function Home() {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ function Home() {
           className="App-logo"
           alt="logo"
           style={{ cursor: 'pointer' }}
-          onClick={() => navigate('/image')}
+          onClick={() => navigate('/login')}
         />
         <p>
           Vroum Vroum ᗜˬᗜ
@@ -26,8 +27,10 @@ function Home() {
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/image" element={<ImagePage />} />
+      <Route path="/" element={<LoginPage />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
     </Routes>
   );
 }
