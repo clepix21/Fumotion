@@ -1,6 +1,6 @@
 import logo from '../assets/images/Sakuya.png';
 import '../styles/App.css';
-import { Routes, Route, useNavigate, Link } from 'react-router-dom';
+import { Routes, Route, useNavigate} from 'react-router-dom';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 
@@ -14,14 +14,11 @@ function Home() {
           className="App-logo"
           alt="logo"
           style={{ cursor: 'pointer' }}
-          onClick={() => navigate('/image')}
+          onClick={() => navigate('/login')}
         />
         <p>
           Vroum Vroum ᗜˬᗜ
         </p>
-        <div style={{ marginTop: 16 }}>
-          <Link to="/voiture" style={{ color: '#61dafb' }}>Voir la page voiture →</Link>
-        </div>
       </header>
     </div>
   );
