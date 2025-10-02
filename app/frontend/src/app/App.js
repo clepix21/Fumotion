@@ -1,4 +1,4 @@
-import logo from '../assets/images/Sakuya.png';
+import logo from '../assets/images/oguri-cap.gif';
 import '../styles/App.css';
 import { Routes, Route, useNavigate} from 'react-router-dom';
 import LoginPage from './pages/auth/LoginPage';
