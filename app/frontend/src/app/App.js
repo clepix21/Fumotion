@@ -1,8 +1,8 @@
 import logo from '../assets/images/Sakuya.png';
 import '../styles/App.css';
 import { Routes, Route, useNavigate, Link } from 'react-router-dom';
-import ImagePage from './pages/ImagePage';
-import VoiturePage from './pages/VoiturePage';
+import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/auth/RegisterPage';
 
 function Home() {
   const navigate = useNavigate();
@@ -30,9 +30,10 @@ function Home() {
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/image" element={<ImagePage />} />
-      <Route path="/voiture" element={<VoiturePage />} />
+      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }
