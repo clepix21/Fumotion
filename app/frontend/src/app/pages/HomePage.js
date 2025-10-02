@@ -1,13 +1,12 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import logo from "../../assets/images/Sakuya.png"
-import "./HomePage.css"
+import '../../styles/HomePage.css';
 
 export default function HomePage() {
   const navigate = useNavigate()
 
   return (
     <div className="home-page">
-      {/* Navigation */}
       <nav className="nav">
         <div className="nav-container">
           <div className="nav-logo">
@@ -24,7 +23,6 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <main className="hero">
         <div className="hero-content">
           <div className="hero-text">
@@ -80,7 +78,6 @@ export default function HomePage() {
         </div>
       </main>
 
-      {/* Features Section */}
       <section className="features">
         <div className="features-container">
           <h2 className="features-title">Pourquoi choisir Fumotion?</h2>
@@ -111,7 +108,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="footer">
         <div className="footer-container">
           <div className="footer-content">
@@ -120,15 +116,15 @@ export default function HomePage() {
               <p className="footer-tagline">Vroum Vroum ᗜˬᗜ</p>
             </div>
             <div className="footer-links">
-              <a href="#" className="footer-link">
-                À propos
-              </a>
-              <a href="#" className="footer-link">
-                Contact
-              </a>
-              <a href="#" className="footer-link">
-                Confidentialité
-              </a>
+                <Link to="/about" className="footer-link">
+                  À propos
+                </Link>
+                <Link to="/contact" className="footer-link">
+                  Contact
+                </Link>
+                <Link to="/privacy" className="footer-link">
+                  Confidentialité
+                </Link>
             </div>
           </div>
           <div className="footer-bottom">

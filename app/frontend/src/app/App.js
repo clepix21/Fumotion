@@ -3,6 +3,7 @@ import '../styles/App.css';
 import { Routes, Route, useNavigate} from 'react-router-dom';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
+import HomePage from "./pages/HomePage"
 
 function Home() {
   const navigate = useNavigate();
