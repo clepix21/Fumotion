@@ -2,7 +2,7 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { post } from "../../services/api"
-import "../../../styles/auth.css"
+import "../../styles/auth.css"
 
 export default function LoginPage() {
   const navigate = useNavigate()

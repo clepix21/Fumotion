@@ -1,6 +1,6 @@
 import { useNavigate, Link } from "react-router-dom"
-import logo from "../../assets/images/Sakuya.png"
-import '../../styles/HomePage.css';
+import logo from "../assets/images/Sakuya.png"
+import '../styles/HomePage.css';
 
 export default function HomePage() {
   const navigate = useNavigate()
