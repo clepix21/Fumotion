@@ -59,24 +59,6 @@ export default function CreateTripPage() {
     }
   };
 
-  // Générer les options d'heures
-  const generateTimeOptions = () => {
-    const options = [];
-    for (let hour = 0; hour < 24; hour++) {
-      for (let minute = 0; minute < 60; minute += 30) {
-        const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-        options.push(timeStr);
-      }
-    }
-    return options;
-  };
-
-  // Calculer la date minimale (aujourd'hui)
-  const getMinDate = () => {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
-  };
-
   return (
     <div className="create-trip-page">
       {/* Header */}

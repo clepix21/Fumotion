@@ -235,9 +235,9 @@ export default function RegisterPage() {
         <div className="auth-terms">
           <p>
             En vous inscrivant, vous acceptez nos{' '}
-            <a href="#" className="terms-link">Conditions d'utilisation</a>
+            <a href="/terms" className="terms-link">Conditions d'utilisation</a>
             {' '}et notre{' '}
-            <a href="#" className="terms-link">Politique de confidentialité</a>
+            <a href="/privacy" className="terms-link">Politique de confidentialité</a>
           </p>
         </div>
       </div>

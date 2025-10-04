@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import '../styles/Search.css';
 
@@ -14,21 +14,7 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
-  useEffect(() => {
-    // Si des paramètres de recherche sont présents dans l'URL, effectuer la recherche
-    if (searchParams.get('departure') && searchParams.get('arrival')) {
-      handleSearch();
-    }
-  }, []);
-
-  const handleInputChange = (e) => {
-    setSearchData({
-      ...searchData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleSearch = async (e) => {
+  const handleSearch = useCallback(async (e) => {
     if (e) e.preventDefault();
     
     setLoading(true);
@@ -56,6 +42,20 @@ export default function SearchPage() {
     } finally {
       setLoading(false);
     }
+  }, [searchData]);
+
+  useEffect(() => {
+    // Si des paramètres de recherche sont présents dans l'URL, effectuer la recherche
+    if (searchParams.get('departure') && searchParams.get('arrival')) {
+      handleSearch();
+    }
+  }, [searchParams, handleSearch]);
+
+  const handleInputChange = (e) => {
+    setSearchData({
+      ...searchData,
+      [e.target.name]: e.target.value
+    });
   };
 
   const handleBookTrip = async (tripId) => {

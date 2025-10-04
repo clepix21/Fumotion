@@ -245,10 +245,10 @@ export default function HomePage() {
                   <a href="#pricing">Tarifs</a>
                 </li>
                 <li>
-                  <a href="#">Qui sommes-nous</a>
+                  <a href="/about">Qui sommes-nous</a>
                 </li>
                 <li>
-                  <a href="#">Blog</a>
+                  <a href="/blog">Blog</a>
                 </li>
               </ul>
             </div>
@@ -257,16 +257,16 @@ export default function HomePage() {
               <h4 className="footer-heading">Support</h4>
               <ul className="footer-links">
                 <li>
-                  <a href="#">Centre d'aide</a>
+                  <a href="/help">Centre d'aide</a>
                 </li>
                 <li>
-                  <a href="#">Nous contacter</a>
+                  <a href="/contact">Nous contacter</a>
                 </li>
                 <li>
-                  <a href="#">Sécurité</a>
+                  <a href="/security">Sécurité</a>
                 </li>
                 <li>
-                  <a href="#">Assurance</a>
+                  <a href="/insurance">Assurance</a>
                 </li>
               </ul>
             </div>
@@ -275,16 +275,16 @@ export default function HomePage() {
               <h4 className="footer-heading">Légal</h4>
               <ul className="footer-links">
                 <li>
-                  <a href="#">Conditions générales</a>
+                  <a href="/terms">Conditions générales</a>
                 </li>
                 <li>
-                  <a href="#">Politique de confidentialité</a>
+                  <a href="/privacy">Politique de confidentialité</a>
                 </li>
                 <li>
-                  <a href="#">Mentions légales</a>
+                  <a href="/legal">Mentions légales</a>
                 </li>
                 <li>
-                  <a href="#">Cookies</a>
+                  <a href="/cookies">Cookies</a>
                 </li>
               </ul>
             </div>
@@ -293,13 +293,13 @@ export default function HomePage() {
           <div className="footer-bottom">
             <p>&copy; 2025 Fumotion. Tous droits réservés.</p>
             <div className="footer-social">
-              <a href="#" className="social-link">
+              <a href="https://facebook.com" className="social-link" target="_blank" rel="noopener noreferrer">
                 temp
               </a>
-              <a href="#" className="social-link">
+              <a href="https://twitter.com" className="social-link" target="_blank" rel="noopener noreferrer">
                 temp
               </a>
-              <a href="#" className="social-link">
+              <a href="https://instagram.com" className="social-link" target="_blank" rel="noopener noreferrer">
                 temp
               </a>
             </div>
