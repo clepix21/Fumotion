@@ -1,0 +1,217 @@
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+const bcrypt = require('bcryptjs');
+
+class Database {
+  constructor() {
+    this.db = null;
+    this.dbPath = path.join(__dirname, '../database/fumotion.db');
+  }
+
+  async connect() {
+    return new Promise((resolve, reject) => {
+      this.db = new sqlite3.Database(this.dbPath, (err) => {
+        if (err) {
+          console.error('Erreur de connexion à la base de données:', err);
+          reject(err);
+        } else {
+          console.log('Connecté à la base de données SQLite');
+          this.initTables().then(resolve).catch(reject);
+        }
+      });
+    });
+  }
+
+  async initTables() {
+    return new Promise((resolve, reject) => {
+      const queries = [
+        // Table des utilisateurs
+        `CREATE TABLE IF NOT EXISTS users (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          email VARCHAR(255) UNIQUE NOT NULL,
+          password VARCHAR(255) NOT NULL,
+          first_name VARCHAR(100) NOT NULL,
+          last_name VARCHAR(100) NOT NULL,
+          phone VARCHAR(20),
+          student_id VARCHAR(50),
+          university VARCHAR(255) DEFAULT 'IUT Amiens',
+          profile_picture VARCHAR(255),
+          is_verified BOOLEAN DEFAULT 0,
+          is_active BOOLEAN DEFAULT 1,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )`,
+
+        // Table des véhicules
+        `CREATE TABLE IF NOT EXISTS vehicles (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER NOT NULL,
+          brand VARCHAR(100) NOT NULL,
+          model VARCHAR(100) NOT NULL,
+          color VARCHAR(50),
+          license_plate VARCHAR(20),
+          seats INTEGER NOT NULL DEFAULT 4,
+          year INTEGER,
+          is_active BOOLEAN DEFAULT 1,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )`,
+
+        // Table des trajets
+        `CREATE TABLE IF NOT EXISTS trips (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          driver_id INTEGER NOT NULL,
+          vehicle_id INTEGER,
+          departure_location VARCHAR(255) NOT NULL,
+          departure_latitude DECIMAL(10, 8),
+          departure_longitude DECIMAL(11, 8),
+          arrival_location VARCHAR(255) NOT NULL,
+          arrival_latitude DECIMAL(10, 8),
+          arrival_longitude DECIMAL(11, 8),
+          departure_datetime DATETIME NOT NULL,
+          available_seats INTEGER NOT NULL,
+          price_per_seat DECIMAL(10, 2) NOT NULL,
+          description TEXT,
+          status VARCHAR(20) DEFAULT 'active' CHECK(status IN ('active', 'completed', 'cancelled')),
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (driver_id) REFERENCES users(id) ON DELETE CASCADE,
+          FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE SET NULL
+        )`,
+
+        // Table des réservations
+        `CREATE TABLE IF NOT EXISTS bookings (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          trip_id INTEGER NOT NULL,
+          passenger_id INTEGER NOT NULL,
+          seats_booked INTEGER NOT NULL DEFAULT 1,
+          total_price DECIMAL(10, 2) NOT NULL,
+          status VARCHAR(20) DEFAULT 'pending' CHECK(status IN ('pending', 'confirmed', 'cancelled', 'completed')),
+          payment_status VARCHAR(20) DEFAULT 'pending' CHECK(payment_status IN ('pending', 'paid', 'refunded')),
+          booking_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (trip_id) REFERENCES trips(id) ON DELETE CASCADE,
+          FOREIGN KEY (passenger_id) REFERENCES users(id) ON DELETE CASCADE,
+          UNIQUE(trip_id, passenger_id)
+        )`,
+
+        // Table des évaluations
+        `CREATE TABLE IF NOT EXISTS reviews (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          booking_id INTEGER NOT NULL,
+          reviewer_id INTEGER NOT NULL,
+          reviewed_id INTEGER NOT NULL,
+          rating INTEGER CHECK(rating >= 1 AND rating <= 5) NOT NULL,
+          comment TEXT,
+          type VARCHAR(20) NOT NULL CHECK(type IN ('driver', 'passenger')),
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE,
+          FOREIGN KEY (reviewer_id) REFERENCES users(id) ON DELETE CASCADE,
+          FOREIGN KEY (reviewed_id) REFERENCES users(id) ON DELETE CASCADE,
+          UNIQUE(booking_id, reviewer_id)
+        )`,
+
+        // Table des messages
+        `CREATE TABLE IF NOT EXISTS messages (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          trip_id INTEGER NOT NULL,
+          sender_id INTEGER NOT NULL,
+          message TEXT NOT NULL,
+          is_read BOOLEAN DEFAULT 0,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (trip_id) REFERENCES trips(id) ON DELETE CASCADE,
+          FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
+        )`
+      ];
+
+      let completed = 0;
+      const total = queries.length;
+
+      queries.forEach((query) => {
+        this.db.run(query, (err) => {
+          if (err) {
+            console.error('Erreur lors de la création des tables:', err);
+            reject(err);
+            return;
+          }
+          
+          completed++;
+          if (completed === total) {
+            console.log('Tables initialisées avec succès');
+            this.createDefaultData().then(resolve).catch(reject);
+          }
+        });
+      });
+    });
+  }
+
+  async createDefaultData() {
+    // Créer un utilisateur admin par défaut
+    const adminEmail = 'admin@fumotion.com';
+    const adminPassword = await bcrypt.hash('admin123', 10);
+    
+    return new Promise((resolve) => {
+      this.db.get('SELECT id FROM users WHERE email = ?', [adminEmail], (err, row) => {
+        if (!row) {
+          this.db.run(
+            `INSERT INTO users (email, password, first_name, last_name, phone, is_verified) 
+             VALUES (?, ?, ?, ?, ?, ?)`,
+            [adminEmail, adminPassword, 'Admin', 'Fumotion', '0123456789', 1],
+            (err) => {
+              if (err) {
+                console.error('Erreur lors de la création de l\'admin:', err);
+              } else {
+                console.log('Utilisateur admin créé avec succès');
+              }
+              resolve();
+            }
+          );
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
+
+  // Méthodes utilitaires pour les requêtes
+  async get(query, params = []) {
+    return new Promise((resolve, reject) => {
+      this.db.get(query, params, (err, row) => {
+        if (err) reject(err);
+        else resolve(row);
+      });
+    });
+  }
+
+  async all(query, params = []) {
+    return new Promise((resolve, reject) => {
+      this.db.all(query, params, (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      });
+    });
+  }
+
+  async run(query, params = []) {
+    return new Promise((resolve, reject) => {
+      this.db.run(query, params, function(err) {
+        if (err) reject(err);
+        else resolve({ id: this.lastID, changes: this.changes });
+      });
+    });
+  }
+
+  close() {
+    if (this.db) {
+      this.db.close((err) => {
+        if (err) {
+          console.error('Erreur lors de la fermeture de la base de données:', err);
+        } else {
+          console.log('Connexion à la base de données fermée');
+        }
+      });
+    }
+  }
+}
+
+module.exports = new Database();

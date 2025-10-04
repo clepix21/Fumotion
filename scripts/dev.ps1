@@ -13,32 +13,32 @@ if ($Help) {
     exit 0
 }
 
-Write-Host "Démarrage de l'environnement de développement Fumotion..." -ForegroundColor Green
+Write-Host "Demarrage de l'environnement de developpement Fumotion..." -ForegroundColor Green
 
 # Vérifier que nous sommes dans le bon répertoire
 if (-not (Test-Path "package.json")) {
-    Write-Host "Erreur: Ce script doit être exécuté depuis la racine du projet" -ForegroundColor Red
+    Write-Host "Erreur: Ce script doit etre execute depuis la racine du projet" -ForegroundColor Red
     exit 1
 }
 
 # Installer les dépendances si nécessaire
-Write-Host "Vérification des dépendances..." -ForegroundColor Yellow
+Write-Host "Verification des dependances..." -ForegroundColor Yellow
 
 if ($Force -or -not (Test-Path "node_modules")) {
-    Write-Host "Installation des dépendances racine..." -ForegroundColor Cyan
+    Write-Host "Installation des dependances racine..." -ForegroundColor Cyan
     npm install
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "Erreur lors de l'installation des dépendances racine" -ForegroundColor Red
+        Write-Host "Erreur lors de l'installation des dependances racine" -ForegroundColor Red
         exit 1
     }
 }
 
 if ($Force -or -not (Test-Path "app\backend\node_modules")) {
-    Write-Host "Installation des dépendances backend..." -ForegroundColor Cyan
+    Write-Host "Installation des dependances backend..." -ForegroundColor Cyan
     Push-Location "app\backend"
     npm install
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "Erreur lors de l'installation des dépendances backend" -ForegroundColor Red
+        Write-Host "Erreur lors de l'installation des dependances backend" -ForegroundColor Red
         Pop-Location
         exit 1
     }
@@ -46,11 +46,11 @@ if ($Force -or -not (Test-Path "app\backend\node_modules")) {
 }
 
 if ($Force -or -not (Test-Path "app\frontend\node_modules")) {
-    Write-Host "Installation des dépendances frontend..." -ForegroundColor Cyan
+    Write-Host "Installation des dependances frontend..." -ForegroundColor Cyan
     Push-Location "app\frontend"
     npm install
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "Erreur lors de l'installation des dépendances frontend" -ForegroundColor Red
+        Write-Host "Erreur lors de l'installation des dependances frontend" -ForegroundColor Red
         Pop-Location
         exit 1
     }
@@ -58,26 +58,45 @@ if ($Force -or -not (Test-Path "app\frontend\node_modules")) {
 }
 
 # Créer les fichiers .env s'ils n'existent pas
-Write-Host "Vérification de la configuration..." -ForegroundColor Yellow
+Write-Host "Verification de la configuration..." -ForegroundColor Yellow
 
-if (-not (Test-Path "app\backend\.env") -and (Test-Path ".env.example")) {
-    Write-Host "Création du fichier .env backend depuis .env.example..." -ForegroundColor Cyan
-    Copy-Item ".env.example" "app\backend\.env"
+if (-not (Test-Path "app\backend\.env")) {
+    Write-Host "Creation du fichier .env backend..." -ForegroundColor Cyan
+    @"
+PORT=5000
+JWT_SECRET=fumotion_secret_key_change_in_production_2025
+DB_PATH=./database/fumotion.db
+NODE_ENV=development
+"@ | Out-File -FilePath "app\backend\.env" -Encoding UTF8
 }
 
 if (-not (Test-Path "app\frontend\.env")) {
-    Write-Host "Création du fichier .env frontend..." -ForegroundColor Cyan
+    Write-Host "Creation du fichier .env frontend..." -ForegroundColor Cyan
     "REACT_APP_API_URL=http://localhost:5000" | Out-File -FilePath "app\frontend\.env" -Encoding UTF8
+}
+
+# Vérifier que la base de données peut être créée
+Write-Host "Verification de la base de donnees..." -ForegroundColor Yellow
+if (-not (Test-Path "app\backend\database")) {
+    New-Item -ItemType Directory -Path "app\backend\database" -Force | Out-Null
 }
 
 # Lancer les serveurs de développement
 Write-Host "" -ForegroundColor White
 Write-Host "Lancement des serveurs..." -ForegroundColor Green
-Write-Host "  - Backend: http://localhost:5000" -ForegroundColor White
-Write-Host "  - Frontend: http://localhost:3000" -ForegroundColor White
+Write-Host "   Backend API: http://localhost:5000" -ForegroundColor White
+Write-Host "   Frontend:    http://localhost:3000" -ForegroundColor White
+Write-Host "   Health check: http://localhost:5000/api/health" -ForegroundColor White
 Write-Host "" -ForegroundColor White
-Write-Host "Utilisez Ctrl+C pour arrêter les serveurs" -ForegroundColor Yellow
+Write-Host "Utilisez Ctrl+C pour arreter les serveurs" -ForegroundColor Yellow
+Write-Host "Les serveurs se relancent automatiquement en cas de modification" -ForegroundColor Yellow
 Write-Host "" -ForegroundColor White
 
-# Utiliser concurrently pour lancer backend et frontend
-npm run dev
+try {
+    # Utiliser concurrently pour lancer backend et frontend
+    npm run dev
+} catch {
+    Write-Host "Erreur lors du lancement des serveurs" -ForegroundColor Red
+    Write-Host "Verifiez que les ports 3000 et 5000 sont libres" -ForegroundColor Yellow
+    exit 1
+}
