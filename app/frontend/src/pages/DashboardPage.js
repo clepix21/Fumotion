@@ -131,7 +131,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="sidebar-section">
-            <h3>Trajets</h3>
+            <h3>Trajets à Amiens</h3>
             <button 
               className={`sidebar-btn ${activeTab === 'trips' ? 'active' : ''}`}
               onClick={() => setActiveTab('trips')}
@@ -164,7 +164,7 @@ export default function DashboardPage() {
         <main className="dashboard-main">
           {activeTab === 'overview' && (
             <div className="overview-section">
-              <h1>Vue d'ensemble</h1>
+              <h1>Vue d'ensemble - Amiens</h1>
               <div className="stats-grid">
                 <div className="stat-card">
                   <div className="stat-icon">🚗</div>
@@ -202,13 +202,39 @@ export default function DashboardPage() {
                   <Link to="/create-trip" className="action-card">
                     <div className="action-icon">➕</div>
                     <h3>Proposer un trajet</h3>
-                    <p>Créez un nouveau trajet et partagez vos frais</p>
+                    <p>Créez un nouveau trajet dans Amiens et partagez vos frais</p>
                   </Link>
                   <Link to="/search" className="action-card">
                     <div className="action-icon">🔍</div>
                     <h3>Trouver un trajet</h3>
-                    <p>Recherchez un trajet pour vos prochains déplacements</p>
+                    <p>Recherchez un trajet pour vos déplacements dans Amiens</p>
                   </Link>
+                </div>
+              </div>
+
+              <div className="city-info">
+                <h2>Destinations populaires à Amiens</h2>
+                <div className="destinations-grid">
+                  <div className="destination-card">
+                    <span className="destination-icon">🏫</span>
+                    <h4>IUT Amiens</h4>
+                    <p>Campus universitaire</p>
+                  </div>
+                  <div className="destination-card">
+                    <span className="destination-icon">🚉</span>
+                    <h4>Gare d'Amiens</h4>
+                    <p>Centre de transport</p>
+                  </div>
+                  <div className="destination-card">
+                    <span className="destination-icon">🏛️</span>
+                    <h4>Centre-ville</h4>
+                    <p>Cathédrale, commerces</p>
+                  </div>
+                  <div className="destination-card">
+                    <span className="destination-icon">🛍️</span>
+                    <h4>Glisy Shopping</h4>
+                    <p>Zone commerciale</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -217,7 +243,7 @@ export default function DashboardPage() {
           {activeTab === 'trips' && (
             <div className="trips-section">
               <div className="section-header">
-                <h1>Mes trajets proposés</h1>
+                <h1>Mes trajets proposés à Amiens</h1>
                 <Link to="/create-trip" className="create-btn">
                   Nouveau trajet
                 </Link>
@@ -227,7 +253,7 @@ export default function DashboardPage() {
                 <div className="empty-state">
                   <div className="empty-icon">🚗</div>
                   <h3>Aucun trajet proposé</h3>
-                  <p>Commencez par proposer votre premier trajet</p>
+                  <p>Commencez par proposer votre premier trajet dans Amiens</p>
                   <Link to="/create-trip" className="empty-action">
                     Proposer un trajet
                   </Link>
@@ -265,13 +291,13 @@ export default function DashboardPage() {
 
           {activeTab === 'bookings' && (
             <div className="bookings-section">
-              <h1>Mes réservations</h1>
+              <h1>Mes réservations à Amiens</h1>
               
               {myBookings.length === 0 ? (
                 <div className="empty-state">
                   <div className="empty-icon">🎫</div>
                   <h3>Aucune réservation</h3>
-                  <p>Vous n'avez pas encore réservé de trajet</p>
+                  <p>Vous n'avez pas encore réservé de trajet dans Amiens</p>
                   <Link to="/search" className="empty-action">
                     Chercher un trajet
                   </Link>
@@ -319,6 +345,7 @@ export default function DashboardPage() {
                     <h2>{user?.first_name} {user?.last_name}</h2>
                     <p>{user?.email}</p>
                     <p>Membre depuis {new Date(user?.created_at).getFullYear()}</p>
+                    <p className="location-info">📍 Étudiant à Amiens</p>
                   </div>
                 </div>
                 
@@ -332,8 +359,12 @@ export default function DashboardPage() {
                     <span>{user?.student_id || 'Non renseigné'}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Université</label>
+                    <label>Établissement</label>
                     <span>{user?.university || 'IUT Amiens'}</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Ville d'étude</label>
+                    <span>Amiens, Hauts-de-France</span>
                   </div>
                 </div>
 

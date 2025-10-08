@@ -1,312 +1,380 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import '../styles/CreateTrip.css';
+import '../styles/Dashboard.css';
 
-export default function CreateTripPage() {
+export default function DashboardPage() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    departureLocation: '',
-    arrivalLocation: '',
-    departureDateTime: '',
-    availableSeats: 1,
-    pricePerSeat: '',
-    description: ''
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [user, setUser] = useState(null);
+  const [activeTab, setActiveTab] = useState('trips');
+  const [myTrips, setMyTrips] = useState([]);
+  const [myBookings, setMyBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  useEffect(() => {
+    // Vérifier l'authentification
+    const token = localStorage.getItem('token');
+    const userData = localStorage.getItem('user');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+    if (!token || !userData) {
+      navigate('/login');
+      return;
+    }
 
+    setUser(JSON.parse(userData));
+    loadDashboardData();
+  }, [navigate]);
+
+  const loadDashboardData = async () => {
     try {
       const token = localStorage.getItem('token');
       
-      if (!token) {
-        navigate('/login');
-        return;
-      }
-
-      const response = await fetch('http://localhost:5000/api/trips', {
-        method: 'POST',
+      // Charger mes trajets
+      const tripsResponse = await fetch('http://localhost:5000/api/trips', {
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(formData),
+        }
       });
-
-      const data = await response.json();
-
-      if (data.success) {
-        navigate('/dashboard');
-      } else {
-        setError(data.message || 'Erreur lors de la création du trajet');
+      
+      if (tripsResponse.ok) {
+        const tripsData = await tripsResponse.json();
+        setMyTrips(tripsData.data || []);
       }
-    } catch (err) {
-      console.error('Erreur:', err);
-      setError('Erreur de connexion au serveur');
+
+      // Charger mes réservations
+      const bookingsResponse = await fetch('http://localhost:5000/api/bookings', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (bookingsResponse.ok) {
+        const bookingsData = await bookingsResponse.json();
+        setMyBookings(bookingsData.data || []);
+      }
+
+    } catch (error) {
+      console.error('Erreur lors du chargement des données:', error);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/');
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Chargement de votre tableau de bord...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="create-trip-page">
+    <div className="dashboard">
       {/* Header */}
-      <header className="page-header">
+      <header className="dashboard-header">
         <div className="header-content">
-          <Link to="/dashboard" className="back-link">
-            ← Retour au tableau de bord
-          </Link>
           <Link to="/" className="logo">
             <span className="logo-icon">🚗</span>
-            <span className="logo-text">Fumotion</span>
+            <span className="logo-text">Fumotion Amiens</span>
           </Link>
+          
+          <nav className="header-nav">
+            <Link to="/search" className="nav-link">
+              Rechercher un trajet
+            </Link>
+            <Link to="/create-trip" className="nav-link">
+              Proposer un trajet
+            </Link>
+          </nav>
+
+          <div className="header-user">
+            <div className="user-info">
+              <span className="user-name">{user?.first_name} {user?.last_name}</span>
+              <span className="user-email">{user?.email}</span>
+            </div>
+            <button onClick={handleLogout} className="logout-btn">
+              Déconnexion
+            </button>
+          </div>
         </div>
       </header>
 
-      <div className="create-trip-container">
-        <div className="create-trip-card">
-          <div className="trip-header">
-            <h1>Proposer un trajet</h1>
-            <p>Partagez votre trajet et réduisez vos frais de transport</p>
+      <div className="dashboard-container">
+        {/* Sidebar */}
+        <aside className="dashboard-sidebar">
+          <div className="sidebar-section">
+            <h3>Tableau de bord</h3>
+            <button 
+              className={`sidebar-btn ${activeTab === 'overview' ? 'active' : ''}`}
+              onClick={() => setActiveTab('overview')}
+            >
+              <span className="btn-icon">📊</span>
+              Vue d'ensemble
+            </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="trip-form">
-            {error && (
-              <div className="error-message">
-                {error}
-              </div>
-            )}
-
-            {/* Itinéraire */}
-            <div className="form-section">
-              <h3 className="section-title">
-                <span className="section-icon">📍</span>
-                Itinéraire
-              </h3>
-              
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="departureLocation" className="form-label">
-                    Lieu de départ
-                  </label>
-                  <input
-                    type="text"
-                    id="departureLocation"
-                    name="departureLocation"
-                    value={formData.departureLocation}
-                    onChange={handleChange}
-                    className="form-input"
-                    placeholder="Ex: Amiens, Gare SNCF"
-                    required
-                    disabled={loading}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="arrivalLocation" className="form-label">
-                    Lieu d'arrivée
-                  </label>
-                  <input
-                    type="text"
-                    id="arrivalLocation"
-                    name="arrivalLocation"
-                    value={formData.arrivalLocation}
-                    onChange={handleChange}
-                    className="form-input"
-                    placeholder="Ex: Paris, Porte de Clignancourt"
-                    required
-                    disabled={loading}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Date et heure */}
-            <div className="form-section">
-              <h3 className="section-title">
-                <span className="section-icon">📅</span>
-                Date et heure de départ
-              </h3>
-              
-              <div className="form-group">
-                <label htmlFor="departureDateTime" className="form-label">
-                  Date et heure
-                </label>
-                <input
-                  type="datetime-local"
-                  id="departureDateTime"
-                  name="departureDateTime"
-                  value={formData.departureDateTime}
-                  onChange={handleChange}
-                  className="form-input"
-                  min={new Date().toISOString().slice(0, 16)}
-                  required
-                  disabled={loading}
-                />
-              </div>
-            </div>
-
-            {/* Détails du trajet */}
-            <div className="form-section">
-              <h3 className="section-title">
-                <span className="section-icon">🚗</span>
-                Détails du trajet
-              </h3>
-              
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="availableSeats" className="form-label">
-                    Nombre de places disponibles
-                  </label>
-                  <select
-                    id="availableSeats"
-                    name="availableSeats"
-                    value={formData.availableSeats}
-                    onChange={handleChange}
-                    className="form-input"
-                    required
-                    disabled={loading}
-                  >
-                    <option value={1}>1 place</option>
-                    <option value={2}>2 places</option>
-                    <option value={3}>3 places</option>
-                    <option value={4}>4 places</option>
-                    <option value={5}>5 places</option>
-                    <option value={6}>6 places</option>
-                    <option value={7}>7 places</option>
-                    <option value={8}>8 places</option>
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="pricePerSeat" className="form-label">
-                    Prix par passager (€)
-                  </label>
-                  <input
-                    type="number"
-                    id="pricePerSeat"
-                    name="pricePerSeat"
-                    value={formData.pricePerSeat}
-                    onChange={handleChange}
-                    className="form-input"
-                    placeholder="15"
-                    min="0"
-                    step="0.50"
-                    required
-                    disabled={loading}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Description */}
-            <div className="form-section">
-              <h3 className="section-title">
-                <span className="section-icon">💭</span>
-                Informations complémentaires
-              </h3>
-              
-              <div className="form-group">
-                <label htmlFor="description" className="form-label">
-                  Description (optionnel)
-                </label>
-                <textarea
-                  id="description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  className="form-textarea"
-                  placeholder="Ajoutez des informations sur votre trajet, votre véhicule, les modalités de rencontre..."
-                  rows="4"
-                  disabled={loading}
-                />
-              </div>
-            </div>
-
-            {/* Prix estimé */}
-            <div className="price-estimate">
-              <h3>Estimation des gains</h3>
-              <div className="estimate-details">
-                <div className="estimate-item">
-                  <span>Prix par passager:</span>
-                  <span className="estimate-value">{formData.pricePerSeat || 0}€</span>
-                </div>
-                <div className="estimate-item">
-                  <span>Nombre de passagers:</span>
-                  <span className="estimate-value">{formData.availableSeats}</span>
-                </div>
-                <div className="estimate-item total">
-                  <span>Gain total estimé:</span>
-                  <span className="estimate-value">
-                    {(parseFloat(formData.pricePerSeat || 0) * parseInt(formData.availableSeats)).toFixed(2)}€
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="form-actions">
-              <Link to="/dashboard" className="cancel-btn">
-                Annuler
-              </Link>
-              <button
-                type="submit"
-                className="submit-btn"
-                disabled={loading}
-              >
-                {loading ? 'Publication en cours...' : 'Publier le trajet'}
-              </button>
-            </div>
-          </form>
-        </div>
-
-        {/* Tips sidebar */}
-        <div className="tips-sidebar">
-          <div className="tips-card">
-            <h3>Conseils pour un bon trajet</h3>
-            <ul className="tips-list">
-              <li>
-                <span className="tip-icon">💡</span>
-                Soyez précis sur le lieu de rendez-vous
-              </li>
-              <li>
-                <span className="tip-icon">📱</span>
-                Laissez votre numéro de téléphone visible
-              </li>
-              <li>
-                <span className="tip-icon">⏰</span>
-                Prévoyez une marge pour les retards
-              </li>
-              <li>
-                <span className="tip-icon">🚗</span>
-                Mentionnez les caractéristiques de votre véhicule
-              </li>
-              <li>
-                <span className="tip-icon">💰</span>
-                Fixez un prix équitable basé sur les frais réels
-              </li>
-            </ul>
+          <div className="sidebar-section">
+            <h3>Trajets à Amiens</h3>
+            <button 
+              className={`sidebar-btn ${activeTab === 'trips' ? 'active' : ''}`}
+              onClick={() => setActiveTab('trips')}
+            >
+              <span className="btn-icon">🚗</span>
+              Mes trajets
+            </button>
+            <button 
+              className={`sidebar-btn ${activeTab === 'bookings' ? 'active' : ''}`}
+              onClick={() => setActiveTab('bookings')}
+            >
+              <span className="btn-icon">🎫</span>
+              Mes réservations
+            </button>
           </div>
 
-          <div className="security-info">
-            <h4>🔒 Sécurité</h4>
-            <p>
-              Vos informations personnelles ne sont partagées qu'avec les passagers 
-              qui réservent votre trajet. Vous pouvez toujours annuler si nécessaire.
-            </p>
+          <div className="sidebar-section">
+            <h3>Compte</h3>
+            <button 
+              className={`sidebar-btn ${activeTab === 'profile' ? 'active' : ''}`}
+              onClick={() => setActiveTab('profile')}
+            >
+              <span className="btn-icon">👤</span>
+              Profil
+            </button>
           </div>
-        </div>
+        </aside>
+
+        {/* Main Content */}
+        <main className="dashboard-main">
+          {activeTab === 'overview' && (
+            <div className="overview-section">
+              <h1>Vue d'ensemble - Amiens</h1>
+              <div className="stats-grid">
+                <div className="stat-card">
+                  <div className="stat-icon">🚗</div>
+                  <div className="stat-content">
+                    <h3>{myTrips.length}</h3>
+                    <p>Trajets proposés</p>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon">🎫</div>
+                  <div className="stat-content">
+                    <h3>{myBookings.length}</h3>
+                    <p>Réservations effectuées</p>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon">⭐</div>
+                  <div className="stat-content">
+                    <h3>4.8</h3>
+                    <p>Note moyenne</p>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon">💰</div>
+                  <div className="stat-content">
+                    <h3>€125</h3>
+                    <p>Économisés ce mois</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="quick-actions">
+                <h2>Actions rapides</h2>
+                <div className="action-cards">
+                  <Link to="/create-trip" className="action-card">
+                    <div className="action-icon">➕</div>
+                    <h3>Proposer un trajet</h3>
+                    <p>Créez un nouveau trajet dans Amiens et partagez vos frais</p>
+                  </Link>
+                  <Link to="/search" className="action-card">
+                    <div className="action-icon">🔍</div>
+                    <h3>Trouver un trajet</h3>
+                    <p>Recherchez un trajet pour vos déplacements dans Amiens</p>
+                  </Link>
+                </div>
+              </div>
+
+              <div className="city-info">
+                <h2>Destinations populaires à Amiens</h2>
+                <div className="destinations-grid">
+                  <div className="destination-card">
+                    <span className="destination-icon">🏫</span>
+                    <h4>IUT Amiens</h4>
+                    <p>Campus universitaire</p>
+                  </div>
+                  <div className="destination-card">
+                    <span className="destination-icon">🚉</span>
+                    <h4>Gare d'Amiens</h4>
+                    <p>Centre de transport</p>
+                  </div>
+                  <div className="destination-card">
+                    <span className="destination-icon">🏛️</span>
+                    <h4>Centre-ville</h4>
+                    <p>Cathédrale, commerces</p>
+                  </div>
+                  <div className="destination-card">
+                    <span className="destination-icon">🛍️</span>
+                    <h4>Glisy Shopping</h4>
+                    <p>Zone commerciale</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'trips' && (
+            <div className="trips-section">
+              <div className="section-header">
+                <h1>Mes trajets proposés à Amiens</h1>
+                <Link to="/create-trip" className="create-btn">
+                  Nouveau trajet
+                </Link>
+              </div>
+              
+              {myTrips.length === 0 ? (
+                <div className="empty-state">
+                  <div className="empty-icon">🚗</div>
+                  <h3>Aucun trajet proposé</h3>
+                  <p>Commencez par proposer votre premier trajet dans Amiens</p>
+                  <Link to="/create-trip" className="empty-action">
+                    Proposer un trajet
+                  </Link>
+                </div>
+              ) : (
+                <div className="trips-grid">
+                  {myTrips.map(trip => (
+                    <div key={trip.id} className="trip-card">
+                      <div className="trip-header">
+                        <div className="trip-route">
+                          <span className="departure">{trip.departure_location}</span>
+                          <span className="arrow">→</span>
+                          <span className="arrival">{trip.arrival_location}</span>
+                        </div>
+                        <span className={`trip-status ${trip.status}`}>
+                          {trip.status === 'active' ? 'Actif' : 
+                           trip.status === 'completed' ? 'Terminé' : 'Annulé'}
+                        </span>
+                      </div>
+                      <div className="trip-details">
+                        <p className="trip-date">{formatDate(trip.departure_datetime)}</p>
+                        <p className="trip-price">{trip.price_per_seat}€ par place</p>
+                        <p className="trip-seats">{trip.remaining_seats || trip.available_seats} places disponibles</p>
+                      </div>
+                      <div className="trip-actions">
+                        <button className="trip-btn secondary">Modifier</button>
+                        <button className="trip-btn primary">Voir détails</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'bookings' && (
+            <div className="bookings-section">
+              <h1>Mes réservations à Amiens</h1>
+              
+              {myBookings.length === 0 ? (
+                <div className="empty-state">
+                  <div className="empty-icon">🎫</div>
+                  <h3>Aucune réservation</h3>
+                  <p>Vous n'avez pas encore réservé de trajet dans Amiens</p>
+                  <Link to="/search" className="empty-action">
+                    Chercher un trajet
+                  </Link>
+                </div>
+              ) : (
+                <div className="bookings-list">
+                  {myBookings.map(booking => (
+                    <div key={booking.id} className="booking-card">
+                      <div className="booking-info">
+                        <div className="booking-route">
+                          <span className="departure">{booking.departure_location}</span>
+                          <span className="arrow">→</span>
+                          <span className="arrival">{booking.arrival_location}</span>
+                        </div>
+                        <p className="booking-date">{formatDate(booking.departure_datetime)}</p>
+                        <p className="booking-driver">
+                          Conducteur: {booking.driver_first_name} {booking.driver_last_name}
+                        </p>
+                      </div>
+                      <div className="booking-details">
+                        <span className="booking-price">{booking.total_price}€</span>
+                        <span className="booking-seats">{booking.seats_booked} place(s)</span>
+                        <span className={`booking-status ${booking.status || booking.booking_status}`}>
+                          {booking.status === 'confirmed' ? 'Confirmé' :
+                           booking.status === 'pending' ? 'En attente' :
+                           booking.status === 'cancelled' ? 'Annulé' : 'Terminé'}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'profile' && (
+            <div className="profile-section">
+              <h1>Mon profil</h1>
+              <div className="profile-card">
+                <div className="profile-header">
+                  <div className="profile-avatar">
+                    {user?.first_name?.[0]}{user?.last_name?.[0]}
+                  </div>
+                  <div className="profile-info">
+                    <h2>{user?.first_name} {user?.last_name}</h2>
+                    <p>{user?.email}</p>
+                    <p>Membre depuis {new Date(user?.created_at).getFullYear()}</p>
+                    <p className="location-info">📍 Étudiant à Amiens</p>
+                  </div>
+                </div>
+                
+                <div className="profile-details">
+                  <div className="detail-item">
+                    <label>Téléphone</label>
+                    <span>{user?.phone || 'Non renseigné'}</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Numéro étudiant</label>
+                    <span>{user?.student_id || 'Non renseigné'}</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Établissement</label>
+                    <span>{user?.university || 'IUT Amiens'}</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Ville d'étude</label>
+                    <span>Amiens, Hauts-de-France</span>
+                  </div>
+                </div>
+
+                <button className="edit-profile-btn">
+                  Modifier le profil
+                </button>
+              </div>
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );
