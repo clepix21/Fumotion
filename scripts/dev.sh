@@ -186,7 +186,10 @@ if ! npm run dev; then
     echo ""
     echo -e "${RED}❌ Erreur lors du lancement des serveurs${NC}"
     echo -e "${YELLOW}💡 Solutions possibles:${NC}"
-    echo -e "   ${WHITE}- Vérifiez que les ports 3000 et 5000 sont libres${NC}"
+    echo -e "   on...
+📁 Création des dossiers...
+✅ Dossiers database et uploads créés
+🔌 Vérification des ports...${WHITE}- Vérifiez que les ports 3000 et 5000 sont libres${NC}"
     echo -e "   ${WHITE}- Relancez avec --force pour réinstaller les dépendances${NC}"
     echo -e "   ${WHITE}- Relancez avec --clean pour un nettoyage complet${NC}"
     exit 1
