@@ -1,59 +1,82 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import '../../styles/auth.css';
+"use client"
+
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import "../../styles/auth.css"
 
 export default function LoginPage() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+    email: "",
+    password: "",
+  })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+      [e.target.name]: e.target.value,
+    })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+    e.preventDefault()
+    setError("")
+    setLoading(true)
 
     try {
-      console.log('Tentative de connexion pour:', formData.email);
+      console.log("[v0] Tentative de connexion pour:", formData.email)
+      console.log("[v0] URL de l'API:", "http://localhost:5000/api/auth/login")
 
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-      });
+      })
 
-      const data = await response.json();
-      console.log('Réponse du serveur:', data);
+      console.log("[v0] Status de la réponse:", response.status)
+      console.log("[v0] Headers de la réponse:", Object.fromEntries(response.headers.entries()))
+
+      const data = await response.json()
+      console.log("[v0] Réponse du serveur:", data)
 
       if (response.ok && data.success) {
-        // Stocker le token et les infos utilisateur
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        
-        console.log('Connexion réussie, redirection vers /dashboard');
-        navigate('/dashboard');
+        if (data.data && data.data.token && data.data.user) {
+          localStorage.setItem("token", data.data.token)
+          localStorage.setItem("user", JSON.stringify(data.data.user))
+
+          console.log("[v0] Token stocké:", data.data.token.substring(0, 20) + "...")
+          console.log("[v0] Utilisateur stocké:", data.data.user.email)
+          console.log("[v0] Connexion réussie, redirection vers /dashboard")
+
+          navigate("/dashboard")
+        } else {
+          console.error("[v0] Structure de réponse invalide:", data)
+          setError("Erreur: Réponse du serveur invalide")
+        }
       } else {
-        setError(data.message || 'Email ou mot de passe incorrect');
+        console.log("[v0] Échec de connexion:", data.message)
+        setError(data.message || "Email ou mot de passe incorrect")
       }
     } catch (err) {
-      console.error('Erreur réseau:', err);
-      setError('Erreur de connexion au serveur. Vérifiez que le serveur backend est démarré.');
+      console.error("[v0] Erreur réseau complète:", err)
+      console.error("[v0] Type d'erreur:", err.name)
+      console.error("[v0] Message d'erreur:", err.message)
+
+      if (err.name === "TypeError" && err.message.includes("fetch")) {
+        setError(
+          "❌ Impossible de se connecter au serveur backend. Vérifiez que le serveur est démarré sur http://localhost:5000",
+        )
+      } else {
+        setError(`Erreur de connexion: ${err.message}`)
+      }
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="auth-page">
@@ -80,7 +103,9 @@ export default function LoginPage() {
             )}
 
             <div className="form-group">
-              <label htmlFor="email" className="form-label">Email</label>
+              <label htmlFor="email" className="form-label">
+                Email
+              </label>
               <input
                 type="email"
                 id="email"
@@ -95,7 +120,9 @@ export default function LoginPage() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password" className="form-label">Mot de passe</label>
+              <label htmlFor="password" className="form-label">
+                Mot de passe
+              </label>
               <input
                 type="password"
                 id="password"
@@ -109,18 +136,14 @@ export default function LoginPage() {
               />
             </div>
 
-            <button
-              type="submit"
-              className="auth-submit-btn"
-              disabled={loading}
-            >
-              {loading ? 'Connexion en cours...' : 'Se connecter'}
+            <button type="submit" className="auth-submit-btn" disabled={loading}>
+              {loading ? "Connexion en cours..." : "Se connecter"}
             </button>
           </form>
 
           <div className="auth-footer">
             <p>
-              Pas encore de compte ?{' '}
+              Pas encore de compte ?{" "}
               <Link to="/register" className="auth-link">
                 S'inscrire
               </Link>
@@ -129,16 +152,22 @@ export default function LoginPage() {
 
           <div className="test-accounts">
             <h4>Comptes de test disponibles :</h4>
+            <p style={{ fontSize: "0.85em", color: "#666", marginBottom: "10px" }}>
+              ⚠️ Assurez-vous d'avoir exécuté <code>npm run seed</code> dans le dossier backend
+            </p>
             <div className="test-account">
-              <strong>Email:</strong> pierre.martin@etudiant.univ-amiens.fr<br/>
+              <strong>Email:</strong> pierre.martin@etudiant.univ-amiens.fr
+              <br />
               <strong>Mot de passe:</strong> password123
             </div>
             <div className="test-account">
-              <strong>Email:</strong> marie.dubois@etudiant.u-picardie.fr<br/>
+              <strong>Email:</strong> marie.dubois@etudiant.u-picardie.fr
+              <br />
               <strong>Mot de passe:</strong> password123
             </div>
             <div className="test-account">
-              <strong>Email:</strong> thomas.leroy@etudiant.univ-amiens.fr<br/>
+              <strong>Email:</strong> thomas.leroy@etudiant.univ-amiens.fr
+              <br />
               <strong>Mot de passe:</strong> password123
             </div>
           </div>
@@ -158,5 +187,5 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }
