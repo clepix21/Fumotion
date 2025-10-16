@@ -1,25 +1,32 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
-const bcrypt = require('bcryptjs');
+const sqlite3 = require("sqlite3").verbose()
+const path = require("path")
+const bcrypt = require("bcryptjs")
+const fs = require("fs")
 
 class Database {
   constructor() {
-    this.db = null;
-    this.dbPath = path.join(__dirname, '../database/fumotion.db');
+    this.db = null
+    const dbDir = path.join(__dirname, "../database")
+    if (!fs.existsSync(dbDir)) {
+      fs.mkdirSync(dbDir, { recursive: true })
+      console.log("📁 Dossier database créé")
+    }
+    this.dbPath = path.join(dbDir, "fumotion.db")
   }
 
   async connect() {
     return new Promise((resolve, reject) => {
       this.db = new sqlite3.Database(this.dbPath, (err) => {
         if (err) {
-          console.error('Erreur de connexion à la base de données:', err);
-          reject(err);
+          console.error("❌ Erreur de connexion à la base de données:", err)
+          reject(err)
         } else {
-          console.log('Connecté à la base de données SQLite');
-          this.initTables().then(resolve).catch(reject);
+          console.log("✅ Connecté à la base de données SQLite")
+          console.log("📍 Chemin:", this.dbPath)
+          this.initTables().then(resolve).catch(reject)
         }
-      });
-    });
+      })
+    })
   }
 
   async initTables() {
@@ -121,97 +128,100 @@ class Database {
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (trip_id) REFERENCES trips(id) ON DELETE CASCADE,
           FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
-        )`
-      ];
+        )`,
+      ]
 
-      let completed = 0;
-      const total = queries.length;
+      let completed = 0
+      const total = queries.length
 
       queries.forEach((query) => {
         this.db.run(query, (err) => {
           if (err) {
-            console.error('Erreur lors de la création des tables:', err);
-            reject(err);
-            return;
+            console.error("Erreur lors de la création des tables:", err)
+            reject(err)
+            return
           }
-          
-          completed++;
+
+          completed++
           if (completed === total) {
-            console.log('Tables initialisées avec succès');
-            this.createDefaultData().then(resolve).catch(reject);
+            console.log("Tables initialisées avec succès")
+            this.createDefaultData().then(resolve).catch(reject)
           }
-        });
-      });
-    });
+        })
+      })
+    })
   }
 
   async createDefaultData() {
     // Créer un utilisateur admin par défaut
-    const adminEmail = 'admin@fumotion.com';
-    const adminPassword = await bcrypt.hash('admin123', 10);
-    
+    const adminEmail = "admin@fumotion.com"
+    const adminPassword = await bcrypt.hash("admin123", 10)
+
     return new Promise((resolve) => {
-      this.db.get('SELECT id FROM users WHERE email = ?', [adminEmail], (err, row) => {
+      this.db.get("SELECT id FROM users WHERE email = ?", [adminEmail], (err, row) => {
         if (!row) {
           this.db.run(
             `INSERT INTO users (email, password, first_name, last_name, phone, is_verified) 
              VALUES (?, ?, ?, ?, ?, ?)`,
-            [adminEmail, adminPassword, 'Admin', 'Fumotion', '0123456789', 1],
+            [adminEmail, adminPassword, "Admin", "Fumotion", "0123456789", 1],
             (err) => {
               if (err) {
-                console.error('Erreur lors de la création de l\'admin:', err);
+                console.error("❌ Erreur lors de la création de l'admin:", err)
               } else {
-                console.log('Utilisateur admin créé avec succès');
+                console.log("✅ Utilisateur admin créé avec succès")
+                console.log("📧 Email: admin@fumotion.com")
+                console.log("🔑 Mot de passe: admin123")
               }
-              resolve();
-            }
-          );
+              resolve()
+            },
+          )
         } else {
-          resolve();
+          console.log("ℹ️  Utilisateur admin déjà existant")
+          resolve()
         }
-      });
-    });
+      })
+    })
   }
 
   // Méthodes utilitaires pour les requêtes
   async get(query, params = []) {
     return new Promise((resolve, reject) => {
       this.db.get(query, params, (err, row) => {
-        if (err) reject(err);
-        else resolve(row);
-      });
-    });
+        if (err) reject(err)
+        else resolve(row)
+      })
+    })
   }
 
   async all(query, params = []) {
     return new Promise((resolve, reject) => {
       this.db.all(query, params, (err, rows) => {
-        if (err) reject(err);
-        else resolve(rows);
-      });
-    });
+        if (err) reject(err)
+        else resolve(rows)
+      })
+    })
   }
 
   async run(query, params = []) {
     return new Promise((resolve, reject) => {
-      this.db.run(query, params, function(err) {
-        if (err) reject(err);
-        else resolve({ id: this.lastID, changes: this.changes });
-      });
-    });
+      this.db.run(query, params, function (err) {
+        if (err) reject(err)
+        else resolve({ id: this.lastID, changes: this.changes })
+      })
+    })
   }
 
   close() {
     if (this.db) {
       this.db.close((err) => {
         if (err) {
-          console.error('Erreur lors de la fermeture de la base de données:', err);
+          console.error("Erreur lors de la fermeture de la base de données:", err)
         } else {
-          console.log('Connexion à la base de données fermée');
+          console.log("Connexion à la base de données fermée")
         }
-      });
+      })
     }
   }
 }
 
-module.exports = new Database();
+module.exports = new Database()

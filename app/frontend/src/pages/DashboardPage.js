@@ -1,80 +1,95 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import '../styles/Dashboard.css';
+"use client"
+
+import { useState, useEffect } from "react"
+import { useNavigate, Link } from "react-router-dom"
+import "../styles/Dashboard.css"
 
 export default function DashboardPage() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  const [activeTab, setActiveTab] = useState('trips');
-  const [myTrips, setMyTrips] = useState([]);
-  const [myBookings, setMyBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate()
+  const [user, setUser] = useState(null)
+  const [activeTab, setActiveTab] = useState("trips")
+  const [myTrips, setMyTrips] = useState([])
+  const [myBookings, setMyBookings] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     // Vérifier l'authentification
-    const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
+    const token = localStorage.getItem("token")
+    const userData = localStorage.getItem("user")
 
-    if (!token || !userData) {
-      navigate('/login');
-      return;
+    // Check if token and userData exist and are valid
+    if (!token || !userData || userData === "undefined" || userData === "null") {
+      // Clear invalid data
+      localStorage.removeItem("token")
+      localStorage.removeItem("user")
+      navigate("/login")
+      return
     }
 
-    setUser(JSON.parse(userData));
-    loadDashboardData();
-  }, [navigate]);
+    // Safely parse user data
+    try {
+      const parsedUser = JSON.parse(userData)
+      setUser(parsedUser)
+      loadDashboardData()
+    } catch (error) {
+      console.error("Erreur lors du parsing des données utilisateur:", error)
+      // Clear corrupted data and redirect to login
+      localStorage.removeItem("token")
+      localStorage.removeItem("user")
+      navigate("/login")
+    }
+  }, [navigate])
 
   const loadDashboardData = async () => {
     try {
-      const token = localStorage.getItem('token');
-      
+      const token = localStorage.getItem("token")
+
       // Charger mes trajets
-      const tripsResponse = await fetch('http://localhost:5000/api/trips', {
+      const tripsResponse = await fetch("http://localhost:5000/api/trips", {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
       if (tripsResponse.ok) {
-        const tripsData = await tripsResponse.json();
-        setMyTrips(tripsData.data || []);
+        const tripsData = await tripsResponse.json()
+        setMyTrips(tripsData.data || [])
       }
 
       // Charger mes réservations
-      const bookingsResponse = await fetch('http://localhost:5000/api/bookings', {
+      const bookingsResponse = await fetch("http://localhost:5000/api/bookings", {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (bookingsResponse.ok) {
-        const bookingsData = await bookingsResponse.json();
-        setMyBookings(bookingsData.data || []);
-      }
+          Authorization: `Bearer ${token}`,
+        },
+      })
 
+      if (bookingsResponse.ok) {
+        const bookingsData = await bookingsResponse.json()
+        setMyBookings(bookingsData.data || [])
+      }
     } catch (error) {
-      console.error('Erreur lors du chargement des données:', error);
+      console.error("Erreur lors du chargement des données:", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/');
-  };
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+    navigate("/")
+  }
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+    return new Date(dateString).toLocaleDateString("fr-FR", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  }
 
   if (loading) {
     return (
@@ -82,7 +97,7 @@ export default function DashboardPage() {
         <div className="loading-spinner"></div>
         <p>Chargement de votre tableau de bord...</p>
       </div>
-    );
+    )
   }
 
   return (
@@ -94,7 +109,7 @@ export default function DashboardPage() {
             <span className="logo-icon">🚗</span>
             <span className="logo-text">Fumotion</span>
           </Link>
-          
+
           <nav className="header-nav">
             <Link to="/search" className="nav-link">
               Rechercher un trajet
@@ -106,7 +121,9 @@ export default function DashboardPage() {
 
           <div className="header-user">
             <div className="user-info">
-              <span className="user-name">{user?.first_name} {user?.last_name}</span>
+              <span className="user-name">
+                {user?.first_name} {user?.last_name}
+              </span>
               <span className="user-email">{user?.email}</span>
             </div>
             <button onClick={handleLogout} className="logout-btn">
@@ -121,9 +138,9 @@ export default function DashboardPage() {
         <aside className="dashboard-sidebar">
           <div className="sidebar-section">
             <h3>Tableau de bord</h3>
-            <button 
-              className={`sidebar-btn ${activeTab === 'overview' ? 'active' : ''}`}
-              onClick={() => setActiveTab('overview')}
+            <button
+              className={`sidebar-btn ${activeTab === "overview" ? "active" : ""}`}
+              onClick={() => setActiveTab("overview")}
             >
               <span className="btn-icon">📊</span>
               Vue d'ensemble
@@ -132,16 +149,16 @@ export default function DashboardPage() {
 
           <div className="sidebar-section">
             <h3>Trajets à Amiens</h3>
-            <button 
-              className={`sidebar-btn ${activeTab === 'trips' ? 'active' : ''}`}
-              onClick={() => setActiveTab('trips')}
+            <button
+              className={`sidebar-btn ${activeTab === "trips" ? "active" : ""}`}
+              onClick={() => setActiveTab("trips")}
             >
               <span className="btn-icon">🚗</span>
               Mes trajets
             </button>
-            <button 
-              className={`sidebar-btn ${activeTab === 'bookings' ? 'active' : ''}`}
-              onClick={() => setActiveTab('bookings')}
+            <button
+              className={`sidebar-btn ${activeTab === "bookings" ? "active" : ""}`}
+              onClick={() => setActiveTab("bookings")}
             >
               <span className="btn-icon">🎫</span>
               Mes réservations
@@ -150,9 +167,9 @@ export default function DashboardPage() {
 
           <div className="sidebar-section">
             <h3>Compte</h3>
-            <button 
-              className={`sidebar-btn ${activeTab === 'profile' ? 'active' : ''}`}
-              onClick={() => setActiveTab('profile')}
+            <button
+              className={`sidebar-btn ${activeTab === "profile" ? "active" : ""}`}
+              onClick={() => setActiveTab("profile")}
             >
               <span className="btn-icon">👤</span>
               Profil
@@ -162,7 +179,7 @@ export default function DashboardPage() {
 
         {/* Main Content */}
         <main className="dashboard-main">
-          {activeTab === 'overview' && (
+          {activeTab === "overview" && (
             <div className="overview-section">
               <h1>Vue d'ensemble - Amiens</h1>
               <div className="stats-grid">
@@ -211,36 +228,10 @@ export default function DashboardPage() {
                   </Link>
                 </div>
               </div>
-
-              <div className="city-info">
-                <h2>Destinations populaires à Amiens</h2>
-                <div className="destinations-grid">
-                  <div className="destination-card">
-                    <span className="destination-icon">🏫</span>
-                    <h4>IUT Amiens</h4>
-                    <p>Campus universitaire</p>
-                  </div>
-                  <div className="destination-card">
-                    <span className="destination-icon">🚉</span>
-                    <h4>Gare d'Amiens</h4>
-                    <p>Centre de transport</p>
-                  </div>
-                  <div className="destination-card">
-                    <span className="destination-icon">🏛️</span>
-                    <h4>Centre-ville</h4>
-                    <p>Cathédrale, commerces</p>
-                  </div>
-                  <div className="destination-card">
-                    <span className="destination-icon">🛍️</span>
-                    <h4>Glisy Shopping</h4>
-                    <p>Zone commerciale</p>
-                  </div>
-                </div>
-              </div>
             </div>
           )}
 
-          {activeTab === 'trips' && (
+          {activeTab === "trips" && (
             <div className="trips-section">
               <div className="section-header">
                 <h1>Mes trajets proposés à Amiens</h1>
@@ -248,7 +239,7 @@ export default function DashboardPage() {
                   Nouveau trajet
                 </Link>
               </div>
-              
+
               {myTrips.length === 0 ? (
                 <div className="empty-state">
                   <div className="empty-icon">🚗</div>
@@ -260,7 +251,7 @@ export default function DashboardPage() {
                 </div>
               ) : (
                 <div className="trips-grid">
-                  {myTrips.map(trip => (
+                  {myTrips.map((trip) => (
                     <div key={trip.id} className="trip-card">
                       <div className="trip-header">
                         <div className="trip-route">
@@ -269,8 +260,7 @@ export default function DashboardPage() {
                           <span className="arrival">{trip.arrival_location}</span>
                         </div>
                         <span className={`trip-status ${trip.status}`}>
-                          {trip.status === 'active' ? 'Actif' : 
-                           trip.status === 'completed' ? 'Terminé' : 'Annulé'}
+                          {trip.status === "active" ? "Actif" : trip.status === "completed" ? "Terminé" : "Annulé"}
                         </span>
                       </div>
                       <div className="trip-details">
@@ -289,10 +279,10 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {activeTab === 'bookings' && (
+          {activeTab === "bookings" && (
             <div className="bookings-section">
               <h1>Mes réservations à Amiens</h1>
-              
+
               {myBookings.length === 0 ? (
                 <div className="empty-state">
                   <div className="empty-icon">🎫</div>
@@ -304,7 +294,7 @@ export default function DashboardPage() {
                 </div>
               ) : (
                 <div className="bookings-list">
-                  {myBookings.map(booking => (
+                  {myBookings.map((booking) => (
                     <div key={booking.id} className="booking-card">
                       <div className="booking-info">
                         <div className="booking-route">
@@ -321,9 +311,13 @@ export default function DashboardPage() {
                         <span className="booking-price">{booking.total_price}€</span>
                         <span className="booking-seats">{booking.seats_booked} place(s)</span>
                         <span className={`booking-status ${booking.status || booking.booking_status}`}>
-                          {booking.status === 'confirmed' ? 'Confirmé' :
-                           booking.status === 'pending' ? 'En attente' :
-                           booking.status === 'cancelled' ? 'Annulé' : 'Terminé'}
+                          {booking.status === "confirmed"
+                            ? "Confirmé"
+                            : booking.status === "pending"
+                              ? "En attente"
+                              : booking.status === "cancelled"
+                                ? "Annulé"
+                                : "Terminé"}
                         </span>
                       </div>
                     </div>
@@ -333,34 +327,37 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {activeTab === 'profile' && (
+          {activeTab === "profile" && (
             <div className="profile-section">
               <h1>Mon profil</h1>
               <div className="profile-card">
                 <div className="profile-header">
                   <div className="profile-avatar">
-                    {user?.first_name?.[0]}{user?.last_name?.[0]}
+                    {user?.first_name?.[0]}
+                    {user?.last_name?.[0]}
                   </div>
                   <div className="profile-info">
-                    <h2>{user?.first_name} {user?.last_name}</h2>
+                    <h2>
+                      {user?.first_name} {user?.last_name}
+                    </h2>
                     <p>{user?.email}</p>
                     <p>Membre depuis {new Date(user?.created_at).getFullYear()}</p>
                     <p className="location-info">📍 Étudiant à Amiens</p>
                   </div>
                 </div>
-                
+
                 <div className="profile-details">
                   <div className="detail-item">
                     <label>Téléphone</label>
-                    <span>{user?.phone || 'Non renseigné'}</span>
+                    <span>{user?.phone || "Non renseigné"}</span>
                   </div>
                   <div className="detail-item">
                     <label>Numéro étudiant</label>
-                    <span>{user?.student_id || 'Non renseigné'}</span>
+                    <span>{user?.student_id || "Non renseigné"}</span>
                   </div>
                   <div className="detail-item">
                     <label>Établissement</label>
-                    <span>{user?.university || 'IUT Amiens'}</span>
+                    <span>{user?.university || "IUT Amiens"}</span>
                   </div>
                   <div className="detail-item">
                     <label>Ville d'étude</label>
@@ -368,14 +365,12 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                <button className="edit-profile-btn">
-                  Modifier le profil
-                </button>
+                <button className="edit-profile-btn">Modifier le profil</button>
               </div>
             </div>
           )}
         </main>
       </div>
     </div>
-  );
+  )
 }

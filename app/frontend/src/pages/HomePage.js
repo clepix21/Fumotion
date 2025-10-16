@@ -76,7 +76,7 @@ export default function HomePage() {
                     </label>
                     <input
                       type="text"
-                      placeholder="Paris, Gare de Lyon"
+                      placeholder="ya pas de depart"
                       className="form-input"
                       value={searchData.departure}
                       onChange={(e) => setSearchData({ ...searchData, departure: e.target.value })}
@@ -90,7 +90,7 @@ export default function HomePage() {
                     </label>
                     <input
                       type="text"
-                      placeholder="Lyon, Part-Dieu"
+                      placeholder="Feuchy crik pawwww"
                       className="form-input"
                       value={searchData.arrival}
                       onChange={(e) => setSearchData({ ...searchData, arrival: e.target.value })}
