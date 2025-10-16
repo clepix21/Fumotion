@@ -228,32 +228,6 @@ export default function DashboardPage() {
                   </Link>
                 </div>
               </div>
-
-              <div className="city-info">
-                <h2>Destinations populaires à Amiens</h2>
-                <div className="destinations-grid">
-                  <div className="destination-card">
-                    <span className="destination-icon">🏫</span>
-                    <h4>IUT Amiens</h4>
-                    <p>Campus universitaire</p>
-                  </div>
-                  <div className="destination-card">
-                    <span className="destination-icon">🚉</span>
-                    <h4>Gare d'Amiens</h4>
-                    <p>Centre de transport</p>
-                  </div>
-                  <div className="destination-card">
-                    <span className="destination-icon">🏛️</span>
-                    <h4>Centre-ville</h4>
-                    <p>Cathédrale, commerces</p>
-                  </div>
-                  <div className="destination-card">
-                    <span className="destination-icon">🛍️</span>
-                    <h4>Glisy Shopping</h4>
-                    <p>Zone commerciale</p>
-                  </div>
-                </div>
-              </div>
             </div>
           )}
 
