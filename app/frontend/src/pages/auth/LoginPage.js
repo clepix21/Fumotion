@@ -149,28 +149,6 @@ export default function LoginPage() {
               </Link>
             </p>
           </div>
-
-          <div className="test-accounts">
-            <h4>Comptes de test disponibles :</h4>
-            <p style={{ fontSize: "0.85em", color: "#666", marginBottom: "10px" }}>
-              ⚠️ Assurez-vous d'avoir exécuté <code>npm run seed</code> dans le dossier backend
-            </p>
-            <div className="test-account">
-              <strong>Email:</strong> pierre.martin@etudiant.univ-amiens.fr
-              <br />
-              <strong>Mot de passe:</strong> password123
-            </div>
-            <div className="test-account">
-              <strong>Email:</strong> marie.dubois@etudiant.u-picardie.fr
-              <br />
-              <strong>Mot de passe:</strong> password123
-            </div>
-            <div className="test-account">
-              <strong>Email:</strong> thomas.leroy@etudiant.univ-amiens.fr
-              <br />
-              <strong>Mot de passe:</strong> password123
-            </div>
-          </div>
         </div>
 
         <div className="auth-info">
