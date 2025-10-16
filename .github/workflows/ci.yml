@@ -14,6 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     name: Tests API Backend
 
+    services:
+      # Ajout d'un service de base de données temporaire pour les tests
+      sqlite-memory:
+        image: cimg/node:18.0
+        ports:
+          - 3306:3306
+
     steps:
       - name: Récupération du code source
         uses: actions/checkout@v4
@@ -42,27 +49,47 @@ jobs:
         run: |
           mkdir -p app/backend/database
 
+      # Ajout de tests unitaires avant de démarrer le serveur
+      - name: Tests unitaires backend
+        run: |
+          cd app/backend
+          npm test || exit 1
+
       - name: Démarrage serveur backend pour tests
         run: |
           cd app/backend
           npm start &
-          sleep 10
-          echo "PID Backend: $!"
+          echo "::group::Attente démarrage serveur"
+          for i in {1..30}; do
+            if curl -s http://localhost:5000/api/health > /dev/null; then
+              echo "Serveur démarré avec succès après $i secondes"
+              break
+            fi
+            if [ $i -eq 30 ]; then
+              echo "Timeout: Le serveur n'a pas démarré dans le temps imparti"
+              exit 1
+            fi
+            sleep 1
+          done
+          echo "::endgroup::"
 
-      - name: Test endpoint santé API
+      - name: Tests API backend
         run: |
+          cd app/backend
+          echo "::group::Test endpoint santé API"
           curl -f http://localhost:5000/api/health || exit 1
-
-      - name: Test endpoint inscription API
-        run: |
+          echo "::endgroup::"
+          
+          echo "::group::Test endpoint inscription API"
           curl -X POST http://localhost:5000/api/auth/register \
             -H "Content-Type: application/json" \
             -d '{"firstName":"Test","lastName":"Utilisateur","email":"test@ci.com","password":"motdepasse123"}' \
             || exit 1
-
-      - name: Test endpoint recherche trajets API
-        run: |
+          echo "::endgroup::"
+          
+          echo "::group::Test endpoint recherche trajets API"
           curl -f http://localhost:5000/api/trips/search || exit 1
+          echo "::endgroup::"
 
   tests-frontend:
     runs-on: ubuntu-latest
@@ -84,6 +111,19 @@ jobs:
           cd app/frontend
           npm ci
 
+      # Configuration pour résoudre le problème d'import CSS dans Jest
+      - name: Configuration du mock pour CSS dans Jest
+        run: |
+          cd app/frontend
+          echo '{
+            "jest": {
+              "moduleNameMapper": {
+                "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+              }
+            }
+          }' > jest.config.json
+          npm install --save-dev identity-obj-proxy
+
       - name: Création fichier environnement frontend
         run: |
           cd app/frontend
@@ -97,7 +137,7 @@ jobs:
       - name: Exécution tests frontend
         run: |
           cd app/frontend
-          CI=true npm test -- --watchAll=false
+          CI=true npm test -- --watchAll=false --config=jest.config.json
 
       - name: Build production frontend
         run: |
@@ -109,6 +149,48 @@ jobs:
           cd app/frontend
           ls -la build/
           test -f build/index.html || exit 1
+          
+      # Stockage des artéfacts de build pour inspection ou déploiement ultérieur
+      - name: Stockage artéfacts build
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-build
+          path: app/frontend/build/
+          retention-days: 7
+
+  security-scan:
+    runs-on: ubuntu-latest
+    name: Analyse de Sécurité
+    needs: []  # Exécution parallèle avec les autres jobs
+
+    steps:
+      - name: Récupération du code source
+        uses: actions/checkout@v4
+
+      - name: Configuration Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      # Scan des vulnérabilités dans les dépendances
+      - name: Audit de sécurité Backend
+        run: |
+          cd app/backend
+          npm audit --production --audit-level=high || echo "Des vulnérabilités ont été détectées"
+          
+      - name: Audit de sécurité Frontend
+        run: |
+          cd app/frontend
+          npm audit --production --audit-level=high || echo "Des vulnérabilités ont été détectées"
+
+      # Scan de code statique avec CodeQL
+      - name: Initialisation CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: javascript
+
+      - name: Analyse CodeQL
+        uses: github/codeql-action/analyze@v2
 
   tests-integration:
     runs-on: ubuntu-latest
@@ -123,6 +205,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
 
       - name: Installation toutes dépendances
         run: |
@@ -153,8 +236,18 @@ jobs:
         run: |
           cd app/backend
           npm start &
-          sleep 15
-          curl -f http://localhost:5000/api/health
+          # Attente plus intelligente du démarrage du serveur
+          for i in {1..30}; do
+            if curl -s http://localhost:5000/api/health > /dev/null; then
+              echo "Serveur démarré avec succès après $i secondes"
+              break
+            fi
+            if [ $i -eq 30 ]; then
+              echo "Timeout: Le serveur n'a pas démarré dans le temps imparti"
+              exit 1
+            fi
+            sleep 1
+          done
 
       - name: Build et test frontend avec backend
         run: |
@@ -164,17 +257,24 @@ jobs:
       - name: Exécution tests API intégration
         run: |
           # Test flux inscription utilisateur
+          echo "::group::Test inscription"
           curl -X POST http://localhost:5000/api/auth/register \
             -H "Content-Type: application/json" \
             -d '{"firstName":"Integration","lastName":"Test","email":"integration@test.com","password":"motdepasseintegration123"}' \
-            -s | grep -q "success"
+            -s | tee response.json
+          grep -q "success" response.json || exit 1
+          echo "::endgroup::"
           
           # Test endpoint trajets
-          curl -s http://localhost:5000/api/trips/search | grep -q "success\|trips"
+          echo "::group::Test trajets"
+          curl -s http://localhost:5000/api/trips/search | tee trips.json
+          grep -q "success\|trips" trips.json || exit 1
+          echo "::endgroup::"
 
   qualite-code:
     runs-on: ubuntu-latest
     name: Contrôle Qualité Code
+    needs: []  # Exécution parallèle
 
     steps:
       - name: Récupération du code source
@@ -190,20 +290,54 @@ jobs:
           cd app/backend && npm ci && cd ../..
           cd app/frontend && npm ci && cd ../..
 
-      - name: Vérification formatage code backend
+      # Analyse de la complexité du code
+      - name: Installation outils d'analyse
+        run: |
+          npm install -g eslint jscpd
+
+      - name: Vérification formatage et duplication code backend
         run: |
           cd app/backend
-          echo "Vérification structure code backend..."
+          echo "::group::Structure code backend"
           find . -name "*.js" -not -path "./node_modules/*" | wc -l
+          echo "::endgroup::"
+          
+          echo "::group::Analyse duplication code backend"
+          jscpd . --ignore "node_modules/**" --threshold 5 || echo "Attention: Code dupliqué détecté"
+          echo "::endgroup::"
 
-      - name: Vérification formatage code frontend
+      - name: Vérification formatage et duplication code frontend
         run: |
           cd app/frontend
-          echo "Vérification structure code frontend..."
+          echo "::group::Structure code frontend"
           find src -name "*.js" -o -name "*.jsx" | wc -l
+          echo "::endgroup::"
+          
+          echo "::group::Analyse duplication code frontend"
+          jscpd src --threshold 5 || echo "Attention: Code dupliqué détecté"
+          echo "::endgroup::"
 
       - name: Validation fichiers package.json
         run: |
           # Validation package.json backend
           cd app/backend && npm ls --depth=0
           cd ../frontend && npm ls --depth=0
+
+  # Workflow de déploiement conditionnel pour la branche main
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    name: Déploiement
+    needs: [tests-integration, security-scan]
+    
+    steps:
+      - name: Récupération artéfacts build
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend-build
+          path: frontend-build
+
+      - name: Vérification des artéfacts
+        run: |
+          ls -la frontend-build/
+          echo "Le déploiement serait exécuté ici dans un environnement de production réel"
