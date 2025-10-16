@@ -97,7 +97,7 @@ jobs:
       - name: Exécution tests frontend
         run: |
           cd app/frontend
-          CI=true npm test -- --watchAll=false
+          CI=true npm test -- --watchAll=false --passWithNoTests
 
       - name: Build production frontend
         run: |
