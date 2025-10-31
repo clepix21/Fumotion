@@ -49,6 +49,10 @@
   color: #3b82f6;
 }
 
+.search-main {
+  padding-top: 5rem;
+}
+
 .search-container {
   max-width: 1200px;
   margin: 0 auto;

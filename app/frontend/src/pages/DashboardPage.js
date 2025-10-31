@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import "../styles/Dashboard.css"
+import "../styles/HomePage.css"
 
 export default function DashboardPage() {
   const navigate = useNavigate()
@@ -82,36 +83,33 @@ export default function DashboardPage() {
 
   return (
     <div className="dashboard">
-      {/* Header */}
-      <header className="dashboard-header">
-        <div className="header-content">
-          <Link to="/" className="logo">
-            <span className="logo-icon">🚗</span>
-            <span className="logo-text">Fumotion</span>
-          </Link>
+      {/* Navbar - identique à la HomePage */}
+      <nav className="navbar">
+        <div className="navbar-container">
+          <div className="navbar-brand" onClick={() => navigate("/")}>
+            <span className="brand-logo">🚗</span>
+            <span className="brand-name">Fumotion</span>
+          </div>
 
-          <nav className="header-nav">
-            <Link to="/search" className="nav-link">
+          <div className="navbar-menu">
+            <a href="/search" className="navbar-link">
               Rechercher un trajet
-            </Link>
-            <Link to="/create-trip" className="nav-link">
-              Proposer un trajet
-            </Link>
-          </nav>
-
-          <div className="header-user">
-            <div className="user-info">
-              <span className="user-name">
-                {user?.first_name} {user?.last_name}
-              </span>
-              <span className="user-email">{user?.email}</span>
-            </div>
-            <button onClick={handleLogout} className="logout-btn">
+            </a>
+            <button onClick={() => navigate("/dashboard")} className="navbar-btn-secondary">
+              Mon tableau de bord
+            </button>
+            <button onClick={() => navigate("/create-trip")} className="navbar-btn-primary">
+              Créer un trajet
+            </button>
+            <span className="navbar-user">
+              {user?.first_name || user?.email}
+            </span>
+            <button onClick={handleLogout} className="navbar-btn-secondary">
               Déconnexion
             </button>
           </div>
         </div>
-      </header>
+      </nav>
 
       <div className="dashboard-container">
         {/* Sidebar */}

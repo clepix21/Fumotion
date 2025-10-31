@@ -4,10 +4,11 @@ import { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import "../styles/CreateTrip.css"
+import "../styles/HomePage.css"
 
 export default function CreateTripPage() {
   const navigate = useNavigate()
-  const { user, token, isAuthenticated } = useAuth()
+  const { user, token, isAuthenticated, logout } = useAuth()
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     departure_location: "",
@@ -64,37 +65,39 @@ export default function CreateTripPage() {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
+    logout()
     navigate("/")
   }
 
   return (
     <div className="create-trip-page">
-      <header className="page-header">
-        <div className="header-content">
-          <Link to="/" className="logo">
-            <span className="logo-icon">🚗</span>
-            <span className="logo-text">Fumotion</span>
-          </Link>
+      {/* Navbar - identique à la HomePage */}
+      <nav className="navbar">
+        <div className="navbar-container">
+          <div className="navbar-brand" onClick={() => navigate("/")}>
+            <span className="brand-logo">🚗</span>
+            <span className="brand-name">Fumotion</span>
+          </div>
 
-          <nav className="header-nav">
-            <Link to="/dashboard" className="nav-link">
-              Tableau de bord
-            </Link>
-            <Link to="/search" className="nav-link">
-              Rechercher
-            </Link>
-          </nav>
-
-          <div className="header-user">
-            <span className="user-name">{user?.first_name}</span>
-            <button onClick={handleLogout} className="logout-btn">
+          <div className="navbar-menu">
+            <a href="/search" className="navbar-link">
+              Rechercher un trajet
+            </a>
+            <button onClick={() => navigate("/dashboard")} className="navbar-btn-secondary">
+              Mon tableau de bord
+            </button>
+            <button onClick={() => navigate("/create-trip")} className="navbar-btn-primary">
+              Créer un trajet
+            </button>
+            <span className="navbar-user">
+              {user?.first_name || user?.email}
+            </span>
+            <button onClick={handleLogout} className="navbar-btn-secondary">
               Déconnexion
             </button>
           </div>
         </div>
-      </header>
+      </nav>
 
       <main className="create-trip-main">
         <div className="create-trip-container">
