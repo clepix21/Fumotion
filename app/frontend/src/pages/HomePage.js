@@ -43,7 +43,7 @@ export default function HomePage() {
             {isAuthenticated() ? (
               <>
                 <span className="navbar-user">
-                  Bonjour, {user?.firstName || user?.email}
+                  Bonjour, {user?.first_name || user?.email}
                 </span>
                 <button onClick={() => navigate("/dashboard")} className="navbar-btn-secondary">
                   Mon tableau de bord
