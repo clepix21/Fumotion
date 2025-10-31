@@ -10,6 +10,7 @@ export default function CreateTripPage() {
   const navigate = useNavigate()
   const { user, token, isAuthenticated, logout } = useAuth()
   const [loading, setLoading] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [formData, setFormData] = useState({
     departure_location: "",
     arrival_location: "",
@@ -71,7 +72,7 @@ export default function CreateTripPage() {
 
   return (
     <div className="create-trip-page">
-      {/* Navbar - identique à la HomePage */}
+      {/* Navbar - Moderne et Professionnelle */}
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-brand" onClick={() => navigate("/")}>
@@ -79,20 +80,29 @@ export default function CreateTripPage() {
             <span className="brand-name">Fumotion</span>
           </div>
 
-          <div className="navbar-menu">
-            <a href="/search" className="navbar-link">
-              Rechercher un trajet
+          <button 
+            className="navbar-mobile-toggle"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? '✕' : '☰'}
+          </button>
+
+          <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
+            <a href="/search" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
+              Rechercher
             </a>
-            <button onClick={() => navigate("/dashboard")} className="navbar-btn-secondary">
-              Mon tableau de bord
-            </button>
-            <button onClick={() => navigate("/create-trip")} className="navbar-btn-primary">
-              Créer un trajet
-            </button>
+            <div className="navbar-divider"></div>
             <span className="navbar-user">
               {user?.first_name || user?.email}
             </span>
-            <button onClick={handleLogout} className="navbar-btn-secondary">
+            <button onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
+              Tableau de bord
+            </button>
+            <button onClick={() => { navigate("/create-trip"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
+              Créer un trajet
+            </button>
+            <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
               Déconnexion
             </button>
           </div>
