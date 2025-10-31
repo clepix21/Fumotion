@@ -1,49 +1,20 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useNavigate, Link } from "react-router-dom"
+import { useAuth } from "../context/AuthContext"
 import "../styles/Dashboard.css"
 
 export default function DashboardPage() {
   const navigate = useNavigate()
-  const [user, setUser] = useState(null)
+  const { user, token, isAuthenticated, logout } = useAuth()
   const [activeTab, setActiveTab] = useState("trips")
   const [myTrips, setMyTrips] = useState([])
   const [myBookings, setMyBookings] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    // Vérifier l'authentification
-    const token = localStorage.getItem("token")
-    const userData = localStorage.getItem("user")
-
-    // Check if token and userData exist and are valid
-    if (!token || !userData || userData === "undefined" || userData === "null") {
-      // Clear invalid data
-      localStorage.removeItem("token")
-      localStorage.removeItem("user")
-      navigate("/login")
-      return
-    }
-
-    // Safely parse user data
+  const loadDashboardData = useCallback(async () => {
     try {
-      const parsedUser = JSON.parse(userData)
-      setUser(parsedUser)
-      loadDashboardData()
-    } catch (error) {
-      console.error("Erreur lors du parsing des données utilisateur:", error)
-      // Clear corrupted data and redirect to login
-      localStorage.removeItem("token")
-      localStorage.removeItem("user")
-      navigate("/login")
-    }
-  }, [navigate])
-
-  const loadDashboardData = async () => {
-    try {
-      const token = localStorage.getItem("token")
-
       // Charger mes trajets
       const tripsResponse = await fetch("http://localhost:5000/api/trips", {
         headers: {
@@ -72,11 +43,20 @@ export default function DashboardPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [token])
+
+  useEffect(() => {
+    // Vérifier l'authentification avec le contexte
+    if (!isAuthenticated()) {
+      navigate("/login")
+      return
+    }
+
+    loadDashboardData()
+  }, [navigate, isAuthenticated, loadDashboardData])
 
   const handleLogout = () => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
+    logout()
     navigate("/")
   }
 

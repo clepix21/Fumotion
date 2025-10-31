@@ -1,15 +1,22 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "../context/AuthContext"
 import "../styles/HomePage.css"
 
 export default function HomePage() {
   const navigate = useNavigate()
+  const { user, isAuthenticated, logout } = useAuth()
   const [searchData, setSearchData] = useState({
     departure: "",
     arrival: "",
     date: "",
     passengers: 1,
   })
+
+  const handleLogout = () => {
+    logout()
+    navigate("/")
+  }
 
   const handleSearch = (e) => {
     e.preventDefault()
@@ -33,12 +40,31 @@ export default function HomePage() {
             <a href="#pricing" className="navbar-link">
               Tarifs
             </a>
-            <button onClick={() => navigate("/login")} className="navbar-btn-secondary">
-              Connexion
-            </button>
-            <button onClick={() => navigate("/register")} className="navbar-btn-primary">
-              Inscription
-            </button>
+            {isAuthenticated() ? (
+              <>
+                <span className="navbar-user">
+                  Bonjour, {user?.firstName || user?.email}
+                </span>
+                <button onClick={() => navigate("/dashboard")} className="navbar-btn-secondary">
+                  Mon tableau de bord
+                </button>
+                <button onClick={() => navigate("/create-trip")} className="navbar-btn-primary">
+                  Créer un trajet
+                </button>
+                <button onClick={handleLogout} className="navbar-btn-secondary">
+                  Déconnexion
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => navigate("/login")} className="navbar-btn-secondary">
+                  Connexion
+                </button>
+                <button onClick={() => navigate("/register")} className="navbar-btn-primary">
+                  Inscription
+                </button>
+              </>
+            )}
           </div>
         </div>
       </nav>

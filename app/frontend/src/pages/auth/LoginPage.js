@@ -1,9 +1,11 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { useAuth } from "../../context/AuthContext"
 import "../../styles/auth.css"
 
 export default function LoginPage() {
   const navigate = useNavigate()
+  const { login } = useAuth()
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -43,8 +45,8 @@ export default function LoginPage() {
 
       if (response.ok && data.success) {
         if (data.data && data.data.token && data.data.user) {
-          localStorage.setItem("token", data.data.token)
-          localStorage.setItem("user", JSON.stringify(data.data.user))
+          // Utiliser le contexte d'authentification
+          login(data.data.user, data.data.token)
 
           console.log("[v0] Token stocké:", data.data.token.substring(0, 20) + "...")
           console.log("[v0] Utilisateur stocké:", data.data.user.email)

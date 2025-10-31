@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
+import { useAuth } from "../context/AuthContext"
 import "../styles/CreateTrip.css"
 
 export default function CreateTripPage() {
   const navigate = useNavigate()
-  const [user, setUser] = useState(null)
+  const { user, token, isAuthenticated } = useAuth()
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     departure_location: "",
@@ -18,33 +19,17 @@ export default function CreateTripPage() {
   })
 
   useEffect(() => {
-    const token = localStorage.getItem("token")
-    const userData = localStorage.getItem("user")
-
-    if (!token || !userData || userData === "undefined" || userData === "null") {
-      localStorage.removeItem("token")
-      localStorage.removeItem("user")
+    if (!isAuthenticated()) {
       navigate("/login")
       return
     }
-
-    try {
-      const parsedUser = JSON.parse(userData)
-      setUser(parsedUser)
-    } catch (error) {
-      console.error("Erreur lors du parsing des données utilisateur:", error)
-      localStorage.removeItem("token")
-      localStorage.removeItem("user")
-      navigate("/login")
-    }
-  }, [navigate])
+  }, [navigate, isAuthenticated])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
 
     try {
-      const token = localStorage.getItem("token")
       const response = await fetch("http://localhost:5000/api/trips", {
         method: "POST",
         headers: {
