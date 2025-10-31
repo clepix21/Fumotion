@@ -100,7 +100,7 @@ export default function SearchPage() {
 
   return (
     <div className="search-page">
-      {/* Navbar - identique à la HomePage */}
+      {/* Navbar */}
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-brand" onClick={() => navigate("/")}>
