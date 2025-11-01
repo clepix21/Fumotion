@@ -1,12 +1,14 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useNavigate, Link } from "react-router-dom"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "../context/AuthContext"
 import "../styles/Search.css"
+import "../styles/HomePage.css"
 
 export default function SearchPage() {
   const navigate = useNavigate()
-  const [user, setUser] = useState(null)
+  const { user, token, isAuthenticated, logout } = useAuth()
   const [searchParams, setSearchParams] = useState({
     departure: "",
     arrival: "",
@@ -15,23 +17,7 @@ export default function SearchPage() {
   const [trips, setTrips] = useState([])
   const [loading, setLoading] = useState(false)
   const [searched, setSearched] = useState(false)
-
-  useEffect(() => {
-    const token = localStorage.getItem("token")
-    const userData = localStorage.getItem("user")
-
-    if (token && userData && userData !== "undefined" && userData !== "null") {
-      try {
-        const parsedUser = JSON.parse(userData)
-        setUser(parsedUser)
-      } catch (error) {
-        console.error("Erreur lors du parsing des données utilisateur:", error)
-        // Clear corrupted data
-        localStorage.removeItem("token")
-        localStorage.removeItem("user")
-      }
-    }
-  }, [])
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const handleSearch = async (e) => {
     e.preventDefault()
@@ -62,7 +48,7 @@ export default function SearchPage() {
   }
 
   const handleBooking = async (tripId) => {
-    if (!user) {
+    if (!isAuthenticated()) {
       navigate("/login")
       return
     }
@@ -71,7 +57,6 @@ export default function SearchPage() {
     if (!seats || isNaN(seats) || seats < 1) return
 
     try {
-      const token = localStorage.getItem("token")
       const response = await fetch("http://localhost:5000/api/bookings", {
         method: "POST",
         headers: {
@@ -99,9 +84,7 @@ export default function SearchPage() {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
-    setUser(null)
+    logout()
     navigate("/")
   }
 
@@ -118,45 +101,56 @@ export default function SearchPage() {
 
   return (
     <div className="search-page">
-      <header className="page-header">
-        <div className="header-content">
-          <Link to="/" className="logo">
-            <span className="logo-icon">🚗</span>
-            <span className="logo-text">Fumotion</span>
-          </Link>
+      {/* Navbar - Moderne et Professionnelle */}
+      <nav className="navbar">
+        <div className="navbar-container">
+          <div className="navbar-brand" onClick={() => navigate("/")}>
+            <span className="brand-logo">🚗</span>
+            <span className="brand-name">Fumotion</span>
+          </div>
 
-          <nav className="header-nav">
-            {user ? (
+          <button 
+            className="navbar-mobile-toggle"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? '✕' : '☰'}
+          </button>
+
+          <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
+            <a href="/search" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
+              Rechercher
+            </a>
+            {isAuthenticated() ? (
               <>
-                <Link to="/dashboard" className="nav-link">
+                <div className="navbar-divider"></div>
+                <span className="navbar-user">
+                  {user?.first_name || user?.email}
+                </span>
+                <button onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
                   Tableau de bord
-                </Link>
-                <Link to="/create-trip" className="nav-link">
-                  Proposer un trajet
-                </Link>
+                </button>
+                <button onClick={() => { navigate("/create-trip"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
+                  Créer un trajet
+                </button>
+                <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
+                  Déconnexion
+                </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="nav-link">
+                <div className="navbar-divider"></div>
+                <button onClick={() => { navigate("/login"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
                   Connexion
-                </Link>
-                <Link to="/register" className="nav-link">
+                </button>
+                <button onClick={() => { navigate("/register"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
                   Inscription
-                </Link>
+                </button>
               </>
             )}
-          </nav>
-
-          {user && (
-            <div className="header-user">
-              <span className="user-name">{user.first_name}</span>
-              <button onClick={handleLogout} className="logout-btn">
-                Déconnexion
-              </button>
-            </div>
-          )}
+          </div>
         </div>
-      </header>
+      </nav>
 
       <main className="search-main">
         <div className="search-container">

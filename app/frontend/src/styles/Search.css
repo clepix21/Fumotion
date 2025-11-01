@@ -2,6 +2,7 @@
 .search-page {
   min-height: 100vh;
   background-color: #f8fafc;
+  padding-top: 5rem;
 }
 
 .page-header {
@@ -47,6 +48,10 @@
 
 .nav-link:hover {
   color: #3b82f6;
+}
+
+.search-main {
+  padding-top: 5rem;
 }
 
 .search-container {

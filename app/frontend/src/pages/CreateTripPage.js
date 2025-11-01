@@ -1,13 +1,16 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useNavigate, Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "../context/AuthContext"
 import "../styles/CreateTrip.css"
+import "../styles/HomePage.css"
 
 export default function CreateTripPage() {
   const navigate = useNavigate()
-  const [user, setUser] = useState(null)
+  const { user, token, isAuthenticated, logout } = useAuth()
   const [loading, setLoading] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [formData, setFormData] = useState({
     departure_location: "",
     arrival_location: "",
@@ -18,33 +21,17 @@ export default function CreateTripPage() {
   })
 
   useEffect(() => {
-    const token = localStorage.getItem("token")
-    const userData = localStorage.getItem("user")
-
-    if (!token || !userData || userData === "undefined" || userData === "null") {
-      localStorage.removeItem("token")
-      localStorage.removeItem("user")
+    if (!isAuthenticated()) {
       navigate("/login")
       return
     }
-
-    try {
-      const parsedUser = JSON.parse(userData)
-      setUser(parsedUser)
-    } catch (error) {
-      console.error("Erreur lors du parsing des données utilisateur:", error)
-      localStorage.removeItem("token")
-      localStorage.removeItem("user")
-      navigate("/login")
-    }
-  }, [navigate])
+  }, [navigate, isAuthenticated])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
 
     try {
-      const token = localStorage.getItem("token")
       const response = await fetch("http://localhost:5000/api/trips", {
         method: "POST",
         headers: {
@@ -79,37 +66,48 @@ export default function CreateTripPage() {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
+    logout()
     navigate("/")
   }
 
   return (
     <div className="create-trip-page">
-      <header className="page-header">
-        <div className="header-content">
-          <Link to="/" className="logo">
-            <span className="logo-icon">🚗</span>
-            <span className="logo-text">Fumotion</span>
-          </Link>
+      {/* Navbar - Moderne et Professionnelle */}
+      <nav className="navbar">
+        <div className="navbar-container">
+          <div className="navbar-brand" onClick={() => navigate("/")}>
+            <span className="brand-logo">🚗</span>
+            <span className="brand-name">Fumotion</span>
+          </div>
 
-          <nav className="header-nav">
-            <Link to="/dashboard" className="nav-link">
-              Tableau de bord
-            </Link>
-            <Link to="/search" className="nav-link">
+          <button 
+            className="navbar-mobile-toggle"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? '✕' : '☰'}
+          </button>
+
+          <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
+            <a href="/search" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
               Rechercher
-            </Link>
-          </nav>
-
-          <div className="header-user">
-            <span className="user-name">{user?.first_name}</span>
-            <button onClick={handleLogout} className="logout-btn">
+            </a>
+            <div className="navbar-divider"></div>
+            <span className="navbar-user">
+              {user?.first_name || user?.email}
+            </span>
+            <button onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
+              Tableau de bord
+            </button>
+            <button onClick={() => { navigate("/create-trip"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
+              Créer un trajet
+            </button>
+            <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
               Déconnexion
             </button>
           </div>
         </div>
-      </header>
+      </nav>
 
       <main className="create-trip-main">
         <div className="create-trip-container">
