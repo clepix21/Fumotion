@@ -260,19 +260,6 @@ export default function RegisterPage() {
             </p>
           </div>
         </div>
-
-        <div className="auth-info">
-          <div className="info-card">
-            <span className="info-icon">🎓</span>
-            <h3>Réservé aux étudiants</h3>
-            <p>Fumotion Amiens est exclusivement destiné aux étudiants des établissements amiénois</p>
-          </div>
-          <div className="info-card">
-            <span className="info-icon">🔒</span>
-            <h3>Sécurisé</h3>
-            <p>Vos données sont protégées et votre identité étudiante est vérifiée</p>
-          </div>
-        </div>
       </div>
     </div>
   );
