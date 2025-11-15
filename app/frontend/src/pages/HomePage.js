@@ -21,8 +21,24 @@ export default function HomePage() {
 
   const handleSearch = (e) => {
     e.preventDefault()
-    console.log("Recherche:", searchData)
-    // TODO: Navigate to search results
+    
+    // Construire les paramètres de recherche
+    const params = new URLSearchParams()
+    if (searchData.departure.trim()) {
+      params.append("departure", searchData.departure.trim())
+    }
+    if (searchData.arrival.trim()) {
+      params.append("arrival", searchData.arrival.trim())
+    }
+    if (searchData.date) {
+      params.append("date", searchData.date)
+    }
+    if (searchData.passengers) {
+      params.append("passengers", searchData.passengers)
+    }
+    
+    // Rediriger vers la page de recherche avec les paramètres
+    navigate(`/search?${params.toString()}`)
   }
 
   return (
