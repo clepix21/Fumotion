@@ -1,8 +1,7 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
+import { tripsAPI } from "../services/api"
 import "../styles/CreateTrip.css"
 import "../styles/HomePage.css"
 
@@ -32,26 +31,133 @@ export default function CreateTripPage() {
     setLoading(true)
 
     try {
-      const response = await fetch("http://localhost:5000/api/trips", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      })
+      // Validation côté client
+      if (!formData.departure_location.trim()) {
+        alert("Veuillez saisir un lieu de départ")
+        setLoading(false)
+        return
+      }
+      if (!formData.arrival_location.trim()) {
+        alert("Veuillez saisir un lieu d'arrivée")
+        setLoading(false)
+        return
+      }
+      if (!formData.departure_datetime) {
+        alert("Veuillez sélectionner une date et heure de départ")
+        setLoading(false)
+        return
+      }
+      if (!formData.price_per_seat || parseFloat(formData.price_per_seat) <= 0) {
+        alert("Veuillez saisir un prix valide (supérieur à 0)")
+        setLoading(false)
+        return
+      }
 
-      const data = await response.json()
+      // Convertir la date : datetime-local retourne "YYYY-MM-DDTHH:mm" (sans timezone)
+      // On doit la convertir en ISO8601 avec timezone
+      let departureDateTimeISO = null
+      if (formData.departure_datetime) {
+        // datetime-local retourne "YYYY-MM-DDTHH:mm" (sans timezone)
+        // On crée une date en utilisant le format local
+        // Note: new Date() avec datetime-local interprète la date comme locale
+        const dateString = formData.departure_datetime
+        // Si le format est "YYYY-MM-DDTHH:mm", on l'utilise directement
+        // Sinon on crée une date locale
+        const localDate = new Date(dateString)
+        
+        // Vérifier que la date est valide
+        if (isNaN(localDate.getTime())) {
+          alert("Date invalide")
+          setLoading(false)
+          return
+        }
+        
+        // Vérifier que la date est dans le futur
+        if (localDate <= new Date()) {
+          alert("La date de départ doit être dans le futur")
+          setLoading(false)
+          return
+        }
+        
+        // Convertir en ISO8601 (UTC)
+        departureDateTimeISO = localDate.toISOString()
+      }
 
-      if (response.ok) {
+      // Convertir les nombres
+      const availableSeats = parseInt(formData.available_seats, 10)
+      const pricePerSeat = parseFloat(formData.price_per_seat)
+      
+      // Vérifier que les conversions sont valides
+      if (isNaN(availableSeats) || availableSeats < 1 || availableSeats > 8) {
+        alert("Le nombre de places doit être entre 1 et 8")
+        setLoading(false)
+        return
+      }
+      
+      if (isNaN(pricePerSeat) || pricePerSeat <= 0) {
+        alert("Le prix doit être un nombre positif")
+        setLoading(false)
+        return
+      }
+
+      // Convertir les données du formulaire au format attendu par le backend (camelCase)
+      const tripData = {
+        departureLocation: formData.departure_location.trim(),
+        arrivalLocation: formData.arrival_location.trim(),
+        departureDateTime: departureDateTimeISO,
+        availableSeats: availableSeats,
+        pricePerSeat: pricePerSeat,
+        description: formData.description.trim() || null,
+        // Les coordonnées GPS sont optionnelles pour l'instant
+        departureLatitude: null,
+        departureLongitude: null,
+        arrivalLatitude: null,
+        arrivalLongitude: null
+      }
+
+      console.log("Données envoyées:", tripData)
+      console.log("Date ISO:", departureDateTimeISO)
+
+      const data = await tripsAPI.create(tripData)
+
+      if (data.success) {
         alert("Trajet créé avec succès!")
+        // Réinitialiser le formulaire
+        setFormData({
+          departure_location: "",
+          arrival_location: "",
+          departure_datetime: "",
+          available_seats: 1,
+          price_per_seat: "",
+          description: "",
+        })
         navigate("/dashboard")
       } else {
-        alert(data.message || "Erreur lors de la création du trajet")
+        // Afficher les erreurs de validation si disponibles
+        const errorMessage = data.errors 
+          ? data.errors.map(err => err.msg || err.message).join('\n')
+          : data.message || "Erreur lors de la création du trajet"
+        alert(errorMessage)
       }
     } catch (error) {
-      console.error("Erreur:", error)
-      alert("Erreur lors de la création du trajet")
+      console.error("Erreur complète:", error)
+      console.error("Détails de l'erreur:", error.data)
+      
+      // Essayer de récupérer les détails de l'erreur
+      let errorMessage = "Erreur lors de la création du trajet"
+      
+      // Si l'erreur contient des détails de validation
+      if (error.errors && Array.isArray(error.errors)) {
+        errorMessage = error.errors.map(err => err.msg || err.message || JSON.stringify(err)).join('\n')
+      } else if (error.data && error.data.errors && Array.isArray(error.data.errors)) {
+        errorMessage = error.data.errors.map(err => err.msg || err.message || JSON.stringify(err)).join('\n')
+      } else if (error.data && error.data.message) {
+        errorMessage = error.data.message
+      } else if (error.message) {
+        errorMessage = error.message
+      }
+      
+      alert(errorMessage)
     } finally {
       setLoading(false)
     }

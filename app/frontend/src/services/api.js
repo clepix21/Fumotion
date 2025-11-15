@@ -30,8 +30,19 @@ export async function apiRequest(path, options = {}) {
         return;
       }
       
-      const message = (data && data.message) || res.statusText || 'Erreur requête API';
-      throw new Error(message);
+      // Créer une erreur avec les détails complets
+      const error = new Error((data && data.message) || res.statusText || 'Erreur requête API');
+      // Ajouter les détails de validation si disponibles
+      if (data && data.errors) {
+        error.errors = data.errors;
+      }
+      if (data && data.success !== undefined) {
+        error.success = data.success;
+      }
+      // Ajouter la réponse complète pour le debugging
+      error.response = res;
+      error.data = data;
+      throw error;
     }
     
     return data;
