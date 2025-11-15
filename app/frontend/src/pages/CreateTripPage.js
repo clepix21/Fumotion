@@ -7,7 +7,7 @@ import "../styles/HomePage.css"
 
 export default function CreateTripPage() {
   const navigate = useNavigate()
-  const { user, token, isAuthenticated, logout } = useAuth()
+  const { user, isAuthenticated, logout } = useAuth()
   const [loading, setLoading] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [formData, setFormData] = useState({
