@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { tripsAPI, bookingsAPI } from "../services/api"
 import MapComponent from "../components/common/MapComponent"
+import Avatar from "../components/common/Avatar"
 import "../styles/Search.css"
 import "../styles/HomePage.css"
 
@@ -192,9 +193,7 @@ export default function SearchPage() {
                   Créer un trajet
                 </button>
                 <div className="navbar-user-profile">
-                  <div className="navbar-avatar">
-                    {user?.first_name ? user.first_name.charAt(0).toUpperCase() : user?.email?.charAt(0).toUpperCase()}
-                  </div>
+                  <Avatar user={user} size="medium" />
                   <div className="navbar-user-info">
                     <span className="navbar-user-name">{user?.first_name || user?.email}</span>
                   </div>

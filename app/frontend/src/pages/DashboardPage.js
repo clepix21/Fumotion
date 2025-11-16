@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { authAPI } from "../services/api"
+import Avatar from "../components/common/Avatar"
 import "../styles/Dashboard.css"
 import "../styles/HomePage.css"
 
@@ -200,9 +201,7 @@ export default function DashboardPage() {
               Créer un trajet
             </button>
             <div className="navbar-user-profile">
-              <div className="navbar-avatar">
-                {user?.first_name ? user.first_name.charAt(0).toUpperCase() : user?.email?.charAt(0).toUpperCase()}
-              </div>
+              <Avatar user={user} size="medium" />
               <div className="navbar-user-info">
                 <span className="navbar-user-name">{user?.first_name || user?.email}</span>
               </div>
@@ -453,36 +452,13 @@ export default function DashboardPage() {
                   
                   {/* Avatar */}
                   <div className="profile-avatar-container">
-                    <div 
-                      className="profile-avatar"
-                      style={{
-                        backgroundImage: displayUser?.profile_picture 
-                          ? `url(http://localhost:5000/uploads/${displayUser.profile_picture})`
-                          : 'none',
-                        backgroundColor: displayUser?.profile_picture ? 'transparent' : '#3b82f6'
-                      }}
-                    >
-                      {!displayUser?.profile_picture && (
-                        <span className="avatar-initials">
-                          {displayUser?.first_name?.[0] || ''}
-                          {displayUser?.last_name?.[0] || ''}
-                        </span>
-                      )}
-                    </div>
-                    {editMode && (
-                      <button
-                        className="avatar-edit-btn"
-                        onClick={() => avatarInputRef.current?.click()}
-                        disabled={uploading.avatar}
-                        title="Modifier la photo de profil"
-                      >
-                        {uploading.avatar ? (
-                          <span className="spinner-small"></span>
-                        ) : (
-                          <span>📷</span>
-                        )}
-                      </button>
-                    )}
+                    <Avatar 
+                      user={displayUser}
+                      size="xlarge"
+                      editable={editMode}
+                      onEdit={() => avatarInputRef.current?.click()}
+                      uploading={uploading.avatar}
+                    />
                     <input
                       ref={avatarInputRef}
                       type="file"
