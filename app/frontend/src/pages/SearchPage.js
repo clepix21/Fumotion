@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { tripsAPI, bookingsAPI } from "../services/api"
+import MapComponent from "../components/common/MapComponent"
 import "../styles/Search.css"
 import "../styles/HomePage.css"
 
@@ -314,12 +315,46 @@ export default function SearchPage() {
             )}
 
             {!loading && trips.length > 0 && (
-              <div className="results-list">
-                <h2>
-                  {trips.length} trajet{trips.length > 1 ? "s" : ""} trouvé{trips.length > 1 ? "s" : ""}
-                </h2>
-
-                {trips.map((trip) => (
+              <>
+                <div style={{ marginBottom: '20px' }}>
+                  <h2>
+                    {trips.length} trajet{trips.length > 1 ? "s" : ""} trouvé{trips.length > 1 ? "s" : ""}
+                  </h2>
+                  <MapComponent
+                    center={trips[0]?.departure_latitude && trips[0]?.departure_longitude 
+                      ? [trips[0].departure_latitude, trips[0].departure_longitude]
+                      : [49.8942, 2.2957]}
+                    zoom={12}
+                    markers={trips
+                      .filter(trip => trip.departure_latitude && trip.departure_longitude)
+                      .map(trip => ({
+                        lat: trip.departure_latitude,
+                        lng: trip.departure_longitude,
+                        type: 'departure',
+                        popup: {
+                          title: `Départ: ${trip.departure_location}`,
+                          description: `${trip.price_per_seat}€ - ${trip.available_seats} places`
+                        }
+                      }))
+                      .concat(
+                        trips
+                          .filter(trip => trip.arrival_latitude && trip.arrival_longitude)
+                          .map(trip => ({
+                            lat: trip.arrival_latitude,
+                            lng: trip.arrival_longitude,
+                            type: 'arrival',
+                            popup: {
+                              title: `Arrivée: ${trip.arrival_location}`,
+                              description: `${trip.price_per_seat}€ - ${trip.available_seats} places`
+                            }
+                          }))
+                      )}
+                    height="300px"
+                    interactive={true}
+                  />
+                </div>
+                <div className="results-list">
+                  {trips.map((trip) => (
                   <div key={trip.id} className="trip-result-card">
                     <div className="trip-info">
                       <div className="trip-route">
@@ -389,7 +424,8 @@ export default function SearchPage() {
                     </div>
                   </div>
                 ))}
-              </div>
+                </div>
+              </>
             )}
 
             {!searched && !loading && (

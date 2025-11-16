@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { tripsAPI } from "../services/api"
+import MapComponent from "../components/common/MapComponent"
+import { geocodeAddress, reverseGeocode } from "../utils/geocoding"
 import "../styles/CreateTrip.css"
 import "../styles/HomePage.css"
 
@@ -10,6 +12,10 @@ export default function CreateTripPage() {
   const { user, isAuthenticated, logout } = useAuth()
   const [loading, setLoading] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mapCenter, setMapCenter] = useState([49.8942, 2.2957]) // Amiens par défaut
+  const [markers, setMarkers] = useState([])
+  const [selectingPoint, setSelectingPoint] = useState(null) // 'departure' ou 'arrival'
+  const geocodeTimeoutRef = useRef(null)
   const [formData, setFormData] = useState({
     departure_location: "",
     arrival_location: "",
@@ -17,6 +23,10 @@ export default function CreateTripPage() {
     available_seats: 1,
     price_per_seat: "",
     description: "",
+    departure_latitude: null,
+    departure_longitude: null,
+    arrival_latitude: null,
+    arrival_longitude: null,
   })
 
   useEffect(() => {
@@ -24,7 +34,74 @@ export default function CreateTripPage() {
       navigate("/login")
       return
     }
+
+    // Géolocalisation automatique au chargement
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords
+          setMapCenter([latitude, longitude])
+        },
+        (error) => {
+          console.log("Géolocalisation non disponible:", error)
+        }
+      )
+    }
   }, [navigate, isAuthenticated])
+
+  // Géocoder les adresses quand elles changent
+  useEffect(() => {
+    if (geocodeTimeoutRef.current) {
+      clearTimeout(geocodeTimeoutRef.current)
+    }
+
+    geocodeTimeoutRef.current = setTimeout(async () => {
+      const newMarkers = []
+
+      if (formData.departure_location.trim()) {
+        const geo = await geocodeAddress(formData.departure_location)
+        if (geo) {
+          setFormData(prev => ({
+            ...prev,
+            departure_latitude: geo.lat,
+            departure_longitude: geo.lng,
+          }))
+          newMarkers.push({
+            lat: geo.lat,
+            lng: geo.lng,
+            type: 'departure',
+            popup: { title: 'Départ', description: formData.departure_location }
+          })
+          setMapCenter([geo.lat, geo.lng])
+        }
+      }
+
+      if (formData.arrival_location.trim()) {
+        const geo = await geocodeAddress(formData.arrival_location)
+        if (geo) {
+          setFormData(prev => ({
+            ...prev,
+            arrival_latitude: geo.lat,
+            arrival_longitude: geo.lng,
+          }))
+          newMarkers.push({
+            lat: geo.lat,
+            lng: geo.lng,
+            type: 'arrival',
+            popup: { title: 'Arrivée', description: formData.arrival_location }
+          })
+        }
+      }
+
+      setMarkers(newMarkers)
+    }, 1000) // Délai de 1 seconde après la saisie
+
+    return () => {
+      if (geocodeTimeoutRef.current) {
+        clearTimeout(geocodeTimeoutRef.current)
+      }
+    }
+  }, [formData.departure_location, formData.arrival_location])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -108,11 +185,10 @@ export default function CreateTripPage() {
         availableSeats: availableSeats,
         pricePerSeat: pricePerSeat,
         description: formData.description.trim() || null,
-        // Les coordonnées GPS sont optionnelles pour l'instant
-        departureLatitude: null,
-        departureLongitude: null,
-        arrivalLatitude: null,
-        arrivalLongitude: null
+        departureLatitude: formData.departure_latitude,
+        departureLongitude: formData.departure_longitude,
+        arrivalLatitude: formData.arrival_latitude,
+        arrivalLongitude: formData.arrival_longitude
       }
 
       console.log("Données envoyées:", tripData)
@@ -130,7 +206,12 @@ export default function CreateTripPage() {
           available_seats: 1,
           price_per_seat: "",
           description: "",
+          departure_latitude: null,
+          departure_longitude: null,
+          arrival_latitude: null,
+          arrival_longitude: null,
         })
+        setMarkers([])
         navigate("/dashboard")
       } else {
         // Afficher les erreurs de validation si disponibles
@@ -169,6 +250,31 @@ export default function CreateTripPage() {
       ...prev,
       [name]: value,
     }))
+  }
+
+  const handleMapClick = async (latlng) => {
+    if (selectingPoint) {
+      const { lat, lng } = latlng
+      const address = await reverseGeocode(lat, lng)
+      
+      if (selectingPoint === 'departure') {
+        setFormData(prev => ({
+          ...prev,
+          departure_location: address ? address.address : `${lat.toFixed(6)}, ${lng.toFixed(6)}`,
+          departure_latitude: lat,
+          departure_longitude: lng,
+        }))
+      } else if (selectingPoint === 'arrival') {
+        setFormData(prev => ({
+          ...prev,
+          arrival_location: address ? address.address : `${lat.toFixed(6)}, ${lng.toFixed(6)}`,
+          arrival_latitude: lat,
+          arrival_longitude: lng,
+        }))
+      }
+      
+      setSelectingPoint(null)
+    }
   }
 
   const handleLogout = () => {
@@ -231,16 +337,39 @@ export default function CreateTripPage() {
                   <span className="label-icon">📍</span>
                   Lieu de départ
                 </label>
-                <input
-                  type="text"
-                  id="departure_location"
-                  name="departure_location"
-                  value={formData.departure_location}
-                  onChange={handleChange}
-                  placeholder="Ex: Amiens, Gare SNCF"
-                  required
-                  className="form-input"
-                />
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input
+                    type="text"
+                    id="departure_location"
+                    name="departure_location"
+                    value={formData.departure_location}
+                    onChange={handleChange}
+                    placeholder="Ex: Amiens, Gare SNCF"
+                    required
+                    className="form-input"
+                    style={{ flex: 1 }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setSelectingPoint(selectingPoint === 'departure' ? null : 'departure')}
+                    style={{
+                      padding: '8px 16px',
+                      backgroundColor: selectingPoint === 'departure' ? '#3b82f6' : '#e2e8f0',
+                      color: selectingPoint === 'departure' ? 'white' : '#2d3748',
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                    }}
+                  >
+                    {selectingPoint === 'departure' ? 'Annuler' : '📍 Carte'}
+                  </button>
+                </div>
+                {selectingPoint === 'departure' && (
+                  <small style={{ color: '#3b82f6', display: 'block', marginTop: '4px' }}>
+                    Cliquez sur la carte pour sélectionner le point de départ
+                  </small>
+                )}
               </div>
 
               <div className="form-group">
@@ -248,15 +377,53 @@ export default function CreateTripPage() {
                   <span className="label-icon">🎯</span>
                   Lieu d'arrivée
                 </label>
-                <input
-                  type="text"
-                  id="arrival_location"
-                  name="arrival_location"
-                  value={formData.arrival_location}
-                  onChange={handleChange}
-                  placeholder="Ex: IUT Amiens"
-                  required
-                  className="form-input"
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input
+                    type="text"
+                    id="arrival_location"
+                    name="arrival_location"
+                    value={formData.arrival_location}
+                    onChange={handleChange}
+                    placeholder="Ex: IUT Amiens"
+                    required
+                    className="form-input"
+                    style={{ flex: 1 }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setSelectingPoint(selectingPoint === 'arrival' ? null : 'arrival')}
+                    style={{
+                      padding: '8px 16px',
+                      backgroundColor: selectingPoint === 'arrival' ? '#3b82f6' : '#e2e8f0',
+                      color: selectingPoint === 'arrival' ? 'white' : '#2d3748',
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                    }}
+                  >
+                    {selectingPoint === 'arrival' ? 'Annuler' : '📍 Carte'}
+                  </button>
+                </div>
+                {selectingPoint === 'arrival' && (
+                  <small style={{ color: '#3b82f6', display: 'block', marginTop: '4px' }}>
+                    Cliquez sur la carte pour sélectionner le point d'arrivée
+                  </small>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label>
+                  <span className="label-icon">🗺️</span>
+                  Carte interactive
+                </label>
+                <MapComponent
+                  center={mapCenter}
+                  zoom={13}
+                  markers={markers}
+                  onMapClick={handleMapClick}
+                  height="300px"
+                  interactive={true}
                 />
               </div>
 
