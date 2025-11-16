@@ -394,8 +394,13 @@ export default function CreateTripPage() {
                 <div className="form-group">
                   <label className="form-label">
                     Carte interactive
+                    {selectingPoint && (
+                      <span className="selection-mode-indicator">
+                        Mode sélection {selectingPoint === 'departure' ? 'départ' : 'arrivée'} actif
+                      </span>
+                    )}
                   </label>
-                  <div className="map-container">
+                  <div className={`map-container ${selectingPoint ? 'selection-mode' : ''}`}>
                     <MapComponent
                       center={mapCenter}
                       zoom={13}
@@ -404,6 +409,14 @@ export default function CreateTripPage() {
                       height="300px"
                       interactive={true}
                     />
+                    {selectingPoint && (
+                      <div className="map-overlay-hint">
+                        <div className="hint-content">
+                          <span className="hint-icon">👆</span>
+                          <p>Cliquez sur la carte pour sélectionner le point de {selectingPoint === 'departure' ? 'départ' : 'arrivée'}</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -535,17 +548,6 @@ export default function CreateTripPage() {
                   <span>Soyez ponctuel et communiquez avec vos passagers</span>
                 </li>
               </ul>
-            </div>
-
-            <div className="security-info">
-              <h4>
-                <span>🔒</span>
-                Sécurité
-              </h4>
-              <p>
-                Tous les utilisateurs sont vérifiés. Votre sécurité est notre priorité. 
-                En cas de problème, contactez notre support.
-              </p>
             </div>
           </aside>
         </div>

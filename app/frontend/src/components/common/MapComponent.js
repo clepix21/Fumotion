@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -22,6 +22,19 @@ function MapCenter({ center, zoom }) {
   return null
 }
 
+// Composant pour gérer les clics sur la carte
+function MapClickHandler({ onMapClick, interactive }) {
+  useMapEvents({
+    click: (e) => {
+      if (onMapClick && interactive) {
+        console.log('Clic sur la carte:', e.latlng)
+        onMapClick(e.latlng)
+      }
+    },
+  })
+  return null
+}
+
 export default function MapComponent({
   center = [49.8942, 2.2957], // Amiens par défaut
   zoom = 13,
@@ -32,8 +45,6 @@ export default function MapComponent({
   showRoute = false,
   routePoints = [],
 }) {
-  const mapRef = useRef(null)
-
   // Créer des icônes personnalisées
   const departureIcon = new L.Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -55,24 +66,12 @@ export default function MapComponent({
 
   const defaultIcon = new L.Icon.Default()
 
-  const handleMapClick = (e) => {
-    if (onMapClick && interactive) {
-      onMapClick(e.latlng)
-    }
-  }
-
   return (
-    <div style={{ height, width: '100%', borderRadius: '8px', overflow: 'hidden' }}>
+    <div style={{ height, width: '100%', borderRadius: '8px', overflow: 'hidden', position: 'relative' }}>
       <MapContainer
         center={center}
         zoom={zoom}
         style={{ height: '100%', width: '100%' }}
-        whenCreated={(mapInstance) => {
-          mapRef.current = mapInstance
-          if (onMapClick) {
-            mapInstance.on('click', handleMapClick)
-          }
-        }}
         scrollWheelZoom={interactive}
         dragging={interactive}
         touchZoom={interactive}
@@ -83,6 +82,7 @@ export default function MapComponent({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <MapCenter center={center} zoom={zoom} />
+        <MapClickHandler onMapClick={onMapClick} interactive={interactive} />
         
         {markers.map((marker, index) => {
           let icon = defaultIcon
