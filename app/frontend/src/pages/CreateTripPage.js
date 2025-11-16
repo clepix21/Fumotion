@@ -313,7 +313,6 @@ export default function CreateTripPage() {
           <div className="create-trip-card">
             <div className="trip-header">
               <h1>Proposer un trajet</h1>
-              <p>Partagez votre trajet et vos frais avec d'autres étudiants</p>
             </div>
 
             {error && (
