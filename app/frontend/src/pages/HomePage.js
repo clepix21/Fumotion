@@ -118,10 +118,7 @@ export default function HomePage() {
                   <span className="tab-icon">🔍</span>
                   Trouver un trajet
                 </button>
-                <button className="search-tab">
-                  <span className="tab-icon">➕</span>
-                  Proposer un trajet
-                </button>
+                
               </div>
 
               <form onSubmit={handleSearch} className="search-form">

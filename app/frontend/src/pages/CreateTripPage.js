@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { tripsAPI } from "../services/api"
 import MapComponent from "../components/common/MapComponent"
@@ -11,6 +11,7 @@ export default function CreateTripPage() {
   const navigate = useNavigate()
   const { user, isAuthenticated, logout } = useAuth()
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mapCenter, setMapCenter] = useState([49.8942, 2.2957]) // Amiens par défaut
   const [markers, setMarkers] = useState([])
@@ -103,81 +104,65 @@ export default function CreateTripPage() {
     }
   }, [formData.departure_location, formData.arrival_location])
 
+  const validateForm = () => {
+    if (!formData.departure_location.trim()) {
+      setError("Veuillez saisir un lieu de départ")
+      return false
+    }
+    if (!formData.arrival_location.trim()) {
+      setError("Veuillez saisir un lieu d'arrivée")
+      return false
+    }
+    if (!formData.departure_datetime) {
+      setError("Veuillez sélectionner une date et heure de départ")
+      return false
+    }
+    if (!formData.price_per_seat || parseFloat(formData.price_per_seat) <= 0) {
+      setError("Veuillez saisir un prix valide (supérieur à 0)")
+      return false
+    }
+
+    const localDate = new Date(formData.departure_datetime)
+    if (isNaN(localDate.getTime())) {
+      setError("Date invalide")
+      return false
+    }
+    if (localDate <= new Date()) {
+      setError("La date de départ doit être dans le futur")
+      return false
+    }
+
+    const availableSeats = parseInt(formData.available_seats, 10)
+    if (isNaN(availableSeats) || availableSeats < 1 || availableSeats > 8) {
+      setError("Le nombre de places doit être entre 1 et 8")
+      return false
+    }
+
+    const pricePerSeat = parseFloat(formData.price_per_seat)
+    if (isNaN(pricePerSeat) || pricePerSeat <= 0) {
+      setError("Le prix doit être un nombre positif")
+      return false
+    }
+
+    return true
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setError(null)
     setLoading(true)
 
+    if (!validateForm()) {
+      setLoading(false)
+      return
+    }
+
     try {
-      // Validation côté client
-      if (!formData.departure_location.trim()) {
-        alert("Veuillez saisir un lieu de départ")
-        setLoading(false)
-        return
-      }
-      if (!formData.arrival_location.trim()) {
-        alert("Veuillez saisir un lieu d'arrivée")
-        setLoading(false)
-        return
-      }
-      if (!formData.departure_datetime) {
-        alert("Veuillez sélectionner une date et heure de départ")
-        setLoading(false)
-        return
-      }
-      if (!formData.price_per_seat || parseFloat(formData.price_per_seat) <= 0) {
-        alert("Veuillez saisir un prix valide (supérieur à 0)")
-        setLoading(false)
-        return
-      }
-
-      // Convertir la date : datetime-local retourne "YYYY-MM-DDTHH:mm" (sans timezone)
-      // On doit la convertir en ISO8601 avec timezone
-      let departureDateTimeISO = null
-      if (formData.departure_datetime) {
-        // datetime-local retourne "YYYY-MM-DDTHH:mm" (sans timezone)
-        // On crée une date en utilisant le format local
-        // Note: new Date() avec datetime-local interprète la date comme locale
-        const dateString = formData.departure_datetime
-        // Si le format est "YYYY-MM-DDTHH:mm", on l'utilise directement
-        // Sinon on crée une date locale
-        const localDate = new Date(dateString)
-        
-        // Vérifier que la date est valide
-        if (isNaN(localDate.getTime())) {
-          alert("Date invalide")
-          setLoading(false)
-          return
-        }
-        
-        // Vérifier que la date est dans le futur
-        if (localDate <= new Date()) {
-          alert("La date de départ doit être dans le futur")
-          setLoading(false)
-          return
-        }
-        
-        // Convertir en ISO8601 (UTC)
-        departureDateTimeISO = localDate.toISOString()
-      }
-
-      // Convertir les nombres
+      const localDate = new Date(formData.departure_datetime)
+      const departureDateTimeISO = localDate.toISOString()
       const availableSeats = parseInt(formData.available_seats, 10)
       const pricePerSeat = parseFloat(formData.price_per_seat)
-      
-      // Vérifier que les conversions sont valides
-      if (isNaN(availableSeats) || availableSeats < 1 || availableSeats > 8) {
-        alert("Le nombre de places doit être entre 1 et 8")
-        setLoading(false)
-        return
-      }
-      
-      if (isNaN(pricePerSeat) || pricePerSeat <= 0) {
-        alert("Le prix doit être un nombre positif")
-        setLoading(false)
-        return
-      }
 
-      // Convertir les données du formulaire au format attendu par le backend (camelCase)
       const tripData = {
         departureLocation: formData.departure_location.trim(),
         arrivalLocation: formData.arrival_location.trim(),
@@ -191,13 +176,9 @@ export default function CreateTripPage() {
         arrivalLongitude: formData.arrival_longitude
       }
 
-      console.log("Données envoyées:", tripData)
-      console.log("Date ISO:", departureDateTimeISO)
-
       const data = await tripsAPI.create(tripData)
 
       if (data.success) {
-        alert("Trajet créé avec succès!")
         // Réinitialiser le formulaire
         setFormData({
           departure_location: "",
@@ -214,20 +195,15 @@ export default function CreateTripPage() {
         setMarkers([])
         navigate("/dashboard")
       } else {
-        // Afficher les erreurs de validation si disponibles
         const errorMessage = data.errors 
           ? data.errors.map(err => err.msg || err.message).join('\n')
           : data.message || "Erreur lors de la création du trajet"
-        alert(errorMessage)
+        setError(errorMessage)
       }
     } catch (error) {
       console.error("Erreur complète:", error)
-      console.error("Détails de l'erreur:", error.data)
-      
-      // Essayer de récupérer les détails de l'erreur
       let errorMessage = "Erreur lors de la création du trajet"
       
-      // Si l'erreur contient des détails de validation
       if (error.errors && Array.isArray(error.errors)) {
         errorMessage = error.errors.map(err => err.msg || err.message || JSON.stringify(err)).join('\n')
       } else if (error.data && error.data.errors && Array.isArray(error.data.errors)) {
@@ -238,7 +214,7 @@ export default function CreateTripPage() {
         errorMessage = error.message
       }
       
-      alert(errorMessage)
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -250,6 +226,7 @@ export default function CreateTripPage() {
       ...prev,
       [name]: value,
     }))
+    setError(null) // Effacer l'erreur quand l'utilisateur modifie
   }
 
   const handleMapClick = async (latlng) => {
@@ -284,7 +261,7 @@ export default function CreateTripPage() {
 
   return (
     <div className="create-trip-page">
-      {/* Navbar - Moderne et Professionnelle */}
+      {/* Navbar */}
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-brand" onClick={() => navigate("/")}>
@@ -322,198 +299,255 @@ export default function CreateTripPage() {
       </nav>
 
       <main className="create-trip-main">
+        {/* Header avec breadcrumb */}
+        <div className="page-header">
+          <div className="header-content">
+            <Link to="/dashboard" className="back-link">
+              ← Retour au tableau de bord
+            </Link>
+          </div>
+        </div>
+
         <div className="create-trip-container">
-          <div className="form-header">
-            <h1>Proposer un trajet</h1>
-            <p>Partagez votre trajet et vos frais avec d'autres étudiants</p>
+          {/* Formulaire principal */}
+          <div className="create-trip-card">
+            <div className="trip-header">
+              <h1>Proposer un trajet</h1>
+              <p>Partagez votre trajet et vos frais avec d'autres étudiants</p>
+            </div>
+
+            {error && (
+              <div className="error-message">
+                <span className="error-icon">⚠️</span>
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="trip-form">
+              {/* Section Itinéraire */}
+              <div className="form-section">
+                <div className="section-title">
+                  <span className="section-icon">📍</span>
+                  <h2>Itinéraire</h2>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="departure_location" className="form-label">
+                    Lieu de départ
+                  </label>
+                  <div className="input-with-button">
+                    <input
+                      type="text"
+                      id="departure_location"
+                      name="departure_location"
+                      value={formData.departure_location}
+                      onChange={handleChange}
+                      placeholder="Ex: Amiens, Gare SNCF"
+                      required
+                      className="form-input"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setSelectingPoint(selectingPoint === 'departure' ? null : 'departure')}
+                      className={`map-select-btn ${selectingPoint === 'departure' ? 'active' : ''}`}
+                    >
+                      {selectingPoint === 'departure' ? 'Annuler' : '📍 Carte'}
+                    </button>
+                  </div>
+                  {selectingPoint === 'departure' && (
+                    <small className="helper-text">
+                      Cliquez sur la carte pour sélectionner le point de départ
+                    </small>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="arrival_location" className="form-label">
+                    Lieu d'arrivée
+                  </label>
+                  <div className="input-with-button">
+                    <input
+                      type="text"
+                      id="arrival_location"
+                      name="arrival_location"
+                      value={formData.arrival_location}
+                      onChange={handleChange}
+                      placeholder="Ex: IUT Amiens"
+                      required
+                      className="form-input"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setSelectingPoint(selectingPoint === 'arrival' ? null : 'arrival')}
+                      className={`map-select-btn ${selectingPoint === 'arrival' ? 'active' : ''}`}
+                    >
+                      {selectingPoint === 'arrival' ? 'Annuler' : '📍 Carte'}
+                    </button>
+                  </div>
+                  {selectingPoint === 'arrival' && (
+                    <small className="helper-text">
+                      Cliquez sur la carte pour sélectionner le point d'arrivée
+                    </small>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    Carte interactive
+                  </label>
+                  <div className="map-container">
+                    <MapComponent
+                      center={mapCenter}
+                      zoom={13}
+                      markers={markers}
+                      onMapClick={handleMapClick}
+                      height="300px"
+                      interactive={true}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="departure_datetime" className="form-label">
+                    Date et heure de départ
+                  </label>
+                  <input
+                    type="datetime-local"
+                    id="departure_datetime"
+                    name="departure_datetime"
+                    value={formData.departure_datetime}
+                    onChange={handleChange}
+                    required
+                    className="form-input"
+                  />
+                </div>
+              </div>
+
+              {/* Section Détails */}
+              <div className="form-section">
+                <div className="section-title">
+                  <span className="section-icon">⚙️</span>
+                  <h2>Détails du trajet</h2>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="available_seats" className="form-label">
+                      Places disponibles
+                    </label>
+                    <select
+                      id="available_seats"
+                      name="available_seats"
+                      value={formData.available_seats}
+                      onChange={handleChange}
+                      required
+                      className="form-input"
+                    >
+                      <option value="1">1 place</option>
+                      <option value="2">2 places</option>
+                      <option value="3">3 places</option>
+                      <option value="4">4 places</option>
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="price_per_seat" className="form-label">
+                      Prix par place (€)
+                    </label>
+                    <input
+                      type="number"
+                      id="price_per_seat"
+                      name="price_per_seat"
+                      value={formData.price_per_seat}
+                      onChange={handleChange}
+                      placeholder="5.00"
+                      step="0.50"
+                      min="0"
+                      required
+                      className="form-input"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="description" className="form-label">
+                    Description (optionnel)
+                  </label>
+                  <textarea
+                    id="description"
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    placeholder="Ajoutez des informations supplémentaires sur votre trajet (point de rendez-vous, bagages, etc.)"
+                    rows="4"
+                    className="form-textarea"
+                  />
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="form-actions">
+                <button 
+                  type="button" 
+                  onClick={() => navigate("/dashboard")} 
+                  className="cancel-btn"
+                  disabled={loading}
+                >
+                  Annuler
+                </button>
+                <button 
+                  type="submit" 
+                  disabled={loading} 
+                  className="submit-btn"
+                >
+                  {loading ? (
+                    <>
+                      <span className="spinner"></span>
+                      Publication en cours...
+                    </>
+                  ) : (
+                    "Publier le trajet"
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
 
-          <form onSubmit={handleSubmit} className="trip-form">
-            <div className="form-section">
-              <h2>Itinéraire</h2>
-
-              <div className="form-group">
-                <label htmlFor="departure_location">
-                  <span className="label-icon">📍</span>
-                  Lieu de départ
-                </label>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <input
-                    type="text"
-                    id="departure_location"
-                    name="departure_location"
-                    value={formData.departure_location}
-                    onChange={handleChange}
-                    placeholder="Ex: Amiens, Gare SNCF"
-                    required
-                    className="form-input"
-                    style={{ flex: 1 }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setSelectingPoint(selectingPoint === 'departure' ? null : 'departure')}
-                    style={{
-                      padding: '8px 16px',
-                      backgroundColor: selectingPoint === 'departure' ? '#3b82f6' : '#e2e8f0',
-                      color: selectingPoint === 'departure' ? 'white' : '#2d3748',
-                      border: 'none',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                    }}
-                  >
-                    {selectingPoint === 'departure' ? 'Annuler' : '📍 Carte'}
-                  </button>
-                </div>
-                {selectingPoint === 'departure' && (
-                  <small style={{ color: '#3b82f6', display: 'block', marginTop: '4px' }}>
-                    Cliquez sur la carte pour sélectionner le point de départ
-                  </small>
-                )}
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="arrival_location">
-                  <span className="label-icon">🎯</span>
-                  Lieu d'arrivée
-                </label>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <input
-                    type="text"
-                    id="arrival_location"
-                    name="arrival_location"
-                    value={formData.arrival_location}
-                    onChange={handleChange}
-                    placeholder="Ex: IUT Amiens"
-                    required
-                    className="form-input"
-                    style={{ flex: 1 }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setSelectingPoint(selectingPoint === 'arrival' ? null : 'arrival')}
-                    style={{
-                      padding: '8px 16px',
-                      backgroundColor: selectingPoint === 'arrival' ? '#3b82f6' : '#e2e8f0',
-                      color: selectingPoint === 'arrival' ? 'white' : '#2d3748',
-                      border: 'none',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                    }}
-                  >
-                    {selectingPoint === 'arrival' ? 'Annuler' : '📍 Carte'}
-                  </button>
-                </div>
-                {selectingPoint === 'arrival' && (
-                  <small style={{ color: '#3b82f6', display: 'block', marginTop: '4px' }}>
-                    Cliquez sur la carte pour sélectionner le point d'arrivée
-                  </small>
-                )}
-              </div>
-
-              <div className="form-group">
-                <label>
-                  <span className="label-icon">🗺️</span>
-                  Carte interactive
-                </label>
-                <MapComponent
-                  center={mapCenter}
-                  zoom={13}
-                  markers={markers}
-                  onMapClick={handleMapClick}
-                  height="300px"
-                  interactive={true}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="departure_datetime">
-                  <span className="label-icon">📅</span>
-                  Date et heure de départ
-                </label>
-                <input
-                  type="datetime-local"
-                  id="departure_datetime"
-                  name="departure_datetime"
-                  value={formData.departure_datetime}
-                  onChange={handleChange}
-                  required
-                  className="form-input"
-                />
-              </div>
+          {/* Sidebar avec conseils */}
+          <aside className="tips-sidebar">
+            <div className="tips-card">
+              <h3>💡 Conseils pour un bon trajet</h3>
+              <ul className="tips-list">
+                <li>
+                  <span className="tip-icon">✓</span>
+                  <span>Indiquez un point de rendez-vous précis et facile à trouver</span>
+                </li>
+                <li>
+                  <span className="tip-icon">✓</span>
+                  <span>Fixez un prix équitable qui couvre vos frais d'essence</span>
+                </li>
+                <li>
+                  <span className="tip-icon">✓</span>
+                  <span>Ajoutez des détails utiles (bagages, animaux, arrêts possibles)</span>
+                </li>
+                <li>
+                  <span className="tip-icon">✓</span>
+                  <span>Soyez ponctuel et communiquez avec vos passagers</span>
+                </li>
+              </ul>
             </div>
 
-            <div className="form-section">
-              <h2>Détails du trajet</h2>
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="available_seats">
-                    <span className="label-icon">👥</span>
-                    Places disponibles
-                  </label>
-                  <select
-                    id="available_seats"
-                    name="available_seats"
-                    value={formData.available_seats}
-                    onChange={handleChange}
-                    required
-                    className="form-input"
-                  >
-                    <option value="1">1 place</option>
-                    <option value="2">2 places</option>
-                    <option value="3">3 places</option>
-                    <option value="4">4 places</option>
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="price_per_seat">
-                    <span className="label-icon">💰</span>
-                    Prix par place (€)
-                  </label>
-                  <input
-                    type="number"
-                    id="price_per_seat"
-                    name="price_per_seat"
-                    value={formData.price_per_seat}
-                    onChange={handleChange}
-                    placeholder="5.00"
-                    step="0.50"
-                    min="0"
-                    required
-                    className="form-input"
-                  />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="description">
-                  <span className="label-icon">📝</span>
-                  Description (optionnel)
-                </label>
-                <textarea
-                  id="description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  placeholder="Ajoutez des informations supplémentaires sur votre trajet..."
-                  rows="4"
-                  className="form-textarea"
-                />
-              </div>
+            <div className="security-info">
+              <h4>
+                <span>🔒</span>
+                Sécurité
+              </h4>
+              <p>
+                Tous les utilisateurs sont vérifiés. Votre sécurité est notre priorité. 
+                En cas de problème, contactez notre support.
+              </p>
             </div>
-
-            <div className="form-actions">
-              <button type="button" onClick={() => navigate("/dashboard")} className="btn-secondary">
-                Annuler
-              </button>
-              <button type="submit" disabled={loading} className="btn-primary">
-                {loading ? "Création..." : "Publier le trajet"}
-              </button>
-            </div>
-          </form>
+          </aside>
         </div>
       </main>
     </div>
