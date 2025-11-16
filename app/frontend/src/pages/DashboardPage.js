@@ -1,8 +1,7 @@
-"use client"
-
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
+import { authAPI } from "../services/api"
 import "../styles/Dashboard.css"
 import "../styles/HomePage.css"
 
@@ -14,9 +13,24 @@ export default function DashboardPage() {
   const [myBookings, setMyBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [profileUser, setProfileUser] = useState(null)
+  const [uploading, setUploading] = useState({ banner: false, avatar: false })
+  const [editMode, setEditMode] = useState(false)
+  const bannerInputRef = useRef(null)
+  const avatarInputRef = useRef(null)
 
   const loadDashboardData = useCallback(async () => {
     try {
+      // Charger le profil utilisateur
+      try {
+        const profileData = await authAPI.getProfile()
+        if (profileData.success) {
+          setProfileUser(profileData.data)
+        }
+      } catch (error) {
+        console.error("Erreur lors du chargement du profil:", error)
+      }
+
       // Charger mes trajets
       const tripsResponse = await fetch("http://localhost:5000/api/trips", {
         headers: {
@@ -72,6 +86,80 @@ export default function DashboardPage() {
       minute: "2-digit",
     })
   }
+
+  const handleBannerUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("L'image ne doit pas dépasser 5MB")
+      return
+    }
+
+    setUploading({ ...uploading, banner: true })
+    try {
+      const formData = new FormData()
+      formData.append('banner', file)
+
+      const response = await fetch("http://localhost:5000/api/auth/profile/banner", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      })
+
+      const data = await response.json()
+      if (data.success) {
+        setProfileUser(prev => ({ ...prev, banner_picture: data.data.banner_picture }))
+      } else {
+        alert(data.message || "Erreur lors de l'upload de la bannière")
+      }
+    } catch (error) {
+      console.error("Erreur:", error)
+      alert("Erreur lors de l'upload de la bannière")
+    } finally {
+      setUploading({ ...uploading, banner: false })
+    }
+  }
+
+  const handleAvatarUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert("L'image ne doit pas dépasser 2MB")
+      return
+    }
+
+    setUploading({ ...uploading, avatar: true })
+    try {
+      const formData = new FormData()
+      formData.append('avatar', file)
+
+      const response = await fetch("http://localhost:5000/api/auth/profile/avatar", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      })
+
+      const data = await response.json()
+      if (data.success) {
+        setProfileUser(prev => ({ ...prev, profile_picture: data.data.profile_picture }))
+      } else {
+        alert(data.message || "Erreur lors de l'upload de la photo")
+      }
+    } catch (error) {
+      console.error("Erreur:", error)
+      alert("Erreur lors de l'upload de la photo")
+    } finally {
+      setUploading({ ...uploading, avatar: false })
+    }
+  }
+
+  const displayUser = profileUser || user
 
   if (loading) {
     return (
@@ -317,43 +405,166 @@ export default function DashboardPage() {
 
           {activeTab === "profile" && (
             <div className="profile-section">
-              <h1>Mon profil</h1>
               <div className="profile-card">
-                <div className="profile-header">
-                  <div className="profile-avatar">
-                    {user?.first_name?.[0]}
-                    {user?.last_name?.[0]}
+                {/* Bannière */}
+                <div className="profile-banner-container">
+                  <div 
+                    className="profile-banner"
+                    style={{
+                      backgroundImage: displayUser?.banner_picture 
+                        ? `url(http://localhost:5000/uploads/${displayUser.banner_picture})`
+                        : 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center'
+                    }}
+                  >
+                    {editMode && (
+                      <button
+                        className="banner-edit-btn"
+                        onClick={() => bannerInputRef.current?.click()}
+                        disabled={uploading.banner}
+                      >
+                        {uploading.banner ? (
+                          <>
+                            <span className="spinner-small"></span>
+                            Upload...
+                          </>
+                        ) : (
+                          <>
+                            <span>📷</span>
+                            Modifier la bannière
+                          </>
+                        )}
+                      </button>
+                    )}
+                    <input
+                      ref={bannerInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleBannerUpload}
+                      style={{ display: 'none' }}
+                    />
                   </div>
-                  <div className="profile-info">
-                    <h2>
-                      {user?.first_name} {user?.last_name}
-                    </h2>
-                    <p>{user?.email}</p>
-                    <p>Membre depuis {new Date(user?.created_at).getFullYear()}</p>
-                    <p className="location-info">📍 Étudiant à Amiens</p>
+                  
+                  {/* Avatar */}
+                  <div className="profile-avatar-container">
+                    <div 
+                      className="profile-avatar"
+                      style={{
+                        backgroundImage: displayUser?.profile_picture 
+                          ? `url(http://localhost:5000/uploads/${displayUser.profile_picture})`
+                          : 'none',
+                        backgroundColor: displayUser?.profile_picture ? 'transparent' : '#3b82f6'
+                      }}
+                    >
+                      {!displayUser?.profile_picture && (
+                        <span className="avatar-initials">
+                          {displayUser?.first_name?.[0] || ''}
+                          {displayUser?.last_name?.[0] || ''}
+                        </span>
+                      )}
+                    </div>
+                    {editMode && (
+                      <button
+                        className="avatar-edit-btn"
+                        onClick={() => avatarInputRef.current?.click()}
+                        disabled={uploading.avatar}
+                        title="Modifier la photo de profil"
+                      >
+                        {uploading.avatar ? (
+                          <span className="spinner-small"></span>
+                        ) : (
+                          <span>📷</span>
+                        )}
+                      </button>
+                    )}
+                    <input
+                      ref={avatarInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAvatarUpload}
+                      style={{ display: 'none' }}
+                    />
                   </div>
                 </div>
 
-                <div className="profile-details">
-                  <div className="detail-item">
-                    <label>Téléphone</label>
-                    <span>{user?.phone || "Non renseigné"}</span>
+                {/* Informations du profil */}
+                <div className="profile-content">
+                  <div className="profile-header-info">
+                    <div className="profile-name-section">
+                      <h2>
+                        {displayUser?.first_name || ''} {displayUser?.last_name || ''}
+                      </h2>
+                      <p className="profile-email">{displayUser?.email}</p>
+                      <p className="profile-joined">
+                        Membre depuis {displayUser?.created_at ? new Date(displayUser.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : '2024'}
+                      </p>
+                      <p className="location-info">
+                        <span className="location-icon">📍</span>
+                        Étudiant à {displayUser?.university || 'IUT Amiens'}, Amiens
+                      </p>
+                    </div>
+                    <button 
+                      className="edit-profile-btn"
+                      onClick={() => setEditMode(!editMode)}
+                    >
+                      {editMode ? 'Annuler' : '✏️ Modifier le profil'}
+                    </button>
                   </div>
-                  <div className="detail-item">
-                    <label>Numéro étudiant</label>
-                    <span>{user?.student_id || "Non renseigné"}</span>
+
+                  {/* Statistiques */}
+                  <div className="profile-stats">
+                    <div className="stat-item">
+                      <span className="stat-value">{myTrips.length}</span>
+                      <span className="stat-label">Trajets proposés</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-value">{myBookings.length}</span>
+                      <span className="stat-label">Réservations</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-value">
+                        {displayUser?.average_rating ? parseFloat(displayUser.average_rating).toFixed(1) : '4.8'}
+                      </span>
+                      <span className="stat-label">Note moyenne</span>
+                    </div>
                   </div>
-                  <div className="detail-item">
-                    <label>Établissement</label>
-                    <span>{user?.university || "IUT Amiens"}</span>
-                  </div>
-                  <div className="detail-item">
-                    <label>Ville d'étude</label>
-                    <span>Amiens, Hauts-de-France</span>
+
+                  {/* Détails */}
+                  <div className="profile-details">
+                    <h3>Informations personnelles</h3>
+                    <div className="details-grid">
+                      <div className="detail-item">
+                        <label>
+                          <span className="detail-icon">📞</span>
+                          Téléphone
+                        </label>
+                        <span>{displayUser?.phone || "Non renseigné"}</span>
+                      </div>
+                      <div className="detail-item">
+                        <label>
+                          <span className="detail-icon">🎓</span>
+                          Numéro étudiant
+                        </label>
+                        <span>{displayUser?.student_id || "Non renseigné"}</span>
+                      </div>
+                      <div className="detail-item">
+                        <label>
+                          <span className="detail-icon">🏫</span>
+                          Établissement
+                        </label>
+                        <span>{displayUser?.university || "IUT Amiens"}</span>
+                      </div>
+                      <div className="detail-item">
+                        <label>
+                          <span className="detail-icon">📍</span>
+                          Ville d'étude
+                        </label>
+                        <span>Amiens, Hauts-de-France</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-
-                <button className="edit-profile-btn">Modifier le profil</button>
               </div>
             </div>
           )}
