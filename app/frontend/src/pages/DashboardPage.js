@@ -193,17 +193,22 @@ export default function DashboardPage() {
               Rechercher
             </a>
             <div className="navbar-divider"></div>
-            <span className="navbar-user">
-              {user?.first_name || user?.email}
-            </span>
             <button onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
               Tableau de bord
             </button>
             <button onClick={() => { navigate("/create-trip"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
               Créer un trajet
             </button>
-            <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
-              Déconnexion
+            <div className="navbar-user-profile">
+              <div className="navbar-avatar">
+                {user?.first_name ? user.first_name.charAt(0).toUpperCase() : user?.email?.charAt(0).toUpperCase()}
+              </div>
+              <div className="navbar-user-info">
+                <span className="navbar-user-name">{user?.first_name || user?.email}</span>
+              </div>
+            </div>
+            <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="navbar-btn-logout">
+              <span>🚪</span> Déconnexion
             </button>
           </div>
         </div>
