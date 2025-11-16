@@ -8,7 +8,7 @@ import "../styles/HomePage.css"
 
 export default function DashboardPage() {
   const navigate = useNavigate()
-  const { user, token, isAuthenticated, logout } = useAuth()
+  const { user, token, isAuthenticated, logout, updateUser } = useAuth()
   const [activeTab, setActiveTab] = useState("trips")
   const [myTrips, setMyTrips] = useState([])
   const [myBookings, setMyBookings] = useState([])
@@ -148,7 +148,9 @@ export default function DashboardPage() {
 
       const data = await response.json()
       if (data.success) {
-        setProfileUser(prev => ({ ...prev, profile_picture: data.data.profile_picture }))
+        const newProfilePicture = data.data.profile_picture;
+        setProfileUser(prev => ({ ...prev, profile_picture: newProfilePicture }))
+        updateUser({ profile_picture: newProfilePicture })
       } else {
         alert(data.message || "Erreur lors de l'upload de la photo")
       }
