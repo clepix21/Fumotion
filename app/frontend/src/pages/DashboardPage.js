@@ -351,12 +351,10 @@ export default function DashboardPage() {
                       <div className="trip-header">
                         <div className="trip-route">
                           <div className="route-location">
-                            <span className="location-icon">📍</span>
                             <span className="departure">{formatAddress(trip.departure_location)}</span>
                           </div>
                           <span className="arrow">→</span>
                           <div className="route-location">
-                            <span className="location-icon">🎯</span>
                             <span className="arrival">{formatAddress(trip.arrival_location)}</span>
                           </div>
                         </div>
