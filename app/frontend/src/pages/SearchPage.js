@@ -167,7 +167,6 @@ export default function SearchPage() {
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-brand" onClick={() => navigate("/")}>
-            <span className="brand-logo">🚗</span>
             <span className="brand-name">Fumotion</span>
           </div>
 
