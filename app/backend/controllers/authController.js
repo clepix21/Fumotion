@@ -1,6 +1,8 @@
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const db = require("../config/database")
+const fs = require("fs")
+const path = require("path")
 
 class AuthController {
   // Inscription
@@ -69,7 +71,7 @@ class AuthController {
 
       // Vérifier si l'utilisateur existe
       const user = await db.get(
-        "SELECT id, email, password, first_name, last_name, phone, is_active FROM users WHERE email = ?",
+        "SELECT id, email, password, first_name, last_name, phone, is_active, profile_picture FROM users WHERE email = ?",
         [email],
       )
 
@@ -177,7 +179,7 @@ class AuthController {
       )
 
       const updatedUser = await db.get(
-        "SELECT id, email, first_name, last_name, phone, student_id FROM users WHERE id = ?",
+        "SELECT id, email, first_name, last_name, phone, student_id, profile_picture FROM users WHERE id = ?",
         [userId],
       )
 
@@ -203,6 +205,88 @@ class AuthController {
         user: req.user,
       },
     })
+  }
+
+  // Upload de la bannière
+  async uploadBanner(req, res) {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message: "Aucun fichier fourni",
+        })
+      }
+
+      const userId = req.user.id
+      const filename = req.file.filename
+
+      // Récupérer l'ancienne bannière si elle existe
+      const user = await db.get("SELECT banner_picture FROM users WHERE id = ?", [userId])
+      if (user && user.banner_picture) {
+        const oldFilePath = path.join(__dirname, "../uploads", user.banner_picture)
+        if (fs.existsSync(oldFilePath)) {
+          fs.unlinkSync(oldFilePath)
+        }
+      }
+
+      // Mettre à jour la base de données
+      await db.run("UPDATE users SET banner_picture = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?", [filename, userId])
+
+      res.json({
+        success: true,
+        message: "Bannière mise à jour avec succès",
+        data: {
+          banner_picture: filename,
+        },
+      })
+    } catch (error) {
+      console.error("Erreur lors de l'upload de la bannière:", error)
+      res.status(500).json({
+        success: false,
+        message: "Erreur serveur lors de l'upload",
+      })
+    }
+  }
+
+  // Upload de l'avatar
+  async uploadAvatar(req, res) {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message: "Aucun fichier fourni",
+        })
+      }
+
+      const userId = req.user.id
+      const filename = req.file.filename
+
+      // Récupérer l'ancien avatar si il existe
+      const user = await db.get("SELECT profile_picture FROM users WHERE id = ?", [userId])
+      if (user && user.profile_picture) {
+        const oldFilePath = path.join(__dirname, "../uploads", user.profile_picture)
+        if (fs.existsSync(oldFilePath)) {
+          fs.unlinkSync(oldFilePath)
+        }
+      }
+
+      // Mettre à jour la base de données
+      await db.run("UPDATE users SET profile_picture = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?", [filename, userId])
+
+      res.json({
+        success: true,
+        message: "Photo de profil mise à jour avec succès",
+        data: {
+          profile_picture: filename,
+        },
+      })
+    } catch (error) {
+      console.error("Erreur lors de l'upload de l'avatar:", error)
+      res.status(500).json({
+        success: false,
+        message: "Erreur serveur lors de l'upload",
+      })
+    }
   }
 }
 

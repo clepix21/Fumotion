@@ -43,6 +43,7 @@ class Database {
           student_id VARCHAR(50),
           university VARCHAR(255) DEFAULT 'IUT Amiens',
           profile_picture VARCHAR(255),
+          banner_picture VARCHAR(255),
           is_verified BOOLEAN DEFAULT 0,
           is_active BOOLEAN DEFAULT 1,
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -153,6 +154,33 @@ class Database {
   }
 
   async createDefaultData() {
+    // Ajouter la colonne banner_picture si elle n'existe pas
+    return new Promise((resolve) => {
+      this.db.all("PRAGMA table_info(users)", (err, columns) => {
+        if (err) {
+          console.error("Erreur lors de la vérification des colonnes:", err)
+          resolve()
+          return
+        }
+
+        const hasBannerPicture = columns.some(col => col.name === 'banner_picture')
+        if (!hasBannerPicture) {
+          this.db.run("ALTER TABLE users ADD COLUMN banner_picture VARCHAR(255)", (err) => {
+            if (err) {
+              console.error("Erreur lors de l'ajout de la colonne banner_picture:", err)
+            } else {
+              console.log("✅ Colonne banner_picture ajoutée avec succès")
+            }
+            this.createAdminUser().then(resolve).catch(() => resolve())
+          })
+        } else {
+          this.createAdminUser().then(resolve).catch(() => resolve())
+        }
+      })
+    })
+  }
+
+  async createAdminUser() {
     // Créer un utilisateur admin par défaut
     const adminEmail = "admin@fumotion.com"
     const adminPassword = await bcrypt.hash("admin123", 10)

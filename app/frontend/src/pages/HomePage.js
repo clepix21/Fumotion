@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
+import Avatar from "../components/common/Avatar"
 import "../styles/HomePage.css"
 
 export default function HomePage() {
@@ -21,8 +22,24 @@ export default function HomePage() {
 
   const handleSearch = (e) => {
     e.preventDefault()
-    console.log("Recherche:", searchData)
-    // TODO: Navigate to search results
+    
+    // Construire les paramètres de recherche
+    const params = new URLSearchParams()
+    if (searchData.departure.trim()) {
+      params.append("departure", searchData.departure.trim())
+    }
+    if (searchData.arrival.trim()) {
+      params.append("arrival", searchData.arrival.trim())
+    }
+    if (searchData.date) {
+      params.append("date", searchData.date)
+    }
+    if (searchData.passengers) {
+      params.append("passengers", searchData.passengers)
+    }
+    
+    // Rediriger vers la page de recherche avec les paramètres
+    navigate(`/search?${params.toString()}`)
   }
 
   return (
@@ -30,7 +47,6 @@ export default function HomePage() {
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-brand" onClick={() => navigate("/")}>
-            <span className="brand-logo">🚗</span>
             <span className="brand-name">Fumotion</span>
           </div>
 
@@ -53,9 +69,6 @@ export default function HomePage() {
             {isAuthenticated() ? (
               <>
                 <div className="navbar-divider"></div>
-                <span className="navbar-user">
-                  {user?.first_name || user?.email}
-                </span>
                 <button onClick={() => { navigate("/search"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
                   Rechercher
                 </button>
@@ -65,7 +78,13 @@ export default function HomePage() {
                 <button onClick={() => { navigate("/create-trip"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
                   Créer un trajet
                 </button>
-                <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
+                <div className="navbar-user-profile">
+                  <Avatar user={user} size="medium" />
+                  <div className="navbar-user-info">
+                    <span className="navbar-user-name">{user?.first_name || user?.email}</span>
+                  </div>
+                </div>
+                <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="navbar-btn-logout">
                   Déconnexion
                 </button>
               </>
@@ -102,10 +121,7 @@ export default function HomePage() {
                   <span className="tab-icon">🔍</span>
                   Trouver un trajet
                 </button>
-                <button className="search-tab">
-                  <span className="tab-icon">➕</span>
-                  Proposer un trajet
-                </button>
+                
               </div>
 
               <form onSubmit={handleSearch} className="search-form">

@@ -150,19 +150,6 @@ export default function LoginPage() {
             </p>
           </div>
         </div>
-
-        <div className="auth-info">
-          <div className="info-card">
-            <span className="info-icon">🚗</span>
-            <h3>Trajets étudiants</h3>
-            <p>Partagez vos trajets quotidiens dans Amiens avec d'autres étudiants</p>
-          </div>
-          <div className="info-card">
-            <span className="info-icon">💰</span>
-            <h3>Économisez</h3>
-            <p>Réduisez vos frais de transport jusqu'à 70%</p>
-          </div>
-        </div>
       </div>
     </div>
   )

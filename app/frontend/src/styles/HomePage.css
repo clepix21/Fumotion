@@ -98,6 +98,58 @@
   margin: 0 0.5rem;
 }
 
+/* Avatar et profil utilisateur */
+.navbar-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 2rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.navbar-user-profile:hover {
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0066ff 0%, #00a3ff 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(0, 102, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.navbar-user-profile:hover .navbar-avatar {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.4);
+}
+
+.navbar-user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar-user-name {
+  color: #1e293b;
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.2;
+}
+
 .navbar-user {
   display: flex;
   align-items: center;
@@ -198,6 +250,38 @@
 .navbar-btn-primary:active {
   transform: translateY(0);
   box-shadow: 0 2px 8px rgba(0, 102, 255, 0.25);
+}
+
+/* Bouton de déconnexion */
+.navbar-btn-logout {
+  background: transparent;
+  border: 1.5px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar-btn-logout:hover {
+  background: #fef2f2;
+  border-color: #ef4444;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.navbar-btn-logout:active {
+  transform: translateY(0);
+}
+
+.navbar-btn-logout span {
+  font-size: 1rem;
 }
 
 /* Menu mobile */

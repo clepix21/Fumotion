@@ -1,47 +1,113 @@
-"use client"
-
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
+import { tripsAPI, bookingsAPI } from "../services/api"
+import MapComponent from "../components/common/MapComponent"
+import Avatar from "../components/common/Avatar"
 import "../styles/Search.css"
 import "../styles/HomePage.css"
 
 export default function SearchPage() {
   const navigate = useNavigate()
-  const { user, token, isAuthenticated, logout } = useAuth()
+  const [searchParamsURL] = useSearchParams()
+  const { user, isAuthenticated, logout } = useAuth()
   const [searchParams, setSearchParams] = useState({
     departure: "",
     arrival: "",
     date: "",
+    passengers: 1,
   })
   const [trips, setTrips] = useState([])
   const [loading, setLoading] = useState(false)
   const [searched, setSearched] = useState(false)
+  const [error, setError] = useState(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  // Charger les paramètres depuis l'URL si présents
+  useEffect(() => {
+    const departure = searchParamsURL.get("departure") || ""
+    const arrival = searchParamsURL.get("arrival") || ""
+    const date = searchParamsURL.get("date") || ""
+    const passengers = parseInt(searchParamsURL.get("passengers") || "1", 10)
+
+    if (departure || arrival || date) {
+      setSearchParams({
+        departure,
+        arrival,
+        date,
+        passengers,
+      })
+      // Lancer la recherche automatiquement si des paramètres sont présents
+      handleSearchFromParams({ departure, arrival, date, passengers })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParamsURL])
+
+  const handleSearchFromParams = async (params) => {
+    setLoading(true)
+    setSearched(true)
+    setError(null)
+
+    try {
+      const searchQuery = {}
+      if (params.departure) searchQuery.departure = params.departure
+      if (params.arrival) searchQuery.arrival = params.arrival
+      if (params.date) searchQuery.date = params.date
+      if (params.passengers) searchQuery.passengers = params.passengers
+
+      const data = await tripsAPI.search(searchQuery)
+
+      if (data.success && data.data) {
+        setTrips(data.data.trips || [])
+      } else {
+        setTrips([])
+        setError(data.message || "Aucun trajet trouvé")
+      }
+    } catch (error) {
+      console.error("Erreur lors de la recherche:", error)
+      setTrips([])
+      setError(error.message || "Erreur lors de la recherche")
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleSearch = async (e) => {
     e.preventDefault()
     setLoading(true)
     setSearched(true)
+    setError(null)
 
     try {
-      const queryParams = new URLSearchParams()
-      if (searchParams.departure) queryParams.append("departure", searchParams.departure)
-      if (searchParams.arrival) queryParams.append("arrival", searchParams.arrival)
-      if (searchParams.date) queryParams.append("date", searchParams.date)
+      const searchQuery = {}
+      if (searchParams.departure.trim()) {
+        searchQuery.departure = searchParams.departure.trim()
+      }
+      if (searchParams.arrival.trim()) {
+        searchQuery.arrival = searchParams.arrival.trim()
+      }
+      if (searchParams.date) {
+        searchQuery.date = searchParams.date
+      }
+      if (searchParams.passengers) {
+        searchQuery.passengers = searchParams.passengers
+      }
 
-      const response = await fetch(`http://localhost:5000/api/trips/search?${queryParams}`)
-      const data = await response.json()
+      const data = await tripsAPI.search(searchQuery)
 
-      if (response.ok) {
-        setTrips(data.data || [])
+      if (data.success && data.data) {
+        setTrips(data.data.trips || [])
+        if (data.data.trips && data.data.trips.length === 0) {
+          setError("Aucun trajet trouvé pour ces critères")
+        }
       } else {
-        console.error("Erreur lors de la recherche:", data.message)
         setTrips([])
+        setError(data.message || "Aucun trajet trouvé")
       }
     } catch (error) {
-      console.error("Erreur:", error)
+      console.error("Erreur lors de la recherche:", error)
       setTrips([])
+      setError(error.message || "Erreur lors de la recherche")
     } finally {
       setLoading(false)
     }
@@ -54,32 +120,28 @@ export default function SearchPage() {
     }
 
     const seats = prompt("Combien de places souhaitez-vous réserver ?", "1")
-    if (!seats || isNaN(seats) || seats < 1) return
+    if (!seats || isNaN(seats) || parseInt(seats, 10) < 1) {
+      return
+    }
+
+    const seatsNumber = parseInt(seats, 10)
 
     try {
-      const response = await fetch("http://localhost:5000/api/bookings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          trip_id: tripId,
-          seats_booked: Number.parseInt(seats),
-        }),
+      const data = await bookingsAPI.create(tripId, {
+        seatsBooked: seatsNumber,
       })
 
-      const data = await response.json()
-
-      if (response.ok) {
+      if (data.success) {
         alert("Réservation effectuée avec succès!")
+        // Recharger les résultats de recherche
         handleSearch({ preventDefault: () => {} })
       } else {
         alert(data.message || "Erreur lors de la réservation")
       }
     } catch (error) {
       console.error("Erreur:", error)
-      alert("Erreur lors de la réservation")
+      const errorMessage = error.message || "Erreur lors de la réservation"
+      alert(errorMessage)
     }
   }
 
@@ -105,7 +167,6 @@ export default function SearchPage() {
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-brand" onClick={() => navigate("/")}>
-            <span className="brand-logo">🚗</span>
             <span className="brand-name">Fumotion</span>
           </div>
 
@@ -124,17 +185,20 @@ export default function SearchPage() {
             {isAuthenticated() ? (
               <>
                 <div className="navbar-divider"></div>
-                <span className="navbar-user">
-                  {user?.first_name || user?.email}
-                </span>
                 <button onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
                   Tableau de bord
                 </button>
                 <button onClick={() => { navigate("/create-trip"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
                   Créer un trajet
                 </button>
-                <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
-                  Déconnexion
+                <div className="navbar-user-profile">
+                  <Avatar user={user} size="medium" />
+                  <div className="navbar-user-info">
+                    <span className="navbar-user-name">{user?.first_name || user?.email}</span>
+                  </div>
+                </div>
+                <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="navbar-btn-logout">
+                  <span>🚪</span> Déconnexion
                 </button>
               </>
             ) : (
@@ -205,6 +269,24 @@ export default function SearchPage() {
                 />
               </div>
 
+              <div className="form-group">
+                <label htmlFor="passengers">
+                  <span className="label-icon">👥</span>
+                  Passagers
+                </label>
+                <select
+                  id="passengers"
+                  value={searchParams.passengers}
+                  onChange={(e) => setSearchParams({ ...searchParams, passengers: parseInt(e.target.value, 10) })}
+                  className="form-input"
+                >
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+              </div>
+
               <button type="submit" className="search-btn" disabled={loading}>
                 {loading ? "Recherche..." : "Rechercher"}
               </button>
@@ -219,7 +301,15 @@ export default function SearchPage() {
               </div>
             )}
 
-            {!loading && searched && trips.length === 0 && (
+            {error && (
+              <div className="error-state">
+                <div className="error-icon">⚠️</div>
+                <h3>Erreur</h3>
+                <p>{error}</p>
+              </div>
+            )}
+
+            {!loading && searched && !error && trips.length === 0 && (
               <div className="empty-state">
                 <div className="empty-icon">🔍</div>
                 <h3>Aucun trajet trouvé</h3>
@@ -228,12 +318,46 @@ export default function SearchPage() {
             )}
 
             {!loading && trips.length > 0 && (
-              <div className="results-list">
-                <h2>
-                  {trips.length} trajet{trips.length > 1 ? "s" : ""} trouvé{trips.length > 1 ? "s" : ""}
-                </h2>
-
-                {trips.map((trip) => (
+              <>
+                <div style={{ marginBottom: '20px' }}>
+                  <h2>
+                    {trips.length} trajet{trips.length > 1 ? "s" : ""} trouvé{trips.length > 1 ? "s" : ""}
+                  </h2>
+                  <MapComponent
+                    center={trips[0]?.departure_latitude && trips[0]?.departure_longitude 
+                      ? [trips[0].departure_latitude, trips[0].departure_longitude]
+                      : [49.8942, 2.2957]}
+                    zoom={12}
+                    markers={trips
+                      .filter(trip => trip.departure_latitude && trip.departure_longitude)
+                      .map(trip => ({
+                        lat: trip.departure_latitude,
+                        lng: trip.departure_longitude,
+                        type: 'departure',
+                        popup: {
+                          title: `Départ: ${trip.departure_location}`,
+                          description: `${trip.price_per_seat}€ - ${trip.available_seats} places`
+                        }
+                      }))
+                      .concat(
+                        trips
+                          .filter(trip => trip.arrival_latitude && trip.arrival_longitude)
+                          .map(trip => ({
+                            lat: trip.arrival_latitude,
+                            lng: trip.arrival_longitude,
+                            type: 'arrival',
+                            popup: {
+                              title: `Arrivée: ${trip.arrival_location}`,
+                              description: `${trip.price_per_seat}€ - ${trip.available_seats} places`
+                            }
+                          }))
+                      )}
+                    height="300px"
+                    interactive={true}
+                  />
+                </div>
+                <div className="results-list">
+                  {trips.map((trip) => (
                   <div key={trip.id} className="trip-result-card">
                     <div className="trip-info">
                       <div className="trip-route">
@@ -256,26 +380,31 @@ export default function SearchPage() {
                       <div className="trip-details">
                         <div className="driver-info">
                           <div className="driver-avatar">
-                            {trip.driver_first_name?.[0]}
-                            {trip.driver_last_name?.[0]}
+                            {trip.first_name?.[0] || trip.driver_first_name?.[0] || "?"}
+                            {trip.last_name?.[0] || trip.driver_last_name?.[0] || ""}
                           </div>
                           <div>
                             <strong>
-                              {trip.driver_first_name} {trip.driver_last_name}
+                              {trip.first_name || trip.driver_first_name || "Conducteur"} {trip.last_name || trip.driver_last_name || ""}
                             </strong>
-                            <p className="driver-rating">⭐ 4.8 (12 avis)</p>
+                            {trip.driver_rating && (
+                              <p className="driver-rating">
+                                ⭐ {parseFloat(trip.driver_rating).toFixed(1)} 
+                                {trip.reviews_count > 0 && ` (${trip.reviews_count} avis)`}
+                              </p>
+                            )}
                           </div>
                         </div>
 
                         <div className="trip-meta">
                           <span className="meta-item">
                             <span className="meta-icon">👥</span>
-                            {trip.remaining_seats || trip.available_seats} place
-                            {(trip.remaining_seats || trip.available_seats) > 1 ? "s" : ""}
+                            {trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats} place
+                            {(trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats) > 1 ? "s" : ""} disponible
                           </span>
                           <span className="meta-item">
                             <span className="meta-icon">💰</span>
-                            {trip.price_per_seat}€ / place
+                            {parseFloat(trip.price_per_seat).toFixed(2)}€ / place
                           </span>
                         </div>
 
@@ -285,20 +414,21 @@ export default function SearchPage() {
 
                     <div className="trip-actions">
                       <div className="trip-price">
-                        <span className="price-label">Prix total</span>
-                        <span className="price-amount">{trip.price_per_seat}€</span>
+                        <span className="price-label">Prix par place</span>
+                        <span className="price-amount">{parseFloat(trip.price_per_seat).toFixed(2)}€</span>
                       </div>
                       <button
                         onClick={() => handleBooking(trip.id)}
                         className="book-btn"
-                        disabled={!trip.remaining_seats && !trip.available_seats}
+                        disabled={(trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats) <= 0}
                       >
-                        {!trip.remaining_seats && !trip.available_seats ? "Complet" : "Réserver"}
+                        {(trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats) <= 0 ? "Complet" : "Réserver"}
                       </button>
                     </div>
                   </div>
                 ))}
-              </div>
+                </div>
+              </>
             )}
 
             {!searched && !loading && (
