@@ -333,15 +333,37 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex: 1;
+}
+
+.route-location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #f8fafc;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.trip-card:hover .route-location {
+  background: #e0f2fe;
+}
+
+.location-icon {
+  font-size: 1rem;
 }
 
 .departure, .arrival {
   font-weight: 600;
   color: #1e293b;
+  font-size: 0.9375rem;
 }
 
 .arrow {
-  color: #64748b;
+  color: #0066ff;
+  font-weight: bold;
+  font-size: 1.125rem;
 }
 
 .trip-status {

@@ -88,6 +88,20 @@ export default function DashboardPage() {
     })
   }
 
+  const formatAddress = (fullAddress) => {
+    if (!fullAddress) return "Adresse non disponible"
+    
+    // Extraire le numéro, rue et ville de l'adresse complète
+    const parts = fullAddress.split(',').map(p => p.trim())
+    
+    if (parts.length >= 2) {
+      // Prendre les 2 premières parties (numéro + rue, ville)
+      return `${parts[0]}, ${parts[1]}`
+    }
+    
+    return fullAddress
+  }
+
   const handleBannerUpload = async (e) => {
     const file = e.target.files[0]
     if (!file) return
@@ -336,9 +350,15 @@ export default function DashboardPage() {
                     <div key={trip.id} className="trip-card">
                       <div className="trip-header">
                         <div className="trip-route">
-                          <span className="departure">{trip.departure_location}</span>
+                          <div className="route-location">
+                            <span className="location-icon">📍</span>
+                            <span className="departure">{formatAddress(trip.departure_location)}</span>
+                          </div>
                           <span className="arrow">→</span>
-                          <span className="arrival">{trip.arrival_location}</span>
+                          <div className="route-location">
+                            <span className="location-icon">🎯</span>
+                            <span className="arrival">{formatAddress(trip.arrival_location)}</span>
+                          </div>
                         </div>
                         <span className={`trip-status ${trip.status}`}>
                           {trip.status === "active" ? "Actif" : trip.status === "completed" ? "Terminé" : "Annulé"}
