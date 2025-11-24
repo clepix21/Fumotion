@@ -86,7 +86,7 @@ export default function HomePage() {
                   </div>
                 </div>
                 <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="navbar-btn-logout">
-                  <span>🚪</span> Déconnexion
+                  Déconnexion
                 </button>
               </>
             ) : (
