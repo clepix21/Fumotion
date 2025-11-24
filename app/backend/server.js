@@ -4,6 +4,13 @@ const cors = require('cors');
 const path = require('path');
 const db = require('./config/database');
 
+// Vérification de la configuration JWT
+if (!process.env.JWT_SECRET) {
+  console.error('❌ ERREUR: JWT_SECRET n\'est pas défini dans le fichier .env');
+  process.exit(1);
+}
+console.log('✅ JWT_SECRET chargé avec succès');
+
 // Importation des routes
 const authRoutes = require('./routes/auth');
 const tripRoutes = require('./routes/trips');
