@@ -297,8 +297,9 @@
   bottom: 0;
   background: rgba(59, 130, 246, 0.05);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding-top: 1rem;
   z-index: 1000;
   pointer-events: none;
   border-radius: 0.5rem;
@@ -306,27 +307,34 @@
 
 .hint-content {
   background: white;
-  padding: 1rem 1.5rem;
+  padding: 0.5rem 1rem;
   border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: 2px solid #3b82f6;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   animation: fadeIn 0.3s ease-out;
 }
 
-.hint-icon {
-  font-size: 1.5rem;
-  animation: bounce 1s infinite;
+.hint-content p {
+  font-size: 0.8125rem;
+  margin: 0;
+  color: #1e293b;
+  font-weight: 500;
 }
 
-@keyframes bounce {
+.hint-icon {
+  font-size: 1rem;
+  animation: bounceDown 1s infinite;
+}
+
+@keyframes bounceDown {
   0%, 100% {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-5px);
+    transform: translateY(5px);
   }
 }
 

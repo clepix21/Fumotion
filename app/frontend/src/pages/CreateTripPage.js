@@ -414,7 +414,7 @@ export default function CreateTripPage() {
                     {selectingPoint && (
                       <div className="map-overlay-hint">
                         <div className="hint-content">
-                          <span className="hint-icon">👆</span>
+                          <span className="hint-icon">👇</span>
                           <p>Cliquez sur la carte pour sélectionner le point de {selectingPoint === 'departure' ? 'départ' : 'arrivée'}</p>
                         </div>
                       </div>
