@@ -1,8 +1,3 @@
--- ============================================================================
--- Script de création de la base de données Fumotion
--- Système de covoiturage pour étudiants IUT Amiens
--- ============================================================================
-
 -- Table des utilisateurs
 -- Stocke les informations des utilisateurs (conducteurs et passagers)
 CREATE TABLE IF NOT EXISTS users (
