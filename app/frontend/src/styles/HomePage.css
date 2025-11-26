@@ -37,7 +37,9 @@
 }
 
 .brand-logo {
-  font-size: 1.75rem;
+  height: 45px;
+  width: auto;
+  object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(0, 102, 255, 0.15));
 }
 
@@ -860,6 +862,12 @@
 
 .footer-logo {
   font-size: 2rem;
+}
+
+.footer-logo-img {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
 }
 
 .footer-name {
