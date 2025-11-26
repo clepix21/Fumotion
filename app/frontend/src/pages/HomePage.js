@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import Avatar from "../components/common/Avatar"
-import logo from "../assets/images/logo.gif"
+import logo from "../assets/images/logo.png"
 import "../styles/HomePage.css"
 
 export default function HomePage() {
