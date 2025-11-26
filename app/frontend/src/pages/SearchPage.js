@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext"
 import { tripsAPI, bookingsAPI } from "../services/api"
 import MapComponent from "../components/common/MapComponent"
 import Avatar from "../components/common/Avatar"
+import logo from "../assets/images/logo.png"
 import "../styles/Search.css"
 import "../styles/HomePage.css"
 
@@ -167,6 +168,7 @@ export default function SearchPage() {
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-brand" onClick={() => navigate("/")}>
+            <img src={logo} alt="Fumotion" className="brand-logo" />
             <span className="brand-name">Fumotion</span>
           </div>
 
