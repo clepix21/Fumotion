@@ -71,7 +71,7 @@ class AuthController {
 
       // Vérifier si l'utilisateur existe
       const user = await db.get(
-        "SELECT id, email, password, first_name, last_name, phone, is_active, profile_picture FROM users WHERE email = ?",
+        "SELECT id, email, password, first_name, last_name, phone, is_active, is_admin, profile_picture FROM users WHERE email = ?",
         [email],
       )
 
