@@ -9,7 +9,7 @@ import "../styles/HomePage.css"
 
 export default function AdminPage() {
   const navigate = useNavigate()
-  const { user, isAuthenticated, logout } = useAuth()
+  const { user, isAuthenticated, logout, loading: authLoading } = useAuth()
   const [activeTab, setActiveTab] = useState("dashboard")
   const [loading, setLoading] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -38,10 +38,13 @@ export default function AdminPage() {
 
   // Vérifier si l'utilisateur est admin
   useEffect(() => {
+    if (authLoading) return // Attendre que l'authentification soit chargée
+    
     if (!isAuthenticated() || !user?.is_admin) {
+      console.log("Accès admin refusé:", { isAuthenticated: isAuthenticated(), user })
       navigate("/")
     }
-  }, [user, isAuthenticated, navigate])
+  }, [user, isAuthenticated, navigate, authLoading])
 
   // Charger les statistiques
   useEffect(() => {
