@@ -46,6 +46,7 @@ class Database {
           banner_picture VARCHAR(255),
           is_verified BOOLEAN DEFAULT 0,
           is_active BOOLEAN DEFAULT 1,
+          is_admin BOOLEAN DEFAULT 0,
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
           updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )`,
@@ -154,7 +155,7 @@ class Database {
   }
 
   async createDefaultData() {
-    // Ajouter la colonne banner_picture si elle n'existe pas
+    // Ajouter les colonnes manquantes si nécessaire
     return new Promise((resolve) => {
       this.db.all("PRAGMA table_info(users)", (err, columns) => {
         if (err) {
@@ -164,18 +165,33 @@ class Database {
         }
 
         const hasBannerPicture = columns.some(col => col.name === 'banner_picture')
+        const hasIsAdmin = columns.some(col => col.name === 'is_admin')
+        
+        const addColumns = []
+        
         if (!hasBannerPicture) {
-          this.db.run("ALTER TABLE users ADD COLUMN banner_picture VARCHAR(255)", (err) => {
-            if (err) {
-              console.error("Erreur lors de l'ajout de la colonne banner_picture:", err)
-            } else {
-              console.log("✅ Colonne banner_picture ajoutée avec succès")
-            }
-            this.createAdminUser().then(resolve).catch(() => resolve())
-          })
-        } else {
-          this.createAdminUser().then(resolve).catch(() => resolve())
+          addColumns.push(new Promise((res) => {
+            this.db.run("ALTER TABLE users ADD COLUMN banner_picture VARCHAR(255)", (err) => {
+              if (err) console.error("Erreur lors de l'ajout de banner_picture:", err)
+              else console.log("✅ Colonne banner_picture ajoutée")
+              res()
+            })
+          }))
         }
+        
+        if (!hasIsAdmin) {
+          addColumns.push(new Promise((res) => {
+            this.db.run("ALTER TABLE users ADD COLUMN is_admin BOOLEAN DEFAULT 0", (err) => {
+              if (err) console.error("Erreur lors de l'ajout de is_admin:", err)
+              else console.log("✅ Colonne is_admin ajoutée")
+              res()
+            })
+          }))
+        }
+
+        Promise.all(addColumns).then(() => {
+          this.createAdminUser().then(resolve).catch(() => resolve())
+        })
       })
     })
   }
@@ -189,9 +205,9 @@ class Database {
       this.db.get("SELECT id FROM users WHERE email = ?", [adminEmail], (err, row) => {
         if (!row) {
           this.db.run(
-            `INSERT INTO users (email, password, first_name, last_name, phone, is_verified) 
-             VALUES (?, ?, ?, ?, ?, ?)`,
-            [adminEmail, adminPassword, "Admin", "Fumotion", "0123456789", 1],
+            `INSERT INTO users (email, password, first_name, last_name, phone, is_verified, is_admin) 
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [adminEmail, adminPassword, "Admin", "Fumotion", "0123456789", 1, 1],
             (err) => {
               if (err) {
                 console.error("❌ Erreur lors de la création de l'admin:", err)
@@ -204,8 +220,19 @@ class Database {
             },
           )
         } else {
-          console.log("ℹ️  Utilisateur admin déjà existant")
-          resolve()
+          // S'assurer que l'utilisateur admin existant a les droits admin
+          this.db.run(
+            "UPDATE users SET is_admin = 1, is_verified = 1 WHERE email = ?",
+            [adminEmail],
+            (err) => {
+              if (err) {
+                console.error("❌ Erreur lors de la mise à jour de l'admin:", err)
+              } else {
+                console.log("ℹ️  Utilisateur admin déjà existant (droits vérifiés)")
+              }
+              resolve()
+            }
+          )
         }
       })
     })
