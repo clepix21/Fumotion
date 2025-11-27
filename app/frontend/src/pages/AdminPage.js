@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { adminAPI } from "../services/adminApi"
@@ -47,34 +47,7 @@ export default function AdminPage() {
   }, [user, isAuthenticated, navigate, authLoading])
 
   // Charger les statistiques
-  useEffect(() => {
-    if (activeTab === "dashboard") {
-      loadStatistics()
-    }
-  }, [activeTab])
-
-  // Charger les utilisateurs
-  useEffect(() => {
-    if (activeTab === "users") {
-      loadUsers()
-    }
-  }, [activeTab, usersPage, usersSearch, usersFilter])
-
-  // Charger les trajets
-  useEffect(() => {
-    if (activeTab === "trips") {
-      loadTrips()
-    }
-  }, [activeTab, tripsPage, tripsFilter])
-
-  // Charger les réservations
-  useEffect(() => {
-    if (activeTab === "bookings") {
-      loadBookings()
-    }
-  }, [activeTab, bookingsPage, bookingsFilter])
-
-  const loadStatistics = async () => {
+  const loadStatistics = useCallback(async () => {
     try {
       setLoading(true)
       const response = await adminAPI.getStatistics()
@@ -86,9 +59,9 @@ export default function AdminPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     try {
       setLoading(true)
       const params = { page: usersPage, limit: 20 }
@@ -105,9 +78,9 @@ export default function AdminPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [usersPage, usersSearch, usersFilter])
 
-  const loadTrips = async () => {
+  const loadTrips = useCallback(async () => {
     try {
       setLoading(true)
       const params = { page: tripsPage, limit: 20 }
@@ -123,9 +96,9 @@ export default function AdminPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [tripsPage, tripsFilter])
 
-  const loadBookings = async () => {
+  const loadBookings = useCallback(async () => {
     try {
       setLoading(true)
       const params = { page: bookingsPage, limit: 20 }
@@ -141,7 +114,32 @@ export default function AdminPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [bookingsPage, bookingsFilter])
+
+  // Charger les données selon l'onglet actif
+  useEffect(() => {
+    if (activeTab === "dashboard") {
+      loadStatistics()
+    }
+  }, [activeTab, loadStatistics])
+
+  useEffect(() => {
+    if (activeTab === "users") {
+      loadUsers()
+    }
+  }, [activeTab, loadUsers])
+
+  useEffect(() => {
+    if (activeTab === "trips") {
+      loadTrips()
+    }
+  }, [activeTab, loadTrips])
+
+  useEffect(() => {
+    if (activeTab === "bookings") {
+      loadBookings()
+    }
+  }, [activeTab, loadBookings])
 
   const handleUpdateUser = async (userId, updates) => {
     try {
