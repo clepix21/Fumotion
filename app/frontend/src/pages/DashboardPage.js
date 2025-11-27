@@ -217,6 +217,11 @@ export default function DashboardPage() {
             <button onClick={() => { navigate("/create-trip"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
               Créer un trajet
             </button>
+            {user?.is_admin && (
+              <button onClick={() => { navigate("/admin"); setMobileMenuOpen(false); }} className="navbar-btn-admin">
+                👑 Admin
+              </button>
+            )}
             <div className="navbar-user-profile">
               <Avatar user={user} size="medium" />
               <div className="navbar-user-info">
