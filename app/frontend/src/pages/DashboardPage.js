@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { authAPI } from "../services/api"
 import Avatar from "../components/common/Avatar"
+import logo from "../assets/images/logo.png"
 import "../styles/Dashboard.css"
 import "../styles/HomePage.css"
 
@@ -193,6 +194,7 @@ export default function DashboardPage() {
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-brand" onClick={() => navigate("/")}>
+            <img src={logo} alt="Fumotion" className="brand-logo" />
             <span className="brand-name">Fumotion</span>
           </div>
 
@@ -269,6 +271,15 @@ export default function DashboardPage() {
               <span className="btn-icon">👤</span>
               Profil
             </button>
+            {user?.is_admin && (
+              <button
+                className="sidebar-btn admin-btn"
+                onClick={() => navigate("/admin")}
+              >
+                <span className="btn-icon">👑</span>
+                Administration
+              </button>
+            )}
           </div>
         </aside>
 

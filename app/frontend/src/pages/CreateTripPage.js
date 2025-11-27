@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext"
 import { tripsAPI } from "../services/api"
 import MapComponent from "../components/common/MapComponent"
 import Avatar from "../components/common/Avatar"
+import logo from "../assets/images/logo.png"
 import { geocodeAddress, reverseGeocode } from "../utils/geocoding"
 import "../styles/CreateTrip.css"
 import "../styles/HomePage.css"
@@ -266,6 +267,7 @@ export default function CreateTripPage() {
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-brand" onClick={() => navigate("/")}>
+            <img src={logo} alt="Fumotion" className="brand-logo" />
             <span className="brand-name">Fumotion</span>
           </div>
 
@@ -288,6 +290,11 @@ export default function CreateTripPage() {
             <button onClick={() => { navigate("/create-trip"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
               Créer un trajet
             </button>
+            {user?.is_admin && (
+              <button onClick={() => { navigate("/admin"); setMobileMenuOpen(false); }} className="navbar-btn-admin">
+                👑 Admin
+              </button>
+            )}
             <div className="navbar-user-profile">
               <Avatar user={user} size="medium" />
               <div className="navbar-user-info">

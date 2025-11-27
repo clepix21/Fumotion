@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import Avatar from "../components/common/Avatar"
+import logo from "../assets/images/logo.png"
 import "../styles/HomePage.css"
 
 export default function HomePage() {
@@ -47,6 +48,7 @@ export default function HomePage() {
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-brand" onClick={() => navigate("/")}>
+            <img src={logo} alt="Fumotion" className="brand-logo" />
             <span className="brand-name">Fumotion</span>
           </div>
 
@@ -282,7 +284,7 @@ export default function HomePage() {
           <div className="footer-grid">
             <div className="footer-column">
               <div className="footer-brand">
-                <span className="footer-logo">🚗</span>
+                <img src={logo} alt="Fumotion" className="footer-logo-img" />
                 <span className="footer-name">Fumotion</span>
               </div>
               <p className="footer-tagline">

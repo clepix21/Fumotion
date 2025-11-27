@@ -37,7 +37,9 @@
 }
 
 .brand-logo {
-  font-size: 1.75rem;
+  height: 45px;
+  width: auto;
+  object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(0, 102, 255, 0.15));
 }
 
@@ -240,6 +242,25 @@
 
 .navbar-btn-primary:hover::before {
   left: 100%;
+}
+
+.navbar-btn-admin {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  border: none;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.5rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35);
+}
+
+.navbar-btn-admin:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.45);
 }
 
 .navbar-btn-primary:hover {
@@ -860,6 +881,12 @@
 
 .footer-logo {
   font-size: 2rem;
+}
+
+.footer-logo-img {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
 }
 
 .footer-name {
