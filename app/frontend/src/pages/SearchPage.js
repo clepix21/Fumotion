@@ -386,10 +386,14 @@ export default function SearchPage() {
 
                       <div className="trip-details">
                         <div className="driver-info">
-                          <div className="driver-avatar">
-                            {trip.first_name?.[0] || trip.driver_first_name?.[0] || "?"}
-                            {trip.last_name?.[0] || trip.driver_last_name?.[0] || ""}
-                          </div>
+                          <Avatar 
+                            user={{
+                              first_name: trip.first_name || trip.driver_first_name,
+                              last_name: trip.last_name || trip.driver_last_name,
+                              profile_picture: trip.profile_picture || trip.driver_profile_picture
+                            }}
+                            size="medium"
+                          />
                           <div>
                             <strong>
                               {trip.first_name || trip.driver_first_name || "Conducteur"} {trip.last_name || trip.driver_last_name || ""}
