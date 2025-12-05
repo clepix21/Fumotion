@@ -359,28 +359,6 @@
   background: #e0f2fe;
 }
 
-.driver-avatar {
-  width: 56px;
-  height: 56px;
-  min-width: 56px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #0066ff 0%, #00a3ff 100%);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 1.25rem;
-  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.25);
-  border: 3px solid white;
-  transition: all 0.3s ease;
-}
-
-.trip-result-card:hover .driver-avatar {
-  transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(0, 102, 255, 0.35);
-}
-
 .driver-info > div {
   flex: 1;
 }
@@ -591,12 +569,5 @@
 
   .price-amount {
     font-size: 1.75rem;
-  }
-
-  .driver-avatar {
-    width: 48px;
-    height: 48px;
-    min-width: 48px;
-    font-size: 1.125rem;
   }
 }

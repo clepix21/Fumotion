@@ -33,7 +33,7 @@ class TripController {
       );
 
       const trip = await db.get(
-        `SELECT t.*, u.first_name, u.last_name, u.email
+        `SELECT t.*, u.first_name, u.last_name, u.email, u.profile_picture
          FROM trips t
          JOIN users u ON t.driver_id = u.id
          WHERE t.id = ?`,
@@ -68,7 +68,7 @@ class TripController {
 
       let query = `
         SELECT t.*, 
-               u.first_name, u.last_name, u.email,
+               u.first_name, u.last_name, u.email, u.profile_picture,
                AVG(r.rating) as driver_rating,
                COUNT(r.id) as reviews_count,
                (t.available_seats - COALESCE(SUM(b.seats_booked), 0)) as remaining_seats
@@ -321,7 +321,7 @@ class TripController {
       await db.run(query, updateValues);
 
       const updatedTrip = await db.get(
-        `SELECT t.*, u.first_name, u.last_name
+        `SELECT t.*, u.first_name, u.last_name, u.profile_picture
          FROM trips t
          JOIN users u ON t.driver_id = u.id
          WHERE t.id = ?`,
