@@ -16,7 +16,7 @@ if ! command -v docker &> /dev/null; then
 fi
 
 # Vérifier que Docker Compose est installé
-if ! command -v docker compose &> /dev/null; then
+if ! command -v docker-compose &> /dev/null; then
     echo "❌ Docker Compose n'est pas installé!"
     exit 1
 fi
@@ -32,18 +32,18 @@ fi
 # Arrêter les conteneurs existants
 echo ""
 echo "🛑 Arrêt des conteneurs existants..."
-docker compose down
+docker-compose down
 
 # Construire les images
 echo ""
 echo "🔨 Construction des images Docker..."
 echo "Cela peut prendre plusieurs minutes..."
-docker compose build
+docker-compose build
 
 # Démarrer les conteneurs
 echo ""
 echo "▶️ Démarrage des conteneurs..."
-docker compose up -d
+docker-compose up -d
 
 # Attendre que les conteneurs soient prêts
 echo ""
@@ -53,7 +53,7 @@ sleep 5
 # Afficher le statut
 echo ""
 echo "📋 Statut des conteneurs:"
-docker compose ps
+docker-compose ps
 
 echo ""
 echo "======================================================="
@@ -65,8 +65,8 @@ echo "   Frontend: http://localhost"
 echo "   Backend:  http://localhost:5000"
 echo ""
 echo "📝 Commandes utiles:"
-echo "   docker compose logs -f         # Voir les logs en temps réel"
-echo "   docker compose ps              # Voir le statut"
-echo "   docker compose down            # Arrêter les conteneurs"
-echo "   docker compose restart         # Redémarrer"
+echo "   docker-compose logs -f         # Voir les logs en temps réel"
+echo "   docker-compose ps              # Voir le statut"
+echo "   docker-compose down            # Arrêter les conteneurs"
+echo "   docker-compose restart         # Redémarrer"
 echo ""
