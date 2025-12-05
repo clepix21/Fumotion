@@ -90,7 +90,7 @@ jobs:
             set -e
             
             # Aller dans le répertoire du projet
-            cd /opt/fumotion || exit 1
+            cd /opt/Fumotion || exit 1
             
             # Vérifier quelle version de Docker Compose est disponible
             if command -v docker-compose &> /dev/null; then
