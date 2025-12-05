@@ -144,3 +144,4 @@ jobs:
             $COMPOSE_CMD logs --tail=20 frontend
             
             echo "✅ Déploiement terminé!"
+            
