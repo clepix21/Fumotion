@@ -43,5 +43,10 @@
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    }
   }
 }

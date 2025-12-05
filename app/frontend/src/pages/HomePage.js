@@ -350,7 +350,7 @@ export default function HomePage() {
           </div>
 
           <div className="footer-bottom">
-            <p>&copy; 2025 Fumotion. Tous droits réservés.</p>
+            <p>&copy; 2025 Fumo. Tous droits réservés.</p>
             <div className="footer-social">
               <a href="https://facebook.com" className="social-link" target="_blank" rel="noopener noreferrer">
                 temp
