@@ -86,29 +86,58 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_PORT || 22 }}
           script: |
-            cd /opt/fumotion
+            # Aller dans le répertoire du projet
+            cd /opt/fumotion || exit 1
             
-            # Pull les nouvelles images
+            # Vérifier quelle version de Docker Compose est disponible
+            if command -v docker-compose &> /dev/null; then
+                COMPOSE_CMD="docker-compose"
+            elif docker compose version &> /dev/null; then
+                COMPOSE_CMD="docker compose"
+            else
+                echo "❌ Docker Compose n'est pas installé!"
+                exit 1
+            fi
+            
+            echo "📝 Utilisation de: $COMPOSE_CMD"
+            
+            # Charger les variables d'environnement
+            if [ -f .env.production ]; then
+                export $(cat .env.production | grep -v '^#' | xargs)
+            fi
+            
+            # Pull la dernière version du code
+            echo "📥 Récupération du code..."
+            git pull origin main || echo "⚠️ Impossible de pull le code"
+            
+            # Pull les nouvelles images Docker
             echo "📥 Récupération des nouvelles images..."
-            docker compose pull
+            $COMPOSE_CMD pull || echo "⚠️ Images non disponibles, construction locale..."
             
             # Arrêter les anciens conteneurs
             echo "🛑 Arrêt des anciens conteneurs..."
-            docker compose down
+            $COMPOSE_CMD down
             
             # Démarrer les nouveaux conteneurs
             echo "▶️ Démarrage des nouveaux conteneurs..."
-            docker compose up -d
+            $COMPOSE_CMD up -d --build
             
             # Attendre le démarrage
-            sleep 10
+            echo "⏳ Attente du démarrage des services..."
+            sleep 15
+            
+            # Vérifier la santé des conteneurs
+            echo "🏥 Vérification de la santé des services..."
+            $COMPOSE_CMD ps
             
             # Nettoyer les anciennes images
             echo "🧹 Nettoyage des anciennes images..."
             docker image prune -af
             
-            # Vérifier le statut
-            echo "📋 Statut des conteneurs:"
-            docker compose ps
+            # Afficher les logs récents
+            echo "📋 Logs récents du backend:"
+            $COMPOSE_CMD logs --tail=20 backend
+            echo "📋 Logs récents du frontend:"
+            $COMPOSE_CMD logs --tail=20 frontend
             
             echo "✅ Déploiement terminé!"
