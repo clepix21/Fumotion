@@ -1,0 +1,17 @@
+node_modules
+npm-debug.log
+.env
+.env.*
+.git
+.gitignore
+README.md
+*.md
+build
+coverage
+.DS_Store
+*.log
+.vscode
+.idea
+src/**/*.test.js
+src/**/*.spec.js
+public/*.map
