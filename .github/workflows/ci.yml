@@ -46,8 +46,22 @@ jobs:
         run: |
           cd app/backend
           npm start &
-          sleep 10
-          echo "PID Backend: $!"
+          BACKEND_PID=$!
+          echo "Backend démarré avec PID: $BACKEND_PID"
+          
+          # Attendre que le serveur soit prêt (max 60 secondes)
+          echo "Attente du démarrage du serveur..."
+          for i in {1..60}; do
+            if curl -f http://localhost:5000/api/health 2>/dev/null; then
+              echo "Serveur backend prêt après ${i} secondes"
+              break
+            fi
+            if [ $i -eq 60 ]; then
+              echo "Timeout: le serveur n'a pas démarré en 60 secondes"
+              exit 1
+            fi
+            sleep 1
+          done
 
       - name: Test endpoint santé API
         run: |
@@ -152,9 +166,25 @@ jobs:
       - name: Démarrage serveur backend
         run: |
           cd app/backend
-          npm start &
-          sleep 15
-          curl -f http://localhost:5000/api/health
+          npm start > backend.log 2>&1 &
+          BACKEND_PID=$!
+          echo "Backend démarré avec PID: $BACKEND_PID"
+          
+          # Attendre que le serveur soit prêt
+          echo "Attente du démarrage du serveur backend..."
+          for i in {1..60}; do
+            if curl -f http://localhost:5000/api/health 2>/dev/null; then
+              echo "✅ Backend prêt après ${i} secondes"
+              break
+            fi
+            if [ $i -eq 60 ]; then
+              echo "❌ Timeout: le backend n'a pas démarré"
+              echo "=== Logs Backend ==="
+              cat backend.log
+              exit 1
+            fi
+            sleep 1
+          done
 
       - name: Build et test frontend avec backend
         run: |

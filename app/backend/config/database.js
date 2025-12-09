@@ -189,8 +189,14 @@ class Database {
           }))
         }
 
-        Promise.all(addColumns).then(() => {
-          this.createAdminUser().then(resolve).catch(() => resolve())
+        Promise.all(addColumns).then(async () => {
+          try {
+            await this.createAdminUser()
+            resolve()
+          } catch (err) {
+            console.error("Erreur lors de la création de l'admin:", err)
+            resolve()
+          }
         })
       })
     })

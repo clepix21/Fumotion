@@ -31,7 +31,7 @@ const validateRegistration = [
     .isLength({ min: 2 })
     .withMessage('Le nom doit contenir au moins 2 caractères'),
   body('phone')
-    .optional()
+    .optional({ checkFalsy: true })
     .isMobilePhone('fr-FR')
     .withMessage('Numéro de téléphone invalide'),
   handleValidationErrors
