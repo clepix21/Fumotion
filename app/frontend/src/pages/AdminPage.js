@@ -231,7 +231,7 @@ export default function AdminPage() {
         <div className="navbar-container">
           <div className="navbar-brand" onClick={() => navigate("/")}>
             <img src={logo} alt="Fumotion" className="brand-logo" />
-            <span className="brand-name">Fumotion Admin</span>
+            <span className="brand-name">Fumotion</span>
           </div>
 
           <button 
