@@ -189,9 +189,57 @@ class Database {
           }))
         }
 
-        Promise.all(addColumns).then(() => {
-          this.createAdminUser().then(resolve).catch(() => resolve())
+        Promise.all(addColumns).then(async () => {
+          try {
+            await this.createAdminUser()
+            resolve()
+          } catch (err) {
+            console.error("Erreur lors de la création de l'admin:", err)
+            resolve()
+          }
         })
+      })
+    })
+  }
+
+  async createAdminUser() {
+    // Créer un utilisateur admin par défaut
+    const adminEmail = "admin@fumotion.com"
+    const adminPassword = await bcrypt.hash("admin123", 10)
+
+    return new Promise((resolve) => {
+      this.db.get("SELECT id FROM users WHERE email = ?", [adminEmail], (err, row) => {
+        if (!row) {
+          this.db.run(
+            `INSERT INTO users (email, password, first_name, last_name, phone, is_verified, is_admin) 
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [adminEmail, adminPassword, "Admin", "Fumotion", "0123456789", 1, 1],
+            (err) => {
+              if (err) {
+                console.error("❌ Erreur lors de la création de l'admin:", err)
+              } else {
+                console.log("✅ Utilisateur admin créé avec succès")
+                console.log("📧 Email: admin@fumotion.com")
+                console.log("🔑 Mot de passe: admin123")
+              }
+              resolve()
+            },
+          )
+        } else {
+          // S'assurer que l'utilisateur admin existant a les droits admin
+          this.db.run(
+            "UPDATE users SET is_admin = 1, is_verified = 1 WHERE email = ?",
+            [adminEmail],
+            (err) => {
+              if (err) {
+                console.error("❌ Erreur lors de la mise à jour de l'admin:", err)
+              } else {
+                console.log("ℹ️  Utilisateur admin déjà existant (droits vérifiés)")
+              }
+              resolve()
+            }
+          )
+        }
       })
     })
   }
