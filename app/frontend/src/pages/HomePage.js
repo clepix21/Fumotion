@@ -120,7 +120,7 @@ export default function HomePage() {
                     <label className="form-label">Départ</label>
                     <input
                       type="text"
-                      placeholder="Paris, Gare de Lyon"
+                      placeholder="Amiens, Gare du Nord"
                       className="form-input"
                       value={searchData.departure}
                       onChange={(e) => setSearchData({ ...searchData, departure: e.target.value })}
@@ -131,7 +131,7 @@ export default function HomePage() {
                     <label className="form-label">Destination</label>
                     <input
                       type="text"
-                      placeholder="Marseille"
+                      placeholder="IUT Amiens"
                       className="form-input"
                       value={searchData.arrival}
                       onChange={(e) => setSearchData({ ...searchData, arrival: e.target.value })}
