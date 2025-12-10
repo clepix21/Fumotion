@@ -176,7 +176,9 @@ export default function HomePage() {
         <div className="benefits-container">
           <div className="benefits-grid">
             <div className="benefit-card">
-              <div className="benefit-icon">🚗</div>
+              <div className="benefit-icon">
+                <img src="https://www.svgrepo.com/show/533553/car-side.svg" alt="Car Icon" />
+              </div>
               <h3 className="benefit-title">Vos trajets préférés à petits prix</h3>
               <p className="benefit-description">Où que vous alliez, en bus ou en covoiturage, trouvez le trajet idéal parmi notre large choix de destinations à petits prix.</p>
             </div>
