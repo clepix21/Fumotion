@@ -248,7 +248,7 @@ export default function HomePage() {
 
       <section id="how-it-works" className="how-it-works-section">
         <div className="how-it-works-container">
-          <h2 className="section-title">Comment ça marche ?</h2>
+          <h2 className="section-title">Comment ça marche ? CACACACACCA IDEE SVG TEXTE</h2>
 
           <div className="steps-grid">
             <div className="step-card">
