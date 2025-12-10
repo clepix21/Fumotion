@@ -438,7 +438,7 @@
 
 .form-row {
   display: grid;
-  grid-template-columns: 2fr 2fr 1.5fr 1fr 0.8fr;
+  grid-template-columns: 2fr 2fr 1.5fr 1.2fr;
   gap: 0;
   align-items: end;
 }
@@ -453,10 +453,6 @@
 
 .form-group:last-child {
   border-right: none;
-}
-
-.form-group-small {
-  max-width: 150px;
 }
 
 .form-label {
