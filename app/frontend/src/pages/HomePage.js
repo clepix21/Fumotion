@@ -149,7 +149,7 @@ export default function HomePage() {
                   </div>
 
                   <div className="form-group form-group-small">
-                    <label className="form-label">1 passager</label>
+                    <label className="form-label">passager</label>
                     <select
                       className="form-input"
                       value={searchData.passengers}
@@ -167,11 +167,6 @@ export default function HomePage() {
                   Rechercher
                 </button>
               </form>
-            </div>
-
-            <div className="afficher-hebergements">
-              <input type="checkbox" id="show-accommodations" />
-              <label htmlFor="show-accommodations">Afficher les hébergements</label>
             </div>
           </div>
         </div>
