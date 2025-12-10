@@ -395,7 +395,7 @@
 .hero-section {
   padding: 10rem 2rem 6rem;
   background: linear-gradient(135deg, rgba(0, 102, 255, 0.85) 0%, rgba(0, 180, 216, 0.85) 100%), 
-              url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600') center/cover;
+              url('../assets/images/regalia-ffxv.jpg') center/cover;
   min-height: 500px;
   display: flex;
   align-items: center;
