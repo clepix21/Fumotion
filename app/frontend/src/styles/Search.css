@@ -89,7 +89,6 @@
   padding: 2.5rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   animation: fadeInUp 0.6s ease-out 0.2s backwards;
-  margin-bottom: 3rem;
 }
 
 .form-row {
