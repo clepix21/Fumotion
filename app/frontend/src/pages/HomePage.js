@@ -5,6 +5,7 @@ import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
 import voiture from "../assets/icons/voiture.svg"
 import bouclier from "../assets/icons/bouclier.svg"
+import speed from "../assets/icons/speed.svg"
 import "../styles/HomePage.css"
 
 export default function HomePage() {
@@ -194,7 +195,9 @@ export default function HomePage() {
             </div>
 
             <div className="benefit-card">
-              <div className="benefit-icon">⚡</div>
+              <div className="benefit-icon">
+                <img src={speed} alt="speed logo" style={{ width: '50px', height: 'auto' }}/>
+              </div>
               <h3 className="benefit-title">Recherchez, cliquez et réservez !</h3>
               <p className="benefit-description">Réserver un trajet devient encore plus simple ! Facile d'utilisation et dotée de technologies avancées, notre appli vous permet de réserver un trajet à proximité en un rien de temps.</p>
             </div>
