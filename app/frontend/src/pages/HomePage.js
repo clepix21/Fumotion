@@ -6,6 +6,7 @@ import logo from "../assets/images/logo.png"
 import voiture from "../assets/icons/voiture.svg"
 import bouclier from "../assets/icons/bouclier.svg"
 import speed from "../assets/icons/speed.svg"
+import placeholder from "../assets/images/placeholder.png"
 import "../styles/HomePage.css"
 
 export default function HomePage() {
@@ -207,19 +208,19 @@ export default function HomePage() {
 
       <section className="popular-trips-section">
         <div className="popular-container">
-          <h2 className="section-title">Nos trajets en bus les plus populaires</h2>
+          <h2 className="section-title">Les trajets les plus populaires</h2>
           
           <div className="popular-trips-grid">
             <div className="trip-card">
-              <div className="trip-image" style={{background: 'linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400) center/cover'}}></div>
+              <div className="trip-image" style={{background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover`}}></div>
               <div className="trip-info">
-                <h3>Paris → Lyon</h3>
+                <h3>Gare du Nord → IUT </h3>
                 <p>Dès 15€</p>
               </div>
             </div>
             
             <div className="trip-card">
-              <div className="trip-image" style={{background: 'linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=400) center/cover'}}></div>
+              <div className="trip-image" style={{background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover`}}></div>
               <div className="trip-info">
                 <h3>Paris → Marseille</h3>
                 <p>Dès 20€</p>
@@ -227,7 +228,7 @@ export default function HomePage() {
             </div>
             
             <div className="trip-card">
-              <div className="trip-image" style={{background: 'linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(https://images.unsplash.com/photo-1517732306149-e8f829eb588a?w=400) center/cover'}}></div>
+              <div className="trip-image" style={{background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover`}}></div>
               <div className="trip-info">
                 <h3>Paris → Bordeaux</h3>
                 <p>Dès 18€</p>
@@ -235,7 +236,7 @@ export default function HomePage() {
             </div>
             
             <div className="trip-card">
-              <div className="trip-image" style={{background: 'linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=400) center/cover'}}></div>
+              <div className="trip-image" style={{background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover`}}></div>
               <div className="trip-info">
                 <h3>Lyon → Nice</h3>
                 <p>Dès 22€</p>
