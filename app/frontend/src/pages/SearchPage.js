@@ -5,6 +5,7 @@ import { tripsAPI, bookingsAPI } from "../services/api"
 import MapComponent from "../components/common/MapComponent"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
+import voiture from "../assets/icons/voiture.svg"
 import "../styles/Search.css"
 import "../styles/HomePage.css"
 
@@ -430,7 +431,9 @@ export default function SearchPage() {
 
             {!searched && !loading && (
               <div className="initial-state">
-                <div className="initial-icon">🚗</div>
+                <div className="initial-icon">
+                <img src={voiture} alt="voiture logo" style={{ width: '100px', height: 'auto' }}/>
+                </div>
                 <h3>Commencez votre recherche</h3>
                 <p>Entrez vos critères de recherche pour trouver des trajets disponibles</p>
               </div>
