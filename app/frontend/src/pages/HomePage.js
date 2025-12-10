@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
+import voiture from "../assets/icons/voiture.svg"
 import "../styles/HomePage.css"
 
 export default function HomePage() {
@@ -177,7 +178,7 @@ export default function HomePage() {
           <div className="benefits-grid">
             <div className="benefit-card">
               <div className="benefit-icon">
-                <img src="https://www.svgrepo.com/show/533553/car-side.svg" alt="Car Icon" />
+                <img src={voiture} alt="voiture logo" style={{ width: '50px', height: 'auto' }}/>
               </div>
               <h3 className="benefit-title">Vos trajets préférés à petits prix</h3>
               <p className="benefit-description">Où que vous alliez, en bus ou en covoiturage, trouvez le trajet idéal parmi notre large choix de destinations à petits prix.</p>
