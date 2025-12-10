@@ -109,33 +109,18 @@ export default function HomePage() {
         <div className="hero-container">
           <div className="hero-content">
             <h1 className="hero-title">
-              Voyagez moins cher
-              <br />
-              entre étudiants
+              Vous avez vos plans, on a vos bons plans.
             </h1>
-            <p className="hero-subtitle">
-              Partagez vos trajets universitaires et économisez jusqu'à 70% sur vos déplacements
-            </p>
 
             <div className="search-card">
-              <div className="search-tabs">
-                <button className="search-tab active">
-                  <span className="tab-icon">🔍</span>
-                  Trouver un trajet
-                </button>
-                
-              </div>
 
               <form onSubmit={handleSearch} className="search-form">
                 <div className="form-row">
                   <div className="form-group">
-                    <label className="form-label">
-                      <span className="label-icon">📍</span>
-                      Départ
-                    </label>
+                    <label className="form-label">Départ</label>
                     <input
                       type="text"
-                      placeholder="ya pas de depart"
+                      placeholder="Paris, Gare de Lyon"
                       className="form-input"
                       value={searchData.departure}
                       onChange={(e) => setSearchData({ ...searchData, departure: e.target.value })}
@@ -143,13 +128,10 @@ export default function HomePage() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">
-                      <span className="label-icon">🎯</span>
-                      Arrivée
-                    </label>
+                    <label className="form-label">Destination</label>
                     <input
                       type="text"
-                      placeholder="Feuchy crik pawwww"
+                      placeholder="Marseille"
                       className="form-input"
                       value={searchData.arrival}
                       onChange={(e) => setSearchData({ ...searchData, arrival: e.target.value })}
@@ -157,10 +139,7 @@ export default function HomePage() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">
-                      <span className="label-icon">📅</span>
-                      Date
-                    </label>
+                    <label className="form-label">Aujourd'hui</label>
                     <input
                       type="date"
                       className="form-input"
@@ -169,20 +148,17 @@ export default function HomePage() {
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label className="form-label">
-                      <span className="label-icon">👥</span>
-                      Passagers
-                    </label>
+                  <div className="form-group form-group-small">
+                    <label className="form-label">1 passager</label>
                     <select
                       className="form-input"
                       value={searchData.passengers}
                       onChange={(e) => setSearchData({ ...searchData, passengers: e.target.value })}
                     >
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4+</option>
+                      <option value="1">1 passager</option>
+                      <option value="2">2 passagers</option>
+                      <option value="3">3 passagers</option>
+                      <option value="4">4 passagers</option>
                     </select>
                   </div>
                 </div>
@@ -193,58 +169,78 @@ export default function HomePage() {
               </form>
             </div>
 
-            <div className="trust-indicators">
-              <div className="trust-item">
-                <span className="trust-number">50K+</span>
-                <span className="trust-label">Étudiants inscrits</span>
-              </div>
-              <div className="trust-item">
-                <span className="trust-number">4.8/5</span>
-                <span className="trust-label">Note moyenne</span>
-              </div>
-              <div className="trust-item">
-                <span className="trust-number">100K+</span>
-                <span className="trust-label">Trajets partagés</span>
-              </div>
+            <div className="afficher-hebergements">
+              <input type="checkbox" id="show-accommodations" />
+              <label htmlFor="show-accommodations">Afficher les hébergements</label>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="benefits-section">
-        <div className="benefits-container">
-          <h2 className="section-title">Pourquoi choisir Fumotion ?</h2>
+      <section className="transport-options-section">
+        <div className="transport-container">
+          <h2 className="section-title">On y va comment ?</h2>
 
-          <div className="benefits-grid">
-            <div className="benefit-card">
-              <div className="benefit-illustration">
-                <img src="/placeholder.svg?height=200&width=300" alt="Économies" />
-              </div>
-              <h3 className="benefit-title">Économisez sur vos trajets</h3>
-              <p className="benefit-description">
-                Partagez les frais d'essence et de péage. Économisez jusqu'à 70% par rapport aux transports
-                traditionnels.
-              </p>
+          <div className="transport-grid">
+            <div className="transport-card">
+              <div className="transport-icon">🚗</div>
+              <h3 className="transport-title">Covoiturage</h3>
+              <p className="transport-description">Allez partout, à prix mini</p>
+              <button className="transport-btn">→</button>
             </div>
 
-            <div className="benefit-card">
-              <div className="benefit-illustration">
-                <img src="/placeholder.svg?height=200&width=300" alt="Réservation facile" />
-              </div>
-              <h3 className="benefit-title">Réservation en quelques clics</h3>
-              <p className="benefit-description">
-                Trouvez et réservez votre trajet en moins de 2 minutes. Paiement sécurisé et confirmation instantanée.
-              </p>
+            <div className="transport-card">
+              <div className="transport-icon">🚌</div>
+              <h3 className="transport-title">Bus</h3>
+              <p className="transport-description">Plus de 250 destinations à partir de 2,99 €</p>
+              <button className="transport-btn">→</button>
             </div>
 
-            <div className="benefit-card">
-              <div className="benefit-illustration">
-                <img src="/placeholder.svg?height=200&width=300" alt="Flexibilité" />
+            <div className="transport-card">
+              <div className="transport-icon">🚄</div>
+              <h3 className="transport-title">Train</h3>
+              <p className="transport-description">SNCF, Renfe et Iryo sans frais supplémentaires</p>
+              <button className="transport-btn">→</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="popular-trips-section">
+        <div className="popular-container">
+          <h2 className="section-title">Nos trajets en bus les plus populaires</h2>
+          
+          <div className="popular-trips-grid">
+            <div className="trip-card">
+              <div className="trip-image" style={{background: 'linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400) center/cover'}}></div>
+              <div className="trip-info">
+                <h3>Paris → Lyon</h3>
+                <p>Dès 15€</p>
               </div>
-              <h3 className="benefit-title">Flexibilité totale</h3>
-              <p className="benefit-description">
-                Annulation gratuite jusqu'à 24h avant le départ. Modifiez votre réservation à tout moment.
-              </p>
+            </div>
+            
+            <div className="trip-card">
+              <div className="trip-image" style={{background: 'linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=400) center/cover'}}></div>
+              <div className="trip-info">
+                <h3>Paris → Marseille</h3>
+                <p>Dès 20€</p>
+              </div>
+            </div>
+            
+            <div className="trip-card">
+              <div className="trip-image" style={{background: 'linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(https://images.unsplash.com/photo-1517732306149-e8f829eb588a?w=400) center/cover'}}></div>
+              <div className="trip-info">
+                <h3>Paris → Bordeaux</h3>
+                <p>Dès 18€</p>
+              </div>
+            </div>
+            
+            <div className="trip-card">
+              <div className="trip-image" style={{background: 'linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=400) center/cover'}}></div>
+              <div className="trip-info">
+                <h3>Lyon → Nice</h3>
+                <p>Dès 22€</p>
+              </div>
             </div>
           </div>
         </div>
