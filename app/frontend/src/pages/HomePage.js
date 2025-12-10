@@ -148,7 +148,7 @@ export default function HomePage() {
                     />
                   </div>
 
-                  <div className="form-group form-group-small">
+                  <div className="form-group">
                     <label className="form-label">passager</label>
                     <select
                       className="form-input"
