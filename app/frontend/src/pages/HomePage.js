@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
 import voiture from "../assets/icons/voiture.svg"
+import bouclier from "../assets/icons/bouclier.svg"
 import "../styles/HomePage.css"
 
 export default function HomePage() {
@@ -185,7 +186,9 @@ export default function HomePage() {
             </div>
 
             <div className="benefit-card">
-              <div className="benefit-icon">🛡️</div>
+              <div className="benefit-icon">
+                <img src={bouclier} alt="bouclier logo" style={{ width: '50px', height: 'auto' }}/>
+              </div>
               <h3 className="benefit-title">Voyagez en toute confiance</h3>
               <p className="benefit-description">Nous prenons le temps qu'il faut pour connaître nos membres et nos compagnies de bus partenaires. Nous vérifions les avis, les profils et les pièces d'identité. Vous savez donc avec qui vous allez voyager pour réserver en toute confiance sur notre plateforme sécurisée.</p>
             </div>
