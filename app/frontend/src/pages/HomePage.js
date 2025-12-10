@@ -172,30 +172,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="transport-options-section">
-        <div className="transport-container">
-          <h2 className="section-title">On y va comment ?</h2>
-
-          <div className="transport-grid">
-            <div className="transport-card">
-              <div className="transport-icon">🚗</div>
-              <h3 className="transport-title">Covoiturage</h3>
-              <p className="transport-description">Allez partout, à prix mini</p>
-              <button className="transport-btn">→</button>
+      <section className="benefits-section">
+        <div className="benefits-container">
+          <div className="benefits-grid">
+            <div className="benefit-card">
+              <div className="benefit-icon">🚗</div>
+              <h3 className="benefit-title">Vos trajets préférés à petits prix</h3>
+              <p className="benefit-description">Où que vous alliez, en bus ou en covoiturage, trouvez le trajet idéal parmi notre large choix de destinations à petits prix.</p>
             </div>
 
-            <div className="transport-card">
-              <div className="transport-icon">🚌</div>
-              <h3 className="transport-title">Bus</h3>
-              <p className="transport-description">Plus de 250 destinations à partir de 2,99 €</p>
-              <button className="transport-btn">→</button>
+            <div className="benefit-card">
+              <div className="benefit-icon">🛡️</div>
+              <h3 className="benefit-title">Voyagez en toute confiance</h3>
+              <p className="benefit-description">Nous prenons le temps qu'il faut pour connaître nos membres et nos compagnies de bus partenaires. Nous vérifions les avis, les profils et les pièces d'identité. Vous savez donc avec qui vous allez voyager pour réserver en toute confiance sur notre plateforme sécurisée.</p>
             </div>
 
-            <div className="transport-card">
-              <div className="transport-icon">🚄</div>
-              <h3 className="transport-title">Train</h3>
-              <p className="transport-description">SNCF, Renfe et Iryo sans frais supplémentaires</p>
-              <button className="transport-btn">→</button>
+            <div className="benefit-card">
+              <div className="benefit-icon">⚡</div>
+              <h3 className="benefit-title">Recherchez, cliquez et réservez !</h3>
+              <p className="benefit-description">Réserver un trajet devient encore plus simple ! Facile d'utilisation et dotée de technologies avancées, notre appli vous permet de réserver un trajet à proximité en un rien de temps.</p>
             </div>
           </div>
         </div>
