@@ -65,12 +65,10 @@ export default function HomePage() {
           </button>
 
           <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
-            <a href="#how-it-works" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
-              Comment ça marche
+            <a href="#benefits" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
+              Pourquoi Fumotion ?
             </a>
-            <a href="#pricing" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
-              Tarifs
-            </a>
+
             
             {isAuthenticated() ? (
               <>
@@ -117,7 +115,6 @@ export default function HomePage() {
             </h1>
 
             <div className="search-card">
-
               <form onSubmit={handleSearch} className="search-form">
                 <div className="form-row">
                   <div className="form-group">
@@ -143,7 +140,7 @@ export default function HomePage() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Aujourd'hui</label>
+                    <label className="form-label">Date</label>
                     <input
                       type="date"
                       className="form-input"
@@ -153,7 +150,7 @@ export default function HomePage() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">passager</label>
+                    <label className="form-label">Passagers</label>
                     <select
                       className="form-input"
                       value={searchData.passengers}
@@ -176,8 +173,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="benefits-section">
+      <section id="benefits" className="benefits-section">
         <div className="benefits-container">
+          <h2 className="section-title">Pourquoi choisir Fumotion ?</h2>
           <div className="benefits-grid">
             <div className="benefit-card">
               <div className="benefit-icon">
@@ -248,7 +246,7 @@ export default function HomePage() {
 
       <section id="how-it-works" className="how-it-works-section">
         <div className="how-it-works-container">
-          <h2 className="section-title">Comment ça marche ? CACACACACCA IDEE SVG TEXTE</h2>
+          <h2 className="section-title">Comment ça marche ?</h2>
 
           <div className="steps-grid">
             <div className="step-card">
@@ -293,54 +291,30 @@ export default function HomePage() {
             <div className="footer-column">
               <h4 className="footer-heading">À propos</h4>
               <ul className="footer-links">
-                <li>
-                  <a href="#how-it-works">Comment ça marche</a>
-                </li>
-                <li>
-                  <a href="#pricing">Tarifs</a>
-                </li>
-                <li>
-                  <a href="/about">Qui sommes-nous</a>
-                </li>
-                <li>
-                  <a href="/blog">Blog</a>
-                </li>
+                <li><a href="#how-it-works">Comment ça marche</a></li>
+                <li><a href="#pricing">Tarifs</a></li>
+                <li><a href="/about">Qui sommes-nous</a></li>
+                <li><a href="/blog">Blog</a></li>
               </ul>
             </div>
 
             <div className="footer-column">
               <h4 className="footer-heading">Support</h4>
               <ul className="footer-links">
-                <li>
-                  <a href="/help">Centre d'aide</a>
-                </li>
-                <li>
-                  <a href="/contact">Nous contacter</a>
-                </li>
-                <li>
-                  <a href="/security">Sécurité</a>
-                </li>
-                <li>
-                  <a href="/insurance">Assurance</a>
-                </li>
+                <li><a href="/help">Centre d'aide</a></li>
+                <li><a href="/contact">Nous contacter</a></li>
+                <li><a href="/security">Sécurité</a></li>
+                <li><a href="/insurance">Assurance</a></li>
               </ul>
             </div>
 
             <div className="footer-column">
               <h4 className="footer-heading">Légal</h4>
               <ul className="footer-links">
-                <li>
-                  <a href="/terms">Conditions générales</a>
-                </li>
-                <li>
-                  <a href="/privacy">Politique de confidentialité</a>
-                </li>
-                <li>
-                  <a href="/legal">Mentions légales</a>
-                </li>
-                <li>
-                  <a href="/cookies">Cookies</a>
-                </li>
+                <li><a href="/terms">Conditions générales</a></li>
+                <li><a href="/privacy">Politique de confidentialité</a></li>
+                <li><a href="/legal">Mentions légales</a></li>
+                <li><a href="/cookies">Cookies</a></li>
               </ul>
             </div>
           </div>
@@ -349,13 +323,13 @@ export default function HomePage() {
             <p>&copy; 2025 Fumotion. Tous droits réservés.</p>
             <div className="footer-social">
               <a href="https://facebook.com" className="social-link" target="_blank" rel="noopener noreferrer">
-                temp
+                Facebook
               </a>
               <a href="https://twitter.com" className="social-link" target="_blank" rel="noopener noreferrer">
-                temp
+                Twitter
               </a>
               <a href="https://instagram.com" className="social-link" target="_blank" rel="noopener noreferrer">
-                temp
+                Instagram
               </a>
             </div>
           </div>
