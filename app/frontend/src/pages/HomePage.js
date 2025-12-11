@@ -68,7 +68,9 @@ export default function HomePage() {
             <a href="#benefits" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
               Pourquoi Fumotion ?
             </a>
-
+            <a href="#benefits" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
+              Trajets populaires 
+            </a>
             
             {isAuthenticated() ? (
               <>
