@@ -95,7 +95,6 @@ export default function LoginPage() {
           <div className="form-group-modern">
             <label className="form-label-modern">Email</label>
             <div className="input-wrapper-modern">
-              <span className="input-icon-modern">✉️</span>
               <input
                 type="email"
                 name="email"
@@ -112,7 +111,6 @@ export default function LoginPage() {
           <div className="form-group-modern">
             <label className="form-label-modern">Mot de passe</label>
             <div className="input-wrapper-modern">
-              <span className="input-icon-modern">🔑</span>
               <input
                 type="password"
                 name="password"
@@ -139,9 +137,9 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="signup-link-modern">
+        <div className="signup-link-modern" style={{ color: "#5B9FED" }}>
           <p>
-            Don't have an Account ? <Link to="/register" className="signup-text-modern">Sign up</Link>
+            Vous n'avez pas de compte ? <Link to="/register" className="signup-text-modern" style={{ color: "#5B9FED" }}>Inscrivez-vous</Link>
           </p>
         </div>
         </div>
