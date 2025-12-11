@@ -101,40 +101,42 @@ export default function RegisterPage() {
               </div>
             )}
 
-            <div className="form-group-modern">
-              <label className="form-label-modern">Prénom</label>
-              <div className="input-wrapper-modern">
-                <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  className="form-input-modern"
-                  placeholder="Votre prénom"
-                  required
-                  disabled={loading}
-                />
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <div className="form-group-modern" style={{ flex: 1 }}>
+                <label className="form-label-modern">Prénom</label>
+                <div className="input-wrapper-modern">
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    className="form-input-modern"
+                    placeholder="Votre prénom"
+                    required
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+
+              <div className="form-group-modern" style={{ flex: 1 }}>
+                <label className="form-label-modern">Nom</label>
+                <div className="input-wrapper-modern">
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    className="form-input-modern"
+                    placeholder="Votre nom"
+                    required
+                    disabled={loading}
+                  />
+                </div>
               </div>
             </div>
 
             <div className="form-group-modern">
-              <label className="form-label-modern">Nom</label>
-              <div className="input-wrapper-modern">
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  className="form-input-modern"
-                  placeholder="Votre nom"
-                  required
-                  disabled={loading}
-                />
-              </div>
-            </div>
-
-            <div className="form-group-modern">
-              <label className="form-label-modern">Email étudiant</label>
+              <label className="form-label-modern">Email</label>
               <div className="input-wrapper-modern">
                 <input
                   type="email"
@@ -142,7 +144,7 @@ export default function RegisterPage() {
                   value={formData.email}
                   onChange={handleChange}
                   className="form-input-modern"
-                  placeholder="votre.email@etudiant.univ-amiens.fr"
+                  placeholder="votre.email@domaine.fr"
                   required
                   disabled={loading}
                 />
@@ -193,7 +195,7 @@ export default function RegisterPage() {
                     value={formData.phone}
                     onChange={handleChange}
                     className="form-input-modern"
-                    placeholder="06 XX XX XX XX"
+                    placeholder="06XXXXXXXX"
                     disabled={loading}
                   />
                 </div>
@@ -208,7 +210,7 @@ export default function RegisterPage() {
                     value={formData.studentId}
                     onChange={handleChange}
                     className="form-input-modern"
-                    placeholder="IUT2024001 ou UPJV2024002"
+                    placeholder="Votre numéro étudiant"
                     disabled={loading}
                   />
                 </div>
