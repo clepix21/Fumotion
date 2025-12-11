@@ -290,60 +290,52 @@ class AuthController {
     }
   }
 
-  // Demande de réinitialisation de mot de passe
+  // Réinitialisation de mot de passe avec email et numéro étudiant
   async forgotPassword(req, res) {
     try {
-      const { email } = req.body
+      const { email, studentId, password } = req.body
 
       console.log("[v0] Demande de réinitialisation de mot de passe pour:", email)
 
-      // Vérifier si l'utilisateur existe
-      const user = await db.get("SELECT id, email, first_name FROM users WHERE email = ?", [email])
+      // Vérifier si l'utilisateur existe avec l'email et le numéro étudiant
+      const user = await db.get(
+        "SELECT id, email FROM users WHERE email = ? AND student_id = ?",
+        [email, studentId]
+      )
 
       if (!user) {
-        // Pour des raisons de sécurité, on retourne toujours success même si l'email n'existe pas
-        return res.json({
-          success: true,
-          message: "Si cet email existe, un lien de réinitialisation a été envoyé",
+        console.log("[v0] Email ou numéro étudiant incorrect")
+        return res.status(400).json({
+          success: false,
+          message: "Email ou numéro étudiant incorrect",
         })
       }
 
-      // Générer un token de réinitialisation
-      const resetToken = crypto.randomBytes(32).toString("hex")
-      const resetTokenHash = crypto.createHash("sha256").update(resetToken).digest("hex")
-      const resetTokenExpiry = new Date(Date.now() + 3600000) // 1 heure
+      // Hasher le nouveau mot de passe
+      const hashedPassword = await bcrypt.hash(password, 10)
 
-      // Sauvegarder le token dans la base de données
+      // Mettre à jour le mot de passe
       await db.run(
-        "UPDATE users SET reset_token = ?, reset_token_expiry = ? WHERE id = ?",
-        [resetTokenHash, resetTokenExpiry.toISOString(), user.id]
+        "UPDATE users SET password = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+        [hashedPassword, user.id]
       )
 
-      // Dans un vrai projet, vous enverriez un email ici
-      // Pour le développement, on log le lien
-      const resetUrl = `http://localhost:3000/reset-password?token=${resetToken}`
-      console.log("[v0] Lien de réinitialisation:", resetUrl)
-      console.log("[v0] Token (à copier pour tester):", resetToken)
+      console.log("[v0] Mot de passe réinitialisé avec succès pour:", user.email)
 
       res.json({
         success: true,
-        message: "Si cet email existe, un lien de réinitialisation a été envoyé",
-        // En dev uniquement - à retirer en production
-        devOnly: {
-          resetUrl,
-          resetToken
-        }
+        message: "Mot de passe réinitialisé avec succès",
       })
     } catch (error) {
-      console.error("[v0] Erreur lors de la demande de réinitialisation:", error)
+      console.error("[v0] Erreur lors de la réinitialisation:", error)
       res.status(500).json({
         success: false,
-        message: "Erreur serveur lors de la demande de réinitialisation",
+        message: "Erreur serveur lors de la réinitialisation",
       })
     }
   }
 
-  // Réinitialisation du mot de passe
+  // Réinitialisation du mot de passe (obsolète, gardé pour compatibilité)
   async resetPassword(req, res) {
     try {
       const { token, password } = req.body
