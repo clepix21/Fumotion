@@ -458,6 +458,22 @@
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
+.back-link-modern {
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  opacity: 0.9;
+}
+
+.back-link-modern:hover {
+  opacity: 1;
+  transform: translateX(-4px);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .auth-container {

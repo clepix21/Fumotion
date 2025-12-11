@@ -81,6 +81,9 @@ export default function LoginPage() {
   return (
     <div className="auth-page-modern">
       <div className="auth-wrapper-modern">
+        <Link to="/" className="back-link-modern">
+          ← Retour à l'accueil
+        </Link>
         <h1 className="auth-title-modern">Connexion</h1>
 
         <div className="auth-card-modern">

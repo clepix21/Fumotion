@@ -90,6 +90,9 @@ export default function RegisterPage() {
   return (
     <div className="auth-page-modern">
       <div className="auth-wrapper-modern">
+        <Link to="/" className="back-link-modern">
+          ← Retour à l'accueil
+        </Link>
         <h1 className="auth-title-modern">Inscription</h1>
 
         <div className="auth-card-modern">
@@ -228,10 +231,14 @@ export default function RegisterPage() {
                   required
                   disabled={loading}
                 >
-                  <option value="IUT Amiens">IUT Amiens</option>
-                  <option value="UPJV Campus Citadelle">UPJV Campus Citadelle</option>
-                  <option value="UPJV Campus Teinturerie">UPJV Campus Teinturerie</option>
-                  <option value="UPJV - Autre campus">UPJV - Autre campus</option>
+                  <option value="UPJV - Campus Citadelle">UPJV - Campus Citadelle</option>
+                  <option value="UPJV - Campus Teinturerie">UPJV - Campus Teinturerie</option>
+                  <option value="UPJV - Campus Cathedrale">UPJV - Campus Cathédrale</option>
+                  <option value="UPJV - Campus Saint-Leu">UPJV - Campus Saint-Leu</option>
+                  <option value="UPJV - Campus Saint-Charles">UPJV - Campus Saint-Charles</option>
+                  <option value="UPJV - Campus Campus-Sud">UPJV - Campus Sud (Pôle Campus / Thil)</option>
+                  <option value="UPJV - Campus Bailly">UPJV - Campus Bailly (STAPS)</option>
+                  <option value="UPJV - IUT Amiens">UPJV - IUT Amiens</option>
                   <option value="Autre établissement Amiens">Autre établissement Amiens</option>
                 </select>
               </div>
