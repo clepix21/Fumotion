@@ -80,10 +80,11 @@ export default function LoginPage() {
 
   return (
     <div className="auth-page-modern">
-      <div className="auth-container-modern">
+      <div className="auth-wrapper-modern">
         <h1 className="auth-title-modern">Sign In</h1>
 
-        <form onSubmit={handleSubmit} className="auth-form-modern">
+        <div className="auth-card-modern">
+          <form onSubmit={handleSubmit} className="auth-form-modern">
           {error && (
             <div className="error-message-modern">
               <span className="error-icon">⚠️</span>
@@ -140,12 +141,25 @@ export default function LoginPage() {
           <div className="divider-modern">
             <span>- OR -</span>
           </div>
+
+          <div className="social-login-modern">
+            <p className="social-text-modern">Sign in with</p>
+            <div className="social-buttons-modern">
+              <button type="button" className="social-btn-modern facebook-btn">
+                <span className="social-icon-modern">f</span>
+              </button>
+              <button type="button" className="social-btn-modern google-btn">
+                <span className="social-icon-modern google-icon">G</span>
+              </button>
+            </div>
+          </div>
         </form>
 
         <div className="signup-link-modern">
           <p>
             Don't have an Account ? <Link to="/register" className="signup-text-modern">Sign up</Link>
           </p>
+        </div>
         </div>
       </div>
     </div>
