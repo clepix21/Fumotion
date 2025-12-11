@@ -79,76 +79,85 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="auth-page">
-      <div className="auth-container">
-        <div className="auth-header">
-          <Link to="/" className="auth-logo">
-            <span className="logo-icon">🚗</span>
-            <span className="logo-text">Fumotion Amiens</span>
-          </Link>
-        </div>
+    <div className="auth-page-modern">
+      <div className="auth-container-modern">
+        <h1 className="auth-title-modern">Sign In</h1>
 
-        <div className="auth-card">
-          <div className="auth-card-header">
-            <h1>Connexion</h1>
-            <p>Accédez à votre compte Fumotion Amiens</p>
-          </div>
+        <form onSubmit={handleSubmit} className="auth-form-modern">
+          {error && (
+            <div className="error-message-modern">
+              <span className="error-icon">⚠️</span>
+              {error}
+            </div>
+          )}
 
-          <form onSubmit={handleSubmit} className="auth-form">
-            {error && (
-              <div className="error-message">
-                <span className="error-icon">⚠️</span>
-                {error}
-              </div>
-            )}
-
-            <div className="form-group">
-              <label htmlFor="email" className="form-label">
-                Email
-              </label>
+          <div className="form-group-modern">
+            <label className="form-label-modern">Email</label>
+            <div className="input-wrapper-modern">
+              <span className="input-icon-modern">✉️</span>
               <input
                 type="email"
-                id="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="form-input"
-                placeholder="votre.email@etudiant.univ-amiens.fr"
+                className="form-input-modern"
+                placeholder="Enter your Email"
                 required
                 disabled={loading}
               />
             </div>
+          </div>
 
-            <div className="form-group">
-              <label htmlFor="password" className="form-label">
-                Mot de passe
-              </label>
+          <div className="form-group-modern">
+            <label className="form-label-modern">Password</label>
+            <div className="input-wrapper-modern">
+              <span className="input-icon-modern">🔑</span>
               <input
                 type="password"
-                id="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="form-input"
-                placeholder="Votre mot de passe"
+                className="form-input-modern"
+                placeholder="******"
                 required
                 disabled={loading}
               />
             </div>
-
-            <button type="submit" className="auth-submit-btn" disabled={loading}>
-              {loading ? "Connexion en cours..." : "Se connecter"}
-            </button>
-          </form>
-
-          <div className="auth-footer">
-            <p>
-              Pas encore de compte ?{" "}
-              <Link to="/register" className="auth-link">
-                S'inscrire
-              </Link>
-            </p>
+            <Link to="/forgot-password" className="forgot-link-modern">
+              Forgot Password?
+            </Link>
           </div>
+
+          <div className="remember-me-modern">
+            <input type="checkbox" id="remember" className="checkbox-modern" />
+            <label htmlFor="remember" className="checkbox-label-modern">Remember me</label>
+          </div>
+
+          <button type="submit" className="login-btn-modern" disabled={loading}>
+            {loading ? "LOADING..." : "LOGIN"}
+          </button>
+
+          <div className="divider-modern">
+            <span>- OR -</span>
+          </div>
+
+          <div className="social-login-modern">
+            <p className="social-text-modern">Sign in with</p>
+            <div className="social-buttons-modern">
+              <button type="button" className="social-btn-modern facebook-btn">
+                <span className="social-icon-modern">f</span>
+              </button>
+              <button type="button" className="social-btn-modern google-btn">
+                <span className="social-icon-modern google-icon">G</span>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div className="signup-link-modern">
+          <p>
+            Don't have an Account ? <Link to="/register" className="signup-text-modern">Sign up</Link>
+          </p>
         </div>
       </div>
     </div>
