@@ -44,6 +44,8 @@ class Database {
           university VARCHAR(255) DEFAULT 'IUT Amiens',
           profile_picture VARCHAR(255),
           banner_picture VARCHAR(255),
+          reset_token VARCHAR(255),
+          reset_token_expiry DATETIME,
           is_verified BOOLEAN DEFAULT 0,
           is_active BOOLEAN DEFAULT 1,
           is_admin BOOLEAN DEFAULT 0,

@@ -474,6 +474,42 @@
   transform: translateX(-4px);
 }
 
+.forgot-description-modern {
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.success-message-modern {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px;
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+  border-radius: 12px;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  text-align: left;
+}
+
+.success-message-modern h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.success-message-modern p {
+  margin: 4px 0;
+  font-size: 0.95rem;
+}
+
+.success-icon {
+  font-size: 24px;
+  font-weight: bold;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .auth-container {

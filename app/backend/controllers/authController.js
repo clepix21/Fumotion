@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken")
 const db = require("../config/database")
 const fs = require("fs")
 const path = require("path")
+const crypto = require("crypto")
 
 class AuthController {
   // Inscription
@@ -285,6 +286,107 @@ class AuthController {
       res.status(500).json({
         success: false,
         message: "Erreur serveur lors de l'upload",
+      })
+    }
+  }
+
+  // Demande de réinitialisation de mot de passe
+  async forgotPassword(req, res) {
+    try {
+      const { email } = req.body
+
+      console.log("[v0] Demande de réinitialisation de mot de passe pour:", email)
+
+      // Vérifier si l'utilisateur existe
+      const user = await db.get("SELECT id, email, first_name FROM users WHERE email = ?", [email])
+
+      if (!user) {
+        // Pour des raisons de sécurité, on retourne toujours success même si l'email n'existe pas
+        return res.json({
+          success: true,
+          message: "Si cet email existe, un lien de réinitialisation a été envoyé",
+        })
+      }
+
+      // Générer un token de réinitialisation
+      const resetToken = crypto.randomBytes(32).toString("hex")
+      const resetTokenHash = crypto.createHash("sha256").update(resetToken).digest("hex")
+      const resetTokenExpiry = new Date(Date.now() + 3600000) // 1 heure
+
+      // Sauvegarder le token dans la base de données
+      await db.run(
+        "UPDATE users SET reset_token = ?, reset_token_expiry = ? WHERE id = ?",
+        [resetTokenHash, resetTokenExpiry.toISOString(), user.id]
+      )
+
+      // Dans un vrai projet, vous enverriez un email ici
+      // Pour le développement, on log le lien
+      const resetUrl = `http://localhost:3000/reset-password?token=${resetToken}`
+      console.log("[v0] Lien de réinitialisation:", resetUrl)
+      console.log("[v0] Token (à copier pour tester):", resetToken)
+
+      res.json({
+        success: true,
+        message: "Si cet email existe, un lien de réinitialisation a été envoyé",
+        // En dev uniquement - à retirer en production
+        devOnly: {
+          resetUrl,
+          resetToken
+        }
+      })
+    } catch (error) {
+      console.error("[v0] Erreur lors de la demande de réinitialisation:", error)
+      res.status(500).json({
+        success: false,
+        message: "Erreur serveur lors de la demande de réinitialisation",
+      })
+    }
+  }
+
+  // Réinitialisation du mot de passe
+  async resetPassword(req, res) {
+    try {
+      const { token, password } = req.body
+
+      console.log("[v0] Tentative de réinitialisation avec token:", token.substring(0, 10) + "...")
+
+      // Hasher le token reçu pour le comparer
+      const resetTokenHash = crypto.createHash("sha256").update(token).digest("hex")
+
+      // Trouver l'utilisateur avec ce token
+      const user = await db.get(
+        "SELECT id, email FROM users WHERE reset_token = ? AND reset_token_expiry > ?",
+        [resetTokenHash, new Date().toISOString()]
+      )
+
+      if (!user) {
+        console.log("[v0] Token invalide ou expiré")
+        return res.status(400).json({
+          success: false,
+          message: "Token invalide ou expiré",
+        })
+      }
+
+      // Hasher le nouveau mot de passe
+      const hashedPassword = await bcrypt.hash(password, 10)
+
+      // Mettre à jour le mot de passe et supprimer le token
+      await db.run(
+        "UPDATE users SET password = ?, reset_token = NULL, reset_token_expiry = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+        [hashedPassword, user.id]
+      )
+
+      console.log("[v0] Mot de passe réinitialisé avec succès pour:", user.email)
+
+      res.json({
+        success: true,
+        message: "Mot de passe réinitialisé avec succès",
+      })
+    } catch (error) {
+      console.error("[v0] Erreur lors de la réinitialisation:", error)
+      res.status(500).json({
+        success: false,
+        message: "Erreur serveur lors de la réinitialisation",
       })
     }
   }
