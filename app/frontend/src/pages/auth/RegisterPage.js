@@ -149,65 +149,69 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            <div className="form-group-modern">
-              <label className="form-label-modern">Mot de passe</label>
-              <div className="input-wrapper-modern">
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="form-input-modern"
-                  placeholder="Au moins 6 caractères"
-                  required
-                  disabled={loading}
-                />
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <div className="form-group-modern" style={{ flex: 1 }}>
+                <label className="form-label-modern">Mot de passe</label>
+                <div className="input-wrapper-modern">
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="form-input-modern"
+                    placeholder="Au moins 6 caractères"
+                    required
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+
+              <div className="form-group-modern" style={{ flex: 1 }}>
+                <label className="form-label-modern">Confirmer le mot de passe</label>
+                <div className="input-wrapper-modern">
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className="form-input-modern"
+                    placeholder="Répétez le mot de passe"
+                    required
+                    disabled={loading}
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="form-group-modern">
-              <label className="form-label-modern">Confirmer le mot de passe</label>
-              <div className="input-wrapper-modern">
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="form-input-modern"
-                  placeholder="Répétez le mot de passe"
-                  required
-                  disabled={loading}
-                />
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <div className="form-group-modern" style={{ flex: 1 }}>
+                <label className="form-label-modern">Téléphone</label>
+                <div className="input-wrapper-modern">
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="form-input-modern"
+                    placeholder="06 XX XX XX XX"
+                    disabled={loading}
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="form-group-modern">
-              <label className="form-label-modern">Téléphone</label>
-              <div className="input-wrapper-modern">
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="form-input-modern"
-                  placeholder="06 XX XX XX XX"
-                  disabled={loading}
-                />
-              </div>
-            </div>
-
-            <div className="form-group-modern">
-              <label className="form-label-modern">Numéro étudiant</label>
-              <div className="input-wrapper-modern">
-                <input
-                  type="text"
-                  name="studentId"
-                  value={formData.studentId}
-                  onChange={handleChange}
-                  className="form-input-modern"
-                  placeholder="IUT2024001 ou UPJV2024002"
-                  disabled={loading}
-                />
+              <div className="form-group-modern" style={{ flex: 1 }}>
+                <label className="form-label-modern">Numéro étudiant</label>
+                <div className="input-wrapper-modern">
+                  <input
+                    type="text"
+                    name="studentId"
+                    value={formData.studentId}
+                    onChange={handleChange}
+                    className="form-input-modern"
+                    placeholder="IUT2024001 ou UPJV2024002"
+                    disabled={loading}
+                  />
+                </div>
               </div>
             </div>
 
