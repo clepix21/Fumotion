@@ -226,6 +226,219 @@
   color: #2d3748;
 }
 
+/* Modern Sign In Design */
+.auth-page-modern {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #5B9FED 0%, #4A8FDD 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.auth-container-modern {
+  width: 100%;
+  max-width: 550px;
+  padding: 40px;
+}
+
+.auth-title-modern {
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.auth-form-modern {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group-modern {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-label-modern {
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.input-wrapper-modern {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 16px 20px;
+  backdrop-filter: blur(10px);
+}
+
+.input-icon-modern {
+  font-size: 1.5rem;
+  margin-right: 12px;
+  color: white;
+}
+
+.form-input-modern {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+}
+
+.form-input-modern::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.forgot-link-modern {
+  text-align: right;
+  color: white;
+  font-size: 0.9rem;
+  text-decoration: none;
+  margin-top: -0.5rem;
+}
+
+.forgot-link-modern:hover {
+  text-decoration: underline;
+}
+
+.remember-me-modern {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox-modern {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.checkbox-label-modern {
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.login-btn-modern {
+  background: white;
+  color: #4A8FDD;
+  border: none;
+  border-radius: 50px;
+  padding: 18px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.login-btn-modern:hover:not(:disabled) {
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.login-btn-modern:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.divider-modern {
+  text-align: center;
+  color: white;
+  margin: 2rem 0;
+  font-size: 1rem;
+}
+
+.social-login-modern {
+  text-align: center;
+}
+
+.social-text-modern {
+  color: white;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.social-buttons-modern {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.social-btn-modern {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.social-btn-modern:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.social-icon-modern {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.facebook-btn .social-icon-modern {
+  color: #1877F2;
+}
+
+.google-icon {
+  font-family: 'Product Sans', sans-serif;
+  background: linear-gradient(90deg, #4285F4 25%, #EA4335 25%, #EA4335 50%, #FBBC05 50%, #FBBC05 75%, #34A853 75%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.signup-link-modern {
+  text-align: center;
+  margin-top: 3rem;
+  color: white;
+  font-size: 1rem;
+}
+
+.signup-text-modern {
+  color: white;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 2px solid white;
+}
+
+.signup-text-modern:hover {
+  opacity: 0.8;
+}
+
+.error-message-modern {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 12px;
+  font-size: 14px;
+  backdrop-filter: blur(10px);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .auth-container {
@@ -239,5 +452,18 @@
   
   .auth-card {
     padding: 24px;
+  }
+
+  .auth-container-modern {
+    padding: 20px;
+  }
+
+  .auth-title-modern {
+    font-size: 2rem;
+  }
+
+  .social-btn-modern {
+    width: 60px;
+    height: 60px;
   }
 }

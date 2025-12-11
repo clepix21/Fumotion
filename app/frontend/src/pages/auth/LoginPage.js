@@ -140,18 +140,6 @@ export default function LoginPage() {
           <div className="divider-modern">
             <span>- OR -</span>
           </div>
-
-          <div className="social-login-modern">
-            <p className="social-text-modern">Sign in with</p>
-            <div className="social-buttons-modern">
-              <button type="button" className="social-btn-modern facebook-btn">
-                <span className="social-icon-modern">f</span>
-              </button>
-              <button type="button" className="social-btn-modern google-btn">
-                <span className="social-icon-modern google-icon">G</span>
-              </button>
-            </div>
-          </div>
         </form>
 
         <div className="signup-link-modern">
