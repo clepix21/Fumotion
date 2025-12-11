@@ -9,7 +9,6 @@ const upload = require('../middleware/upload');
 router.post('/register', validateRegistration, AuthController.register);
 router.post('/login', validateLogin, AuthController.login);
 router.post('/forgot-password', AuthController.forgotPassword);
-router.post('/reset-password', AuthController.resetPassword);
 
 // Routes protégées
 router.get('/profile', authMiddleware, AuthController.getProfile);

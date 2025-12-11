@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken")
 const db = require("../config/database")
 const fs = require("fs")
 const path = require("path")
-const crypto = require("crypto")
 
 class AuthController {
   // Inscription
@@ -317,54 +316,6 @@ class AuthController {
       // Mettre à jour le mot de passe
       await db.run(
         "UPDATE users SET password = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-        [hashedPassword, user.id]
-      )
-
-      console.log("[v0] Mot de passe réinitialisé avec succès pour:", user.email)
-
-      res.json({
-        success: true,
-        message: "Mot de passe réinitialisé avec succès",
-      })
-    } catch (error) {
-      console.error("[v0] Erreur lors de la réinitialisation:", error)
-      res.status(500).json({
-        success: false,
-        message: "Erreur serveur lors de la réinitialisation",
-      })
-    }
-  }
-
-  // Réinitialisation du mot de passe (obsolète, gardé pour compatibilité)
-  async resetPassword(req, res) {
-    try {
-      const { token, password } = req.body
-
-      console.log("[v0] Tentative de réinitialisation avec token:", token.substring(0, 10) + "...")
-
-      // Hasher le token reçu pour le comparer
-      const resetTokenHash = crypto.createHash("sha256").update(token).digest("hex")
-
-      // Trouver l'utilisateur avec ce token
-      const user = await db.get(
-        "SELECT id, email FROM users WHERE reset_token = ? AND reset_token_expiry > ?",
-        [resetTokenHash, new Date().toISOString()]
-      )
-
-      if (!user) {
-        console.log("[v0] Token invalide ou expiré")
-        return res.status(400).json({
-          success: false,
-          message: "Token invalide ou expiré",
-        })
-      }
-
-      // Hasher le nouveau mot de passe
-      const hashedPassword = await bcrypt.hash(password, 10)
-
-      // Mettre à jour le mot de passe et supprimer le token
-      await db.run(
-        "UPDATE users SET password = ?, reset_token = NULL, reset_token_expiry = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
         [hashedPassword, user.id]
       )
 
