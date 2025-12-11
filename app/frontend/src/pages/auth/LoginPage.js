@@ -81,7 +81,7 @@ export default function LoginPage() {
   return (
     <div className="auth-page-modern">
       <div className="auth-wrapper-modern">
-        <h1 className="auth-title-modern">Sign In</h1>
+        <h1 className="auth-title-modern">Connexion</h1>
 
         <div className="auth-card-modern">
           <form onSubmit={handleSubmit} className="auth-form-modern">
@@ -102,7 +102,7 @@ export default function LoginPage() {
                 value={formData.email}
                 onChange={handleChange}
                 className="form-input-modern"
-                placeholder="Enter your Email"
+                placeholder="Entrez votre email"
                 required
                 disabled={loading}
               />
@@ -110,7 +110,7 @@ export default function LoginPage() {
           </div>
 
           <div className="form-group-modern">
-            <label className="form-label-modern">Password</label>
+            <label className="form-label-modern">Mot de passe</label>
             <div className="input-wrapper-modern">
               <span className="input-icon-modern">🔑</span>
               <input
@@ -125,34 +125,18 @@ export default function LoginPage() {
               />
             </div>
             <Link to="/forgot-password" className="forgot-link-modern">
-              Forgot Password?
+              Mot de passe oublié ?
             </Link>
           </div>
 
           <div className="remember-me-modern">
             <input type="checkbox" id="remember" className="checkbox-modern" />
-            <label htmlFor="remember" className="checkbox-label-modern">Remember me</label>
+            <label htmlFor="remember" className="checkbox-label-modern">Se souvenir de moi</label>
           </div>
 
           <button type="submit" className="login-btn-modern" disabled={loading}>
-            {loading ? "LOADING..." : "LOGIN"}
+            {loading ? "CHARGEMENT..." : "CONNEXION"}
           </button>
-
-          <div className="divider-modern">
-            <span>- OR -</span>
-          </div>
-
-          <div className="social-login-modern">
-            <p className="social-text-modern">Sign in with</p>
-            <div className="social-buttons-modern">
-              <button type="button" className="social-btn-modern facebook-btn">
-                <span className="social-icon-modern">f</span>
-              </button>
-              <button type="button" className="social-btn-modern google-btn">
-                <span className="social-icon-modern google-icon">G</span>
-              </button>
-            </div>
-          </div>
         </form>
 
         <div className="signup-link-modern">
