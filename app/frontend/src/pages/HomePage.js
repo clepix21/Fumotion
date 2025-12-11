@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
+import voiture from "../assets/icons/voiture.svg"
+import bouclier from "../assets/icons/bouclier.svg"
+import speed from "../assets/icons/speed.svg"
+import placeholder from "../assets/images/placeholder.png"
 import "../styles/HomePage.css"
 
 export default function HomePage() {
@@ -61,11 +65,11 @@ export default function HomePage() {
           </button>
 
           <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
-            <a href="#how-it-works" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
-              Comment ça marche
+            <a href="#benefits" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
+              Pourquoi Fumotion ?
             </a>
-            <a href="#pricing" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
-              Tarifs
+            <a href="#popular-trips" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
+              Trajets populaires 
             </a>
             
             {isAuthenticated() ? (
@@ -109,33 +113,17 @@ export default function HomePage() {
         <div className="hero-container">
           <div className="hero-content">
             <h1 className="hero-title">
-              Voyagez moins cher
-              <br />
-              entre étudiants
+              Vous avez vos plans, on a vos bons plans.
             </h1>
-            <p className="hero-subtitle">
-              Partagez vos trajets universitaires et économisez jusqu'à 70% sur vos déplacements
-            </p>
 
             <div className="search-card">
-              <div className="search-tabs">
-                <button className="search-tab active">
-                  <span className="tab-icon">🔍</span>
-                  Trouver un trajet
-                </button>
-                
-              </div>
-
               <form onSubmit={handleSearch} className="search-form">
                 <div className="form-row">
                   <div className="form-group">
-                    <label className="form-label">
-                      <span className="label-icon">📍</span>
-                      Départ
-                    </label>
+                    <label className="form-label">Départ</label>
                     <input
                       type="text"
-                      placeholder="ya pas de depart"
+                      placeholder="Amiens, Gare du Nord"
                       className="form-input"
                       value={searchData.departure}
                       onChange={(e) => setSearchData({ ...searchData, departure: e.target.value })}
@@ -143,13 +131,10 @@ export default function HomePage() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">
-                      <span className="label-icon">🎯</span>
-                      Arrivée
-                    </label>
+                    <label className="form-label">Destination</label>
                     <input
                       type="text"
-                      placeholder="Feuchy crik pawwww"
+                      placeholder="IUT Amiens"
                       className="form-input"
                       value={searchData.arrival}
                       onChange={(e) => setSearchData({ ...searchData, arrival: e.target.value })}
@@ -157,10 +142,7 @@ export default function HomePage() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">
-                      <span className="label-icon">📅</span>
-                      Date
-                    </label>
+                    <label className="form-label">Date</label>
                     <input
                       type="date"
                       className="form-input"
@@ -170,19 +152,16 @@ export default function HomePage() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">
-                      <span className="label-icon">👥</span>
-                      Passagers
-                    </label>
+                    <label className="form-label">Passagers</label>
                     <select
                       className="form-input"
                       value={searchData.passengers}
                       onChange={(e) => setSearchData({ ...searchData, passengers: e.target.value })}
                     >
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4+</option>
+                      <option value="1">1 passager</option>
+                      <option value="2">2 passagers</option>
+                      <option value="3">3 passagers</option>
+                      <option value="4">4 passagers</option>
                     </select>
                   </div>
                 </div>
@@ -192,59 +171,76 @@ export default function HomePage() {
                 </button>
               </form>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <div className="trust-indicators">
-              <div className="trust-item">
-                <span className="trust-number">50K+</span>
-                <span className="trust-label">Étudiants inscrits</span>
+      <section id="benefits" className="benefits-section">
+        <div className="benefits-container">
+          <h2 className="section-title">Pourquoi choisir Fumotion ?</h2>
+          <div className="benefits-grid">
+            <div className="benefit-card">
+              <div className="benefit-icon">
+                <img src={voiture} alt="voiture logo" style={{ width: '50px', height: 'auto' }}/>
               </div>
-              <div className="trust-item">
-                <span className="trust-number">4.8/5</span>
-                <span className="trust-label">Note moyenne</span>
+              <h3 className="benefit-title">Vos trajets préférés à petits prix</h3>
+              <p className="benefit-description">Où que vous alliez, en bus ou en covoiturage, trouvez le trajet idéal parmi notre large choix de destinations à petits prix.</p>
+            </div>
+
+            <div className="benefit-card">
+              <div className="benefit-icon">
+                <img src={bouclier} alt="bouclier logo" style={{ width: '50px', height: 'auto' }}/>
               </div>
-              <div className="trust-item">
-                <span className="trust-number">100K+</span>
-                <span className="trust-label">Trajets partagés</span>
+              <h3 className="benefit-title">Voyagez en toute confiance</h3>
+              <p className="benefit-description">Nous prenons le temps qu'il faut pour connaître nos membres et nos compagnies de bus partenaires. Nous vérifions les avis, les profils et les pièces d'identité. Vous savez donc avec qui vous allez voyager pour réserver en toute confiance sur notre plateforme sécurisée.</p>
+            </div>
+
+            <div className="benefit-card">
+              <div className="benefit-icon">
+                <img src={speed} alt="speed logo" style={{ width: '50px', height: 'auto' }}/>
               </div>
+              <h3 className="benefit-title">Recherchez, cliquez et réservez !</h3>
+              <p className="benefit-description">Réserver un trajet devient encore plus simple ! Facile d'utilisation et dotée de technologies avancées, notre appli vous permet de réserver un trajet à proximité en un rien de temps.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="benefits-section">
-        <div className="benefits-container">
-          <h2 className="section-title">Pourquoi choisir Fumotion ?</h2>
-
-          <div className="benefits-grid">
-            <div className="benefit-card">
-              <div className="benefit-illustration">
-                <img src="/placeholder.svg?height=200&width=300" alt="Économies" />
+      <section id="popular-trips" className="popular-trips-section">
+        <div className="popular-container">
+          <h2 className="section-title">Les trajets les plus populaires</h2>
+          
+          <div className="popular-trips-grid">
+            <div className="trip-card">
+              <div className="trip-image" style={{background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover`}}></div>
+              <div className="trip-info">
+                <h3>Gare du Nord → IUT </h3>
+                <p>Dès 15€</p>
               </div>
-              <h3 className="benefit-title">Économisez sur vos trajets</h3>
-              <p className="benefit-description">
-                Partagez les frais d'essence et de péage. Économisez jusqu'à 70% par rapport aux transports
-                traditionnels.
-              </p>
             </div>
-
-            <div className="benefit-card">
-              <div className="benefit-illustration">
-                <img src="/placeholder.svg?height=200&width=300" alt="Réservation facile" />
+            
+            <div className="trip-card">
+              <div className="trip-image" style={{background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover`}}></div>
+              <div className="trip-info">
+                <h3>Paris → Marseille</h3>
+                <p>Dès 20€</p>
               </div>
-              <h3 className="benefit-title">Réservation en quelques clics</h3>
-              <p className="benefit-description">
-                Trouvez et réservez votre trajet en moins de 2 minutes. Paiement sécurisé et confirmation instantanée.
-              </p>
             </div>
-
-            <div className="benefit-card">
-              <div className="benefit-illustration">
-                <img src="/placeholder.svg?height=200&width=300" alt="Flexibilité" />
+            
+            <div className="trip-card">
+              <div className="trip-image" style={{background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover`}}></div>
+              <div className="trip-info">
+                <h3>Paris → Bordeaux</h3>
+                <p>Dès 18€</p>
               </div>
-              <h3 className="benefit-title">Flexibilité totale</h3>
-              <p className="benefit-description">
-                Annulation gratuite jusqu'à 24h avant le départ. Modifiez votre réservation à tout moment.
-              </p>
+            </div>
+            
+            <div className="trip-card">
+              <div className="trip-image" style={{background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover`}}></div>
+              <div className="trip-info">
+                <h3>Lyon → Nice</h3>
+                <p>Dès 22€</p>
+              </div>
             </div>
           </div>
         </div>
@@ -297,54 +293,30 @@ export default function HomePage() {
             <div className="footer-column">
               <h4 className="footer-heading">À propos</h4>
               <ul className="footer-links">
-                <li>
-                  <a href="#how-it-works">Comment ça marche</a>
-                </li>
-                <li>
-                  <a href="#pricing">Tarifs</a>
-                </li>
-                <li>
-                  <a href="/about">Qui sommes-nous</a>
-                </li>
-                <li>
-                  <a href="/blog">Blog</a>
-                </li>
+                <li><a href="#how-it-works">Comment ça marche</a></li>
+                <li><a href="#pricing">Tarifs</a></li>
+                <li><a href="/about">Qui sommes-nous</a></li>
+                <li><a href="/blog">Blog</a></li>
               </ul>
             </div>
 
             <div className="footer-column">
               <h4 className="footer-heading">Support</h4>
               <ul className="footer-links">
-                <li>
-                  <a href="/help">Centre d'aide</a>
-                </li>
-                <li>
-                  <a href="/contact">Nous contacter</a>
-                </li>
-                <li>
-                  <a href="/security">Sécurité</a>
-                </li>
-                <li>
-                  <a href="/insurance">Assurance</a>
-                </li>
+                <li><a href="/help">Centre d'aide</a></li>
+                <li><a href="/contact">Nous contacter</a></li>
+                <li><a href="/security">Sécurité</a></li>
+                <li><a href="/insurance">Assurance</a></li>
               </ul>
             </div>
 
             <div className="footer-column">
               <h4 className="footer-heading">Légal</h4>
               <ul className="footer-links">
-                <li>
-                  <a href="/terms">Conditions générales</a>
-                </li>
-                <li>
-                  <a href="/privacy">Politique de confidentialité</a>
-                </li>
-                <li>
-                  <a href="/legal">Mentions légales</a>
-                </li>
-                <li>
-                  <a href="/cookies">Cookies</a>
-                </li>
+                <li><a href="/terms">Conditions générales</a></li>
+                <li><a href="/privacy">Politique de confidentialité</a></li>
+                <li><a href="/legal">Mentions légales</a></li>
+                <li><a href="/cookies">Cookies</a></li>
               </ul>
             </div>
           </div>
@@ -353,13 +325,13 @@ export default function HomePage() {
             <p>&copy; 2025 Fumotion. Tous droits réservés.</p>
             <div className="footer-social">
               <a href="https://facebook.com" className="social-link" target="_blank" rel="noopener noreferrer">
-                temp
+                Facebook
               </a>
               <a href="https://twitter.com" className="social-link" target="_blank" rel="noopener noreferrer">
-                temp
+                Twitter
               </a>
               <a href="https://instagram.com" className="social-link" target="_blank" rel="noopener noreferrer">
-                temp
+                Instagram
               </a>
             </div>
           </div>

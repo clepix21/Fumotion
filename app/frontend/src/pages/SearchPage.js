@@ -5,6 +5,7 @@ import { tripsAPI, bookingsAPI } from "../services/api"
 import MapComponent from "../components/common/MapComponent"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
+import voiture from "../assets/icons/voiture.svg"
 import "../styles/Search.css"
 import "../styles/HomePage.css"
 
@@ -230,75 +231,61 @@ export default function SearchPage() {
             <p>Trouvez le covoiturage parfait pour vos déplacements</p>
           </div>
 
-          <form onSubmit={handleSearch} className="search-form">
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="departure">
-                  <span className="label-icon">📍</span>
-                  Départ
-                </label>
-                <input
-                  type="text"
-                  id="departure"
-                  value={searchParams.departure}
-                  onChange={(e) => setSearchParams({ ...searchParams, departure: e.target.value })}
-                  placeholder="Ville de départ"
-                  className="form-input"
-                />
+          <div className="search-card">
+            <form onSubmit={handleSearch} className="search-form">
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Départ</label>
+                  <input
+                    type="text"
+                    placeholder="Paris, Gare de Lyon"
+                    className="form-input"
+                    value={searchParams.departure}
+                    onChange={(e) => setSearchParams({ ...searchParams, departure: e.target.value })}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Destination</label>
+                  <input
+                    type="text"
+                    placeholder="Marseille"
+                    className="form-input"
+                    value={searchParams.arrival}
+                    onChange={(e) => setSearchParams({ ...searchParams, arrival: e.target.value })}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Aujourd'hui</label>
+                  <input
+                    type="date"
+                    className="form-input"
+                    value={searchParams.date}
+                    onChange={(e) => setSearchParams({ ...searchParams, date: e.target.value })}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">passager</label>
+                  <select
+                    className="form-input"
+                    value={searchParams.passengers}
+                    onChange={(e) => setSearchParams({ ...searchParams, passengers: parseInt(e.target.value, 10) })}
+                  >
+                    <option value="1">1 passager</option>
+                    <option value="2">2 passagers</option>
+                    <option value="3">3 passagers</option>
+                    <option value="4">4 passagers</option>
+                  </select>
+                </div>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="arrival">
-                  <span className="label-icon">🎯</span>
-                  Arrivée
-                </label>
-                <input
-                  type="text"
-                  id="arrival"
-                  value={searchParams.arrival}
-                  onChange={(e) => setSearchParams({ ...searchParams, arrival: e.target.value })}
-                  placeholder="Ville d'arrivée"
-                  className="form-input"
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="date">
-                  <span className="label-icon">📅</span>
-                  Date
-                </label>
-                <input
-                  type="date"
-                  id="date"
-                  value={searchParams.date}
-                  onChange={(e) => setSearchParams({ ...searchParams, date: e.target.value })}
-                  className="form-input"
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="passengers">
-                  <span className="label-icon">👥</span>
-                  Passagers
-                </label>
-                <select
-                  id="passengers"
-                  value={searchParams.passengers}
-                  onChange={(e) => setSearchParams({ ...searchParams, passengers: parseInt(e.target.value, 10) })}
-                  className="form-input"
-                >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                </select>
-              </div>
-
-              <button type="submit" className="search-btn" disabled={loading}>
+              <button type="submit" className="search-button" disabled={loading}>
                 {loading ? "Recherche..." : "Rechercher"}
               </button>
-            </div>
-          </form>
+            </form>
+          </div>
 
           <div className="results-section">
             {loading && (
@@ -444,7 +431,9 @@ export default function SearchPage() {
 
             {!searched && !loading && (
               <div className="initial-state">
-                <div className="initial-icon">🚗</div>
+                <div className="initial-icon">
+                <img src={voiture} alt="voiture logo" style={{ width: '100px', height: 'auto' }}/>
+                </div>
                 <h3>Commencez votre recherche</h3>
                 <p>Entrez vos critères de recherche pour trouver des trajets disponibles</p>
               </div>

@@ -88,175 +88,170 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-container">
-        <div className="auth-header">
-          <Link to="/" className="auth-logo">
-            <span className="logo-icon">🚗</span>
-            <span className="logo-text">Fumotion Amiens</span>
-          </Link>
-        </div>
+    <div className="auth-page-modern">
+      <div className="auth-wrapper-modern">
+        <Link to="/" className="back-link-modern">
+          ← Retour à l'accueil
+        </Link>
+        <h1 className="auth-title-modern">Inscription</h1>
 
-        <div className="auth-card">
-          <div className="auth-card-header">
-            <h1>Rejoindre Fumotion Amiens</h1>
-            <p>Créez votre compte étudiant pour partager vos trajets dans Amiens</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="auth-form">
+        <div className="auth-card-modern">
+          <form onSubmit={handleSubmit} className="auth-form-modern">
             {error && (
-              <div className="error-message">
+              <div className="error-message-modern">
                 <span className="error-icon">⚠️</span>
                 {error}
               </div>
             )}
 
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="firstName" className="form-label">Prénom</label>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  className="form-input"
-                  placeholder="Votre prénom"
-                  required
-                  disabled={loading}
-                />
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <div className="form-group-modern" style={{ flex: 1 }}>
+                <label className="form-label-modern">Prénom</label>
+                <div className="input-wrapper-modern">
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    className="form-input-modern"
+                    placeholder="Votre prénom"
+                    required
+                    disabled={loading}
+                  />
+                </div>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="lastName" className="form-label">Nom</label>
-                <input
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  className="form-input"
-                  placeholder="Votre nom"
-                  required
-                  disabled={loading}
-                />
+              <div className="form-group-modern" style={{ flex: 1 }}>
+                <label className="form-label-modern">Nom</label>
+                <div className="input-wrapper-modern">
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    className="form-input-modern"
+                    placeholder="Votre nom"
+                    required
+                    disabled={loading}
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="email" className="form-label">Email étudiant</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="form-input"
-                placeholder="votre.email@etudiant.univ-amiens.fr"
-                required
-                disabled={loading}
-              />
-              <small className="form-hint">
-                Utilisez votre email étudiant officiel (.univ-amiens.fr ou .u-picardie.fr)
-              </small>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="password" className="form-label">Mot de passe</label>
+            <div className="form-group-modern">
+              <label className="form-label-modern">Email</label>
+              <div className="input-wrapper-modern">
                 <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
+                  type="email"
+                  name="email"
+                  value={formData.email}
                   onChange={handleChange}
-                  className="form-input"
-                  placeholder="Au moins 6 caractères"
-                  required
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="confirmPassword" className="form-label">Confirmer</label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="form-input"
-                  placeholder="Répétez le mot de passe"
+                  className="form-input-modern"
+                  placeholder="votre.email@domaine.fr"
                   required
                   disabled={loading}
                 />
               </div>
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="phone" className="form-label">Téléphone</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="form-input"
-                  placeholder="06 XX XX XX XX"
-                  disabled={loading}
-                />
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <div className="form-group-modern" style={{ flex: 1 }}>
+                <label className="form-label-modern">Mot de passe</label>
+                <div className="input-wrapper-modern">
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="form-input-modern"
+                    placeholder="Au moins 6 caractères"
+                    required
+                    disabled={loading}
+                  />
+                </div>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="studentId" className="form-label">Numéro étudiant</label>
-                <input
-                  type="text"
-                  id="studentId"
-                  name="studentId"
-                  value={formData.studentId}
-                  onChange={handleChange}
-                  className="form-input"
-                  placeholder="IUT2024001 ou UPJV2024002"
-                  disabled={loading}
-                />
+              <div className="form-group-modern" style={{ flex: 1 }}>
+                <label className="form-label-modern">Confirmer le mot de passe</label>
+                <div className="input-wrapper-modern">
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className="form-input-modern"
+                    placeholder="Répétez le mot de passe"
+                    required
+                    disabled={loading}
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="university" className="form-label">Établissement</label>
-              <select
-                id="university"
-                name="university"
-                value={formData.university}
-                onChange={handleChange}
-                className="form-input"
-                required
-                disabled={loading}
-              >
-                <option value="IUT Amiens">IUT Amiens</option>
-                <option value="UPJV Campus Citadelle">UPJV Campus Citadelle</option>
-                <option value="UPJV Campus Teinturerie">UPJV Campus Teinturerie</option>
-                <option value="UPJV - Autre campus">UPJV - Autre campus</option>
-                <option value="Autre établissement Amiens">Autre établissement Amiens</option>
-              </select>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <div className="form-group-modern" style={{ flex: 1 }}>
+                <label className="form-label-modern">Téléphone</label>
+                <div className="input-wrapper-modern">
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="form-input-modern"
+                    placeholder="06XXXXXXXX"
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+
+              <div className="form-group-modern" style={{ flex: 1 }}>
+                <label className="form-label-modern">Numéro étudiant</label>
+                <div className="input-wrapper-modern">
+                  <input
+                    type="text"
+                    name="studentId"
+                    value={formData.studentId}
+                    onChange={handleChange}
+                    className="form-input-modern"
+                    placeholder="Votre numéro étudiant"
+                    disabled={loading}
+                  />
+                </div>
+              </div>
             </div>
 
-            <button
-              type="submit"
-              className="auth-submit-btn"
-              disabled={loading}
-            >
-              {loading ? 'Inscription en cours...' : 'S\'inscrire'}
+            <div className="form-group-modern">
+              <label className="form-label-modern">Établissement</label>
+              <div className="input-wrapper-modern">
+                <select
+                  name="university"
+                  value={formData.university}
+                  onChange={handleChange}
+                  className="form-input-modern"
+                  required
+                  disabled={loading}
+                >
+                  <option value="UPJV - Campus Citadelle">UPJV - Campus Citadelle</option>
+                  <option value="UPJV - Campus Teinturerie">UPJV - Campus Teinturerie</option>
+                  <option value="UPJV - Campus Cathedrale">UPJV - Campus Cathédrale</option>
+                  <option value="UPJV - Campus Saint-Leu">UPJV - Campus Saint-Leu</option>
+                  <option value="UPJV - Campus Saint-Charles">UPJV - Campus Saint-Charles</option>
+                  <option value="UPJV - Campus Campus-Sud">UPJV - Campus Sud (Pôle Campus / Thil)</option>
+                  <option value="UPJV - Campus Bailly">UPJV - Campus Bailly (STAPS)</option>
+                  <option value="UPJV - IUT Amiens">UPJV - IUT Amiens</option>
+                  <option value="Autre établissement Amiens">Autre établissement Amiens</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" className="login-btn-modern" disabled={loading}>
+              {loading ? "CHARGEMENT..." : "S'INSCRIRE"}
             </button>
           </form>
 
-          <div className="auth-footer">
+          <div className="signup-link-modern" style={{ color: "#5B9FED" }}>
             <p>
-              Déjà un compte ?{' '}
-              <Link to="/login" className="auth-link">
-                Se connecter
-              </Link>
+              Déjà un compte ? <Link to="/login" className="signup-text-modern" style={{ color: "#5B9FED" }}>Se connecter</Link>
             </p>
           </div>
         </div>

@@ -288,6 +288,51 @@ class AuthController {
       })
     }
   }
+
+  // Réinitialisation de mot de passe avec email et numéro étudiant
+  async forgotPassword(req, res) {
+    try {
+      const { email, studentId, password } = req.body
+
+      console.log("[v0] Demande de réinitialisation de mot de passe pour:", email)
+
+      // Vérifier si l'utilisateur existe avec l'email et le numéro étudiant
+      const user = await db.get(
+        "SELECT id, email FROM users WHERE email = ? AND student_id = ?",
+        [email, studentId]
+      )
+
+      if (!user) {
+        console.log("[v0] Email ou numéro étudiant incorrect")
+        return res.status(400).json({
+          success: false,
+          message: "Email ou numéro étudiant incorrect",
+        })
+      }
+
+      // Hasher le nouveau mot de passe
+      const hashedPassword = await bcrypt.hash(password, 10)
+
+      // Mettre à jour le mot de passe
+      await db.run(
+        "UPDATE users SET password = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+        [hashedPassword, user.id]
+      )
+
+      console.log("[v0] Mot de passe réinitialisé avec succès pour:", user.email)
+
+      res.json({
+        success: true,
+        message: "Mot de passe réinitialisé avec succès",
+      })
+    } catch (error) {
+      console.error("[v0] Erreur lors de la réinitialisation:", error)
+      res.status(500).json({
+        success: false,
+        message: "Erreur serveur lors de la réinitialisation",
+      })
+    }
+  }
 }
 
 module.exports = new AuthController()

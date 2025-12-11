@@ -8,6 +8,7 @@ const upload = require('../middleware/upload');
 // Routes publiques
 router.post('/register', validateRegistration, AuthController.register);
 router.post('/login', validateLogin, AuthController.login);
+router.post('/forgot-password', AuthController.forgotPassword);
 
 // Routes protégées
 router.get('/profile', authMiddleware, AuthController.getProfile);

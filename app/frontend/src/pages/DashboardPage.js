@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext"
 import { authAPI } from "../services/api"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
+import voiture from "../assets/icons/voiture.svg"
 import "../styles/Dashboard.css"
 import "../styles/HomePage.css"
 
@@ -250,7 +251,9 @@ export default function DashboardPage() {
               className={`sidebar-btn ${activeTab === "trips" ? "active" : ""}`}
               onClick={() => setActiveTab("trips")}
             >
-              <span className="btn-icon">🚗</span>
+              <span className="btn-icon">
+                <img src={voiture} alt="voiture logo" style={{ width: '30px', height: 'auto' }}/>
+              </span>
               Mes trajets
             </button>
             <button
@@ -290,7 +293,9 @@ export default function DashboardPage() {
               <h1>Vue d'ensemble - Amiens</h1>
               <div className="stats-grid">
                 <div className="stat-card">
-                  <div className="stat-icon">🚗</div>
+                  <div className="stat-icon">
+                    <img src={voiture} alt="voiture logo" style={{ width: '50px', height: 'auto' }}/>
+                  </div>
                   <div className="stat-content">
                     <h3>{myTrips.length}</h3>
                     <p>Trajets proposés</p>
@@ -348,7 +353,9 @@ export default function DashboardPage() {
 
               {myTrips.length === 0 ? (
                 <div className="empty-state">
-                  <div className="empty-icon">🚗</div>
+                  <div className="empty-icon">
+                    <img src={voiture} alt="voiture logo" style={{ width: '50px', height: 'auto' }}/>
+                  </div>
                   <h3>Aucun trajet proposé</h3>
                   <p>Commencez par proposer votre premier trajet dans Amiens</p>
                   <Link to="/create-trip" className="empty-action">
