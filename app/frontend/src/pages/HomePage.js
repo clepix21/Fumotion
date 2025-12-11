@@ -68,7 +68,7 @@ export default function HomePage() {
             <a href="#benefits" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
               Pourquoi Fumotion ?
             </a>
-            <a href="#benefits" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
+            <a href="#popular-trips" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
               Trajets populaires 
             </a>
             
@@ -206,7 +206,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="popular-trips-section">
+      <section id="popular-trips" className="popular-trips-section">
         <div className="popular-container">
           <h2 className="section-title">Les trajets les plus populaires</h2>
           
