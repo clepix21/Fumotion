@@ -13,10 +13,15 @@ services:
       - NODE_ENV=production
       - PORT=5000
       - JWT_SECRET=${JWT_SECRET:-changez_moi_secret_jwt_super_securise}
-      - DB_PATH=/app/database/fumotion.db
+      - DB_HOST=mysql
+      - DB_USER=${DB_USER:-fumotion}
+      - DB_PASSWORD=${DB_PASSWORD:-fumotion_password}
+      - DB_NAME=${DB_NAME:-fumotion}
     volumes:
-      - backend-data:/app/database
       - backend-uploads:/app/uploads
+    depends_on:
+      mysql:
+        condition: service_healthy
     networks:
       - fumotion-network
     healthcheck:
@@ -48,10 +53,29 @@ services:
       retries: 3
       start_period: 10s
 
+  mysql:
+    image: mysql:8.0
+    container_name: fumotion-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_password}
+      MYSQL_DATABASE: ${DB_NAME:-fumotion}
+      MYSQL_USER: ${DB_USER:-fumotion}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-fumotion_password}
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - fumotion-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
-  backend-data:
-    driver: local
   backend-uploads:
+    driver: local
+  db-data:
     driver: local
 
 networks:
