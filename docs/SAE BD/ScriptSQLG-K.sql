@@ -30,7 +30,7 @@ CREATE TABLE vehicles(
    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
    user_id INT NOT NULL,
    PRIMARY KEY(vehicle_id),
-   FOREIGN KEY(user_id) REFERENCES users(user_id)
+   FOREIGN KEY(user_id) REFERENCES users(user_¨¨id)
 );
 
 CREATE TABLE trips(
