@@ -14,6 +14,20 @@ jobs:
     runs-on: ubuntu-latest
     name: Tests API Backend
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root_password_test
+          MYSQL_DATABASE: fumotion_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - name: Récupération du code source
         uses: actions/checkout@v4
@@ -35,12 +49,11 @@ jobs:
           cd app/backend
           echo "PORT=5000" > .env
           echo "JWT_SECRET=cle_secrete_test_pour_ci" >> .env
-          echo "DB_PATH=./database/test.db" >> .env
+          echo "DB_HOST=127.0.0.1" >> .env
+          echo "DB_USER=root" >> .env
+          echo "DB_PASSWORD=root_password_test" >> .env
+          echo "DB_NAME=fumotion_test" >> .env
           echo "NODE_ENV=test" >> .env
-
-      - name: Création répertoire base de données
-        run: |
-          mkdir -p app/backend/database
 
       - name: Démarrage serveur backend pour tests
         run: |
@@ -126,6 +139,20 @@ jobs:
     name: Tests d'Intégration
     needs: [tests-backend, tests-frontend]
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root_password_integration
+          MYSQL_DATABASE: fumotion_integration
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - name: Récupération du code source
         uses: actions/checkout@v4
@@ -148,9 +175,11 @@ jobs:
           cd app/backend
           echo "PORT=5000" > .env
           echo "JWT_SECRET=secret_integration_test" >> .env
-          echo "DB_PATH=./database/integration.db" >> .env
+          echo "DB_HOST=127.0.0.1" >> .env
+          echo "DB_USER=root" >> .env
+          echo "DB_PASSWORD=root_password_integration" >> .env
+          echo "DB_NAME=fumotion_integration" >> .env
           echo "NODE_ENV=test" >> .env
-          mkdir -p database
           cd ../..
           
           # Environnement frontend
