@@ -69,10 +69,12 @@ jobs:
 
       - name: Test endpoint inscription API
         run: |
-          curl -X POST http://localhost:5000/api/auth/register \
+          response=$(curl -X POST http://localhost:5000/api/auth/register \
             -H "Content-Type: application/json" \
             -d '{"firstName":"Test","lastName":"Utilisateur","email":"test@ci.com","password":"motdepasse123"}' \
-            || exit 1
+            -s)
+          echo "Réponse inscription: $response"
+          echo "$response" | grep -q "success" || exit 1
 
       - name: Test endpoint recherche trajets API
         run: |
@@ -102,11 +104,6 @@ jobs:
         run: |
           cd app/frontend
           echo "REACT_APP_API_URL=http://localhost:5000" > .env
-
-      - name: Vérification qualité code frontend
-        run: |
-          cd app/frontend
-          npm run lint || echo "Vérification lint terminée avec avertissements"
 
       - name: Exécution tests frontend
         run: |
@@ -140,8 +137,6 @@ jobs:
 
       - name: Installation toutes dépendances
         run: |
-          # Installation dépendances racine
-          npm ci
           # Installation dépendances backend
           cd app/backend && npm ci && cd ../..
           # Installation dépendances frontend

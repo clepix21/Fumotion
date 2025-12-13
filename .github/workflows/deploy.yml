@@ -1,4 +1,4 @@
-name: Deploy to Production
+name: Déploiement en Production
 
 on:
   push:
@@ -10,27 +10,27 @@ env:
   IMAGE_NAME: ${{ github.repository_owner }}/fumotion
 
 jobs:
-  build-and-push:
+  construction-et-publication:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
 
     steps:
-      - name: Checkout code
+      - name: Récupération du code source
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
+      - name: Configuration Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to GitHub Container Registry
+      - name: Connexion au registre GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ${{ env.DOCKER_REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata for Backend
+      - name: Extraction métadonnées Backend
         id: meta-backend
         uses: docker/metadata-action@v5
         with:
@@ -40,7 +40,7 @@ jobs:
             type=sha,prefix={{branch}}-
             type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: Build and push Backend image
+      - name: Construction et publication image Backend
         uses: docker/build-push-action@v5
         with:
           context: ./app/backend
@@ -50,7 +50,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Extract metadata for Frontend
+      - name: Extraction métadonnées Frontend
         id: meta-frontend
         uses: docker/metadata-action@v5
         with:
@@ -60,7 +60,7 @@ jobs:
             type=sha,prefix={{branch}}-
             type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: Build and push Frontend image
+      - name: Construction et publication image Frontend
         uses: docker/build-push-action@v5
         with:
           context: ./app/frontend
@@ -72,13 +72,13 @@ jobs:
           build-args: |
             REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
 
-  deploy:
-    needs: build-and-push
+  deploiement:
+    needs: construction-et-publication
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
 
     steps:
-      - name: Deploy to server via SSH
+      - name: Déploiement sur le serveur via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SERVER_HOST }}
