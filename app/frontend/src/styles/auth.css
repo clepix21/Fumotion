@@ -315,6 +315,22 @@
   color: #94a3b8;
 }
 
+.form-input-modern.input-error {
+  border-color: #ef4444;
+}
+
+.input-wrapper-modern:has(.input-error) {
+  border-color: #ef4444;
+}
+
+.field-error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+  font-weight: 500;
+}
+
 .forgot-link-modern {
   text-align: right;
   color: #5B9FED;
