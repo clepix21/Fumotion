@@ -18,28 +18,42 @@ export default function RegisterPage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+    // Effacer l'erreur du champ lors de la modification
+    if (fieldErrors[name]) {
+      setFieldErrors({
+        ...fieldErrors,
+        [name]: ''
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setFieldErrors({});
     setLoading(true);
 
     // Validation côté client
+    const errors = {};
+    
     if (formData.password !== formData.confirmPassword) {
-      setError('Les mots de passe ne correspondent pas');
-      setLoading(false);
-      return;
+      errors.confirmPassword = 'Les mots de passe ne correspondent pas';
     }
 
     if (formData.password.length < 6) {
-      setError('Le mot de passe doit contenir au moins 6 caractères');
+      errors.password = 'Le mot de passe doit contenir au moins 6 caractères';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
       setLoading(false);
       return;
     }
@@ -77,7 +91,18 @@ export default function RegisterPage() {
           navigate('/login');
         }
       } else {
-        setError(data.message || 'Erreur lors de l\'inscription');
+        // Gérer les erreurs de validation du backend
+        if (data.errors && Array.isArray(data.errors)) {
+          const errors = {};
+          data.errors.forEach(err => {
+            const field = err.path || err.param;
+            errors[field] = err.msg;
+          });
+          setFieldErrors(errors);
+          setError('Veuillez corriger les erreurs dans le formulaire');
+        } else {
+          setError(data.message || 'Erreur lors de l\'inscription');
+        }
       }
     } catch (err) {
       console.error('Erreur réseau:', err);
@@ -113,12 +138,15 @@ export default function RegisterPage() {
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleChange}
-                    className="form-input-modern"
+                    className={`form-input-modern ${fieldErrors.firstName ? 'input-error' : ''}`}
                     placeholder="Votre prénom"
                     required
                     disabled={loading}
                   />
                 </div>
+                {fieldErrors.firstName && (
+                  <span className="field-error-message">{fieldErrors.firstName}</span>
+                )}
               </div>
 
               <div className="form-group-modern" style={{ flex: 1 }}>
@@ -129,12 +157,15 @@ export default function RegisterPage() {
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleChange}
-                    className="form-input-modern"
+                    className={`form-input-modern ${fieldErrors.lastName ? 'input-error' : ''}`}
                     placeholder="Votre nom"
                     required
                     disabled={loading}
                   />
                 </div>
+                {fieldErrors.lastName && (
+                  <span className="field-error-message">{fieldErrors.lastName}</span>
+                )}
               </div>
             </div>
 
@@ -146,12 +177,15 @@ export default function RegisterPage() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="form-input-modern"
+                  className={`form-input-modern ${fieldErrors.email ? 'input-error' : ''}`}
                   placeholder="votre.email@domaine.fr"
                   required
                   disabled={loading}
                 />
               </div>
+              {fieldErrors.email && (
+                <span className="field-error-message">{fieldErrors.email}</span>
+              )}
             </div>
 
             <div style={{ display: 'flex', gap: '1rem' }}>
@@ -163,12 +197,15 @@ export default function RegisterPage() {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="form-input-modern"
+                    className={`form-input-modern ${fieldErrors.password ? 'input-error' : ''}`}
                     placeholder="Au moins 6 caractères"
                     required
                     disabled={loading}
                   />
                 </div>
+                {fieldErrors.password && (
+                  <span className="field-error-message">{fieldErrors.password}</span>
+                )}
               </div>
 
               <div className="form-group-modern" style={{ flex: 1 }}>
@@ -179,12 +216,15 @@ export default function RegisterPage() {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className="form-input-modern"
+                    className={`form-input-modern ${fieldErrors.confirmPassword ? 'input-error' : ''}`}
                     placeholder="Répétez le mot de passe"
                     required
                     disabled={loading}
                   />
                 </div>
+                {fieldErrors.confirmPassword && (
+                  <span className="field-error-message">{fieldErrors.confirmPassword}</span>
+                )}
               </div>
             </div>
 
@@ -197,11 +237,14 @@ export default function RegisterPage() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="form-input-modern"
+                    className={`form-input-modern ${fieldErrors.phone ? 'input-error' : ''}`}
                     placeholder="06XXXXXXXX"
                     disabled={loading}
                   />
                 </div>
+                {fieldErrors.phone && (
+                  <span className="field-error-message">{fieldErrors.phone}</span>
+                )}
               </div>
 
               <div className="form-group-modern" style={{ flex: 1 }}>

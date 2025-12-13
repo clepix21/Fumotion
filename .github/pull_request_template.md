@@ -15,3 +15,10 @@
 - [] Les tests passent localement
 - [] La CI est verte (GitHub Actions)
 - [] Documentation mise à jour si nécessaire
+
+---
+
+<br>
+<div align="center">
+  <img src="https://i.imgflip.com/60pyt9.png" alt="chocobo">
+</div>

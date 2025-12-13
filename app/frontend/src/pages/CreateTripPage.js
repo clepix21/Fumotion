@@ -234,19 +234,24 @@ export default function CreateTripPage() {
   const handleMapClick = async (latlng) => {
     if (selectingPoint) {
       const { lat, lng } = latlng
-      const address = await reverseGeocode(lat, lng)
+      const geocodeResult = await reverseGeocode(lat, lng)
+      
+      // Utiliser l'adresse retournée par le géocodage inverse, ou une description des coordonnées
+      let locationText = geocodeResult && geocodeResult.address 
+        ? geocodeResult.address 
+        : `Point sélectionné (${lat.toFixed(4)}°, ${lng.toFixed(4)}°)`
       
       if (selectingPoint === 'departure') {
         setFormData(prev => ({
           ...prev,
-          departure_location: address ? address.address : `${lat.toFixed(6)}, ${lng.toFixed(6)}`,
+          departure_location: locationText,
           departure_latitude: lat,
           departure_longitude: lng,
         }))
       } else if (selectingPoint === 'arrival') {
         setFormData(prev => ({
           ...prev,
-          arrival_location: address ? address.address : `${lat.toFixed(6)}, ${lng.toFixed(6)}`,
+          arrival_location: locationText,
           arrival_latitude: lat,
           arrival_longitude: lng,
         }))
