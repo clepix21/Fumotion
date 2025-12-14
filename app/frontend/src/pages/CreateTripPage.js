@@ -234,18 +234,22 @@ export default function CreateTripPage() {
   const handleMapClick = async (latlng) => {
     if (selectingPoint) {
       const { lat, lng } = latlng
+      const pointType = selectingPoint // Sauvegarder la valeur avant de la réinitialiser
+      
+      // Désactiver immédiatement le mode sélection pour éviter les clics multiples
+      setSelectingPoint(null)
       
       // Indiquer qu'on est en train de charger l'adresse
       const loadingText = 'Recherche de l\'adresse...'
       
-      if (selectingPoint === 'departure') {
+      if (pointType === 'departure') {
         setFormData(prev => ({
           ...prev,
           departure_location: loadingText,
           departure_latitude: lat,
           departure_longitude: lng,
         }))
-      } else if (selectingPoint === 'arrival') {
+      } else if (pointType === 'arrival') {
         setFormData(prev => ({
           ...prev,
           arrival_location: loadingText,
@@ -274,19 +278,17 @@ export default function CreateTripPage() {
       }
       
       // Mettre à jour avec l'adresse finale
-      if (selectingPoint === 'departure') {
+      if (pointType === 'departure') {
         setFormData(prev => ({
           ...prev,
           departure_location: locationText,
         }))
-      } else if (selectingPoint === 'arrival') {
+      } else if (pointType === 'arrival') {
         setFormData(prev => ({
           ...prev,
           arrival_location: locationText,
         }))
       }
-      
-      setSelectingPoint(null)
     }
   }
 
