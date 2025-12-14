@@ -5,7 +5,7 @@ import { tripsAPI } from "../services/api"
 import MapComponent from "../components/common/MapComponent"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
-import { geocodeAddress, reverseGeocode } from "../utils/geocoding"
+import { geocodeAddress, reverseGeocode, formatAddressShort } from "../utils/geocoding"
 import "../styles/CreateTrip.css"
 import "../styles/HomePage.css"
 
@@ -234,26 +234,55 @@ export default function CreateTripPage() {
   const handleMapClick = async (latlng) => {
     if (selectingPoint) {
       const { lat, lng } = latlng
-      const geocodeResult = await reverseGeocode(lat, lng)
       
-      // Utiliser l'adresse retournée par le géocodage inverse, ou une description des coordonnées
-      let locationText = geocodeResult && geocodeResult.address 
-        ? geocodeResult.address 
-        : `Point sélectionné (${lat.toFixed(4)}°, ${lng.toFixed(4)}°)`
+      // Indiquer qu'on est en train de charger l'adresse
+      const loadingText = 'Recherche de l\'adresse...'
       
       if (selectingPoint === 'departure') {
         setFormData(prev => ({
           ...prev,
-          departure_location: locationText,
+          departure_location: loadingText,
           departure_latitude: lat,
           departure_longitude: lng,
         }))
       } else if (selectingPoint === 'arrival') {
         setFormData(prev => ({
           ...prev,
-          arrival_location: locationText,
+          arrival_location: loadingText,
           arrival_latitude: lat,
           arrival_longitude: lng,
+        }))
+      }
+      
+      // Récupérer l'adresse via géocodage inverse
+      const geocodeResult = await reverseGeocode(lat, lng)
+      
+      // Utiliser le formatage court de l'adresse
+      let locationText = formatAddressShort(geocodeResult)
+      
+      if (!locationText) {
+        locationText = `Localisation : ${lat.toFixed(6)}, ${lng.toFixed(6)}`
+      }
+      
+      // Si le géocodage a échoué, réessayer une fois après un court délai
+      if (!geocodeResult || !geocodeResult.address) {
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        const retryResult = await reverseGeocode(lat, lng)
+        if (retryResult) {
+          locationText = formatAddressShort(retryResult) || locationText
+        }
+      }
+      
+      // Mettre à jour avec l'adresse finale
+      if (selectingPoint === 'departure') {
+        setFormData(prev => ({
+          ...prev,
+          departure_location: locationText,
+        }))
+      } else if (selectingPoint === 'arrival') {
+        setFormData(prev => ({
+          ...prev,
+          arrival_location: locationText,
         }))
       }
       
