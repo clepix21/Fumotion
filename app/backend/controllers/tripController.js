@@ -83,7 +83,7 @@ class TripController {
         LEFT JOIN reviews r ON u.id = r.reviewed_id
         LEFT JOIN bookings b ON t.id = b.trip_id AND b.status != 'cancelled'
         WHERE t.status = 'active'
-        AND t.departure_datetime > datetime('now')
+        AND t.departure_datetime > NOW()
       `;
 
       const params = [];
@@ -99,7 +99,7 @@ class TripController {
       }
 
       if (date) {
-        query += ` AND date(t.departure_datetime) = date(?)`;
+        query += ` AND DATE(t.departure_datetime) = DATE(?)`;
         params.push(date);
       }
 
