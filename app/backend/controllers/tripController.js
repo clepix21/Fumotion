@@ -19,6 +19,12 @@ class TripController {
 
       const driverId = req.user.id;
 
+      // Convertir la date ISO en format MySQL DATETIME (YYYY-MM-DD HH:MM:SS)
+      const mysqlDateTime = new Date(departureDateTime)
+        .toISOString()
+        .slice(0, 19)
+        .replace('T', ' ');
+
       const result = await db.run(
         `INSERT INTO trips (
           driver_id, departure_location, arrival_location, departure_datetime,
@@ -26,7 +32,7 @@ class TripController {
           departure_longitude, arrival_latitude, arrival_longitude
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
-          driverId, departureLocation, arrivalLocation, departureDateTime,
+          driverId, departureLocation, arrivalLocation, mysqlDateTime,
           availableSeats, pricePerSeat, description, departureLatitude,
           departureLongitude, arrivalLatitude, arrivalLongitude
         ]
