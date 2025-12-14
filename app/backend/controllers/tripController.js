@@ -75,13 +75,16 @@ class TripController {
       let query = `
         SELECT t.*, 
                u.first_name, u.last_name, u.email, u.profile_picture,
-               AVG(r.rating) as driver_rating,
-               COUNT(r.id) as reviews_count,
-               (t.available_seats - COALESCE(SUM(b.seats_booked), 0)) as remaining_seats
+               COALESCE(AVG(r.rating), 0) as driver_rating,
+               COUNT(DISTINCT r.id) as reviews_count,
+               (t.available_seats - COALESCE(
+                 (SELECT SUM(b2.seats_booked) 
+                  FROM bookings b2 
+                  WHERE b2.trip_id = t.id AND b2.status != 'cancelled'), 0)
+               ) as remaining_seats
         FROM trips t
         JOIN users u ON t.driver_id = u.id
         LEFT JOIN reviews r ON u.id = r.reviewed_id
-        LEFT JOIN bookings b ON t.id = b.trip_id AND b.status != 'cancelled'
         WHERE t.status = 'active'
         AND t.departure_datetime > NOW()
       `;
@@ -103,7 +106,7 @@ class TripController {
         params.push(date);
       }
 
-      query += ` GROUP BY t.id`;
+      query += ` GROUP BY t.id, u.first_name, u.last_name, u.email, u.profile_picture`;
 
       if (passengers) {
         query += ` HAVING remaining_seats >= ?`;
