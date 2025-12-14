@@ -120,10 +120,11 @@ class TripController {
 
       query += ` ORDER BY t.departure_datetime ASC`;
 
-      // Pagination
+      // Pagination - MySQL a des problèmes avec LIMIT/OFFSET en tant que paramètres préparés
       const offset = (page - 1) * limit;
-      query += ` LIMIT ? OFFSET ?`;
-      params.push(parseInt(limit), offset);
+      const limitValue = parseInt(limit);
+      const offsetValue = parseInt(offset);
+      query += ` LIMIT ${limitValue} OFFSET ${offsetValue}`;
 
       const trips = await db.all(query, params);
 
