@@ -92,11 +92,12 @@ export async function reverseGeocode(lat, lng) {
 
 // Fonction pour formater l'adresse de manière concise
 export function formatAddressShort(geocodeResult) {
-  if (!geocodeResult || !geocodeResult.formatted) {
-    return geocodeResult?.address || null
+  if (!geocodeResult) {
+    return null
   }
 
-  const addr = geocodeResult.formatted
+  // Si on a l'objet address détaillé
+  const addr = geocodeResult.formatted || {}
   const parts = []
 
   // Ajouter le numéro de rue
@@ -111,13 +112,15 @@ export function formatAddressShort(geocodeResult) {
     parts.push(addr.pedestrian)
   } else if (addr.footway) {
     parts.push(addr.footway)
+  } else if (addr.path) {
+    parts.push(addr.path)
   }
 
   // Créer la première partie (rue)
   const street = parts.join(' ')
 
   // Ajouter la ville
-  const city = addr.city || addr.town || addr.village || addr.municipality
+  const city = addr.city || addr.town || addr.village || addr.municipality || addr.suburb
 
   // Formater le résultat final
   if (street && city) {
@@ -128,7 +131,17 @@ export function formatAddressShort(geocodeResult) {
     return street
   }
 
-  // Fallback sur l'adresse complète
-  return geocodeResult.address
+  // Fallback : essayer de parser l'adresse complète
+  if (geocodeResult.address) {
+    const fullAddress = geocodeResult.address
+    // Extraire seulement la première partie avant la première virgule et la ville
+    const parts = fullAddress.split(',').map(p => p.trim())
+    if (parts.length >= 2) {
+      return `${parts[0]}, ${parts[1]}`
+    }
+    return parts[0] || fullAddress
+  }
+
+  return null
 }
 
