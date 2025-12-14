@@ -124,7 +124,7 @@ class TripController {
         SELECT COUNT(DISTINCT t.id) as total
         FROM trips t
         WHERE t.status = 'active'
-        AND t.departure_datetime > datetime('now')
+        AND t.departure_datetime > NOW()
       `;
       const countParams = [];
 
@@ -139,7 +139,7 @@ class TripController {
       }
 
       if (date) {
-        countQuery += ` AND date(t.departure_datetime) = date(?)`;
+        countQuery += ` AND DATE(t.departure_datetime) = DATE(?)`;
         countParams.push(date);
       }
 
