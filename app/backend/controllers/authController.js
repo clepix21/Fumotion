@@ -133,11 +133,12 @@ class AuthController {
         `SELECT u.*, 
                 COUNT(DISTINCT t.id) as trips_created,
                 COUNT(DISTINCT b.id) as bookings_made,
-                AVG(r.rating) as average_rating
+                (SELECT AVG(rating) FROM reviews WHERE reviewed_id = u.id AND type = 'driver') as driver_rating,
+                (SELECT AVG(rating) FROM reviews WHERE reviewed_id = u.id AND type = 'passenger') as passenger_rating,
+                (SELECT AVG(rating) FROM reviews WHERE reviewed_id = u.id) as average_rating
          FROM users u
          LEFT JOIN trips t ON u.id = t.driver_id
          LEFT JOIN bookings b ON u.id = b.passenger_id
-         LEFT JOIN reviews r ON u.id = r.reviewed_id
          WHERE u.id = ?
          GROUP BY u.id`,
         [req.user.id],

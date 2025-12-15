@@ -77,10 +77,12 @@ class TripController {
                u.first_name, u.last_name, u.email, u.profile_picture,
                (SELECT COALESCE(AVG(r2.rating), 0) 
                 FROM reviews r2 
-                WHERE r2.reviewed_id = u.id) as driver_rating,
+               (SELECT COALESCE(AVG(r2.rating), 0) 
+                FROM reviews r2 
+                WHERE r2.reviewed_id = u.id AND r2.type = 'driver') as driver_rating,
                (SELECT COUNT(r3.id) 
                 FROM reviews r3 
-                WHERE r3.reviewed_id = u.id) as reviews_count,
+                WHERE r3.reviewed_id = u.id AND r3.type = 'driver') as reviews_count,
                (t.available_seats - COALESCE(
                  (SELECT SUM(b2.seats_booked) 
                   FROM bookings b2 
@@ -183,14 +185,13 @@ class TripController {
       const trip = await db.get(
         `SELECT t.*, 
                 u.first_name, u.last_name, u.email, u.phone,
-                AVG(r.rating) as driver_rating,
-                COUNT(r.id) as reviews_count,
+                (SELECT AVG(rating) FROM reviews WHERE reviewed_id = u.id AND type = 'driver') as driver_rating,
+                (SELECT COUNT(id) FROM reviews WHERE reviewed_id = u.id AND type = 'driver') as reviews_count,
                 v.brand, v.model, v.color,
                 (t.available_seats - COALESCE(SUM(b.seats_booked), 0)) as remaining_seats
          FROM trips t
          JOIN users u ON t.driver_id = u.id
          LEFT JOIN vehicles v ON t.vehicle_id = v.id
-         LEFT JOIN reviews r ON u.id = r.reviewed_id
          LEFT JOIN bookings b ON t.id = b.trip_id AND b.status != 'cancelled'
          WHERE t.id = ?
          GROUP BY t.id`,
@@ -312,7 +313,7 @@ class TripController {
         'departure_location', 'arrival_location', 'departure_datetime',
         'available_seats', 'price_per_seat', 'description'
       ];
-      
+
       const updateFields = [];
       const updateValues = [];
 
