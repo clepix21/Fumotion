@@ -5,7 +5,7 @@ import { tripsAPI } from "../services/api"
 import MapComponent from "../components/common/MapComponent"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
-import { geocodeAddress, reverseGeocode } from "../utils/geocoding"
+import { geocodeAddress, reverseGeocode, formatAddressShort } from "../utils/geocoding"
 import "../styles/CreateTrip.css"
 import "../styles/HomePage.css"
 
@@ -60,8 +60,9 @@ export default function CreateTripPage() {
 
     geocodeTimeoutRef.current = setTimeout(async () => {
       const newMarkers = []
+      const loadingText = 'Recherche de l\'adresse...'
 
-      if (formData.departure_location.trim()) {
+      if (formData.departure_location.trim() && formData.departure_location !== loadingText) {
         const geo = await geocodeAddress(formData.departure_location)
         if (geo) {
           setFormData(prev => ({
@@ -79,7 +80,7 @@ export default function CreateTripPage() {
         }
       }
 
-      if (formData.arrival_location.trim()) {
+      if (formData.arrival_location.trim() && formData.arrival_location !== loadingText) {
         const geo = await geocodeAddress(formData.arrival_location)
         if (geo) {
           setFormData(prev => ({
@@ -197,7 +198,7 @@ export default function CreateTripPage() {
         setMarkers([])
         navigate("/dashboard")
       } else {
-        const errorMessage = data.errors 
+        const errorMessage = data.errors
           ? data.errors.map(err => err.msg || err.message).join('\n')
           : data.message || "Erreur lors de la création du trajet"
         setError(errorMessage)
@@ -205,7 +206,7 @@ export default function CreateTripPage() {
     } catch (error) {
       console.error("Erreur complète:", error)
       let errorMessage = "Erreur lors de la création du trajet"
-      
+
       if (error.errors && Array.isArray(error.errors)) {
         errorMessage = error.errors.map(err => err.msg || err.message || JSON.stringify(err)).join('\n')
       } else if (error.data && error.data.errors && Array.isArray(error.data.errors)) {
@@ -215,7 +216,7 @@ export default function CreateTripPage() {
       } else if (error.message) {
         errorMessage = error.message
       }
-      
+
       setError(errorMessage)
     } finally {
       setLoading(false)
@@ -234,30 +235,61 @@ export default function CreateTripPage() {
   const handleMapClick = async (latlng) => {
     if (selectingPoint) {
       const { lat, lng } = latlng
-      const geocodeResult = await reverseGeocode(lat, lng)
-      
-      // Utiliser l'adresse retournée par le géocodage inverse, ou une description des coordonnées
-      let locationText = geocodeResult && geocodeResult.address 
-        ? geocodeResult.address 
-        : `Point sélectionné (${lat.toFixed(4)}°, ${lng.toFixed(4)}°)`
-      
-      if (selectingPoint === 'departure') {
+      const pointType = selectingPoint // Sauvegarder la valeur avant de la réinitialiser
+
+      // Désactiver immédiatement le mode sélection pour éviter les clics multiples
+      setSelectingPoint(null)
+
+      // Indiquer qu'on est en train de charger l'adresse
+      const loadingText = 'Recherche de l\'adresse...'
+
+      if (pointType === 'departure') {
         setFormData(prev => ({
           ...prev,
-          departure_location: locationText,
+          departure_location: loadingText,
           departure_latitude: lat,
           departure_longitude: lng,
         }))
-      } else if (selectingPoint === 'arrival') {
+      } else if (pointType === 'arrival') {
         setFormData(prev => ({
           ...prev,
-          arrival_location: locationText,
+          arrival_location: loadingText,
           arrival_latitude: lat,
           arrival_longitude: lng,
         }))
       }
-      
-      setSelectingPoint(null)
+
+      // Récupérer l'adresse via géocodage inverse
+      const geocodeResult = await reverseGeocode(lat, lng)
+
+      // Utiliser le formatage court de l'adresse
+      let locationText = formatAddressShort(geocodeResult)
+
+      if (!locationText) {
+        locationText = `Localisation : ${lat.toFixed(6)}, ${lng.toFixed(6)}`
+      }
+
+      // Si le géocodage a échoué, réessayer une fois après un court délai
+      if (!geocodeResult || !geocodeResult.address) {
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        const retryResult = await reverseGeocode(lat, lng)
+        if (retryResult) {
+          locationText = formatAddressShort(retryResult) || locationText
+        }
+      }
+
+      // Mettre à jour avec l'adresse finale
+      if (pointType === 'departure') {
+        setFormData(prev => ({
+          ...prev,
+          departure_location: locationText,
+        }))
+      } else if (pointType === 'arrival') {
+        setFormData(prev => ({
+          ...prev,
+          arrival_location: locationText,
+        }))
+      }
     }
   }
 
@@ -276,7 +308,7 @@ export default function CreateTripPage() {
             <span className="brand-name">Fumotion</span>
           </div>
 
-          <button 
+          <button
             className="navbar-mobile-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
@@ -514,17 +546,17 @@ export default function CreateTripPage() {
 
               {/* Actions */}
               <div className="form-actions">
-                <button 
-                  type="button" 
-                  onClick={() => navigate("/dashboard")} 
+                <button
+                  type="button"
+                  onClick={() => navigate("/dashboard")}
                   className="cancel-btn"
                   disabled={loading}
                 >
                   Annuler
                 </button>
-                <button 
-                  type="submit" 
-                  disabled={loading} 
+                <button
+                  type="submit"
+                  disabled={loading}
                   className="submit-btn"
                 >
                   {loading ? (

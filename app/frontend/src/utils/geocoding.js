@@ -10,6 +10,21 @@ export async function geocodeAddress(address) {
     return null
   }
 
+  // Vérifier si l'adresse est une coordonnée (format "Localisation : lat, lng" ou "lat, lng")
+  const coordMatch = address.match(/(?:Localisation\s?:\s?)?(-?\d+\.\d+),\s?(-?\d+\.\d+)/)
+  if (coordMatch) {
+    const lat = parseFloat(coordMatch[1])
+    const lng = parseFloat(coordMatch[2])
+    if (!isNaN(lat) && !isNaN(lng)) {
+      return {
+        lat,
+        lng,
+        address: address, // Garder le texte tel quel
+        formatted: {},
+      }
+    }
+  }
+
   // Respecter le délai entre les requêtes
   const now = Date.now()
   const timeSinceLastRequest = now - lastRequestTime
@@ -24,11 +39,12 @@ export async function geocodeAddress(address) {
       format: 'json',
       limit: 1,
       addressdetails: 1,
+      email: 'contact@fumotion.com'
     })
 
     const response = await fetch(`${NOMINATIM_BASE_URL}?${params.toString()}`, {
       headers: {
-        'User-Agent': 'Fumotion/1.0', // Requis par Nominatim
+        'User-Agent': 'Fumotion/1.0 (contact@fumotion.com)',
       },
     })
 
@@ -56,17 +72,26 @@ export async function geocodeAddress(address) {
 }
 
 export async function reverseGeocode(lat, lng) {
+  // Respecter le délai entre les requêtes
+  const now = Date.now()
+  const timeSinceLastRequest = now - lastRequestTime
+  if (timeSinceLastRequest < MIN_REQUEST_INTERVAL) {
+    await new Promise(resolve => setTimeout(resolve, MIN_REQUEST_INTERVAL - timeSinceLastRequest))
+  }
+  lastRequestTime = Date.now()
+
   try {
     const params = new URLSearchParams({
       lat: lat.toString(),
       lon: lng.toString(),
       format: 'json',
       addressdetails: 1,
+      email: 'contact@fumotion.com' // Ajout de l'email pour la politique Nominatim
     })
 
     const response = await fetch(`https://nominatim.openstreetmap.org/reverse?${params.toString()}`, {
       headers: {
-        'User-Agent': 'Fumotion/1.0',
+        'User-Agent': 'Fumotion/1.0 (contact@fumotion.com)',
       },
     })
 
@@ -88,5 +113,60 @@ export async function reverseGeocode(lat, lng) {
     console.error('Erreur de géocodage inverse:', error)
     return null
   }
+}
+
+// Fonction pour formater l'adresse de manière concise
+export function formatAddressShort(geocodeResult) {
+  if (!geocodeResult) {
+    return null
+  }
+
+  // Si on a l'objet address détaillé
+  const addr = geocodeResult.formatted || {}
+  const parts = []
+
+  // Ajouter le numéro de rue
+  if (addr.house_number) {
+    parts.push(addr.house_number)
+  }
+
+  // Ajouter le nom de la rue
+  if (addr.road) {
+    parts.push(addr.road)
+  } else if (addr.pedestrian) {
+    parts.push(addr.pedestrian)
+  } else if (addr.footway) {
+    parts.push(addr.footway)
+  } else if (addr.path) {
+    parts.push(addr.path)
+  }
+
+  // Créer la première partie (rue)
+  const street = parts.join(' ')
+
+  // Ajouter la ville
+  const city = addr.city || addr.town || addr.village || addr.municipality || addr.suburb
+
+  // Formater le résultat final
+  if (street && city) {
+    return `${street}, ${city}`
+  } else if (city) {
+    return city
+  } else if (street) {
+    return street
+  }
+
+  // Fallback : essayer de parser l'adresse complète
+  if (geocodeResult.address) {
+    const fullAddress = geocodeResult.address
+    // Extraire seulement la première partie avant la première virgule et la ville
+    const parts = fullAddress.split(',').map(p => p.trim())
+    if (parts.length >= 2) {
+      return `${parts[0]}, ${parts[1]}`
+    }
+    return parts[0] || fullAddress
+  }
+
+  return null
 }
 

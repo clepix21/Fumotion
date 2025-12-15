@@ -19,6 +19,12 @@ class TripController {
 
       const driverId = req.user.id;
 
+      // Convertir la date ISO en format MySQL DATETIME (YYYY-MM-DD HH:MM:SS)
+      const mysqlDateTime = new Date(departureDateTime)
+        .toISOString()
+        .slice(0, 19)
+        .replace('T', ' ');
+
       const result = await db.run(
         `INSERT INTO trips (
           driver_id, departure_location, arrival_location, departure_datetime,
@@ -26,7 +32,7 @@ class TripController {
           departure_longitude, arrival_latitude, arrival_longitude
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
-          driverId, departureLocation, arrivalLocation, departureDateTime,
+          driverId, departureLocation, arrivalLocation, mysqlDateTime,
           availableSeats, pricePerSeat, description, departureLatitude,
           departureLongitude, arrivalLatitude, arrivalLongitude
         ]
@@ -69,15 +75,21 @@ class TripController {
       let query = `
         SELECT t.*, 
                u.first_name, u.last_name, u.email, u.profile_picture,
-               AVG(r.rating) as driver_rating,
-               COUNT(r.id) as reviews_count,
-               (t.available_seats - COALESCE(SUM(b.seats_booked), 0)) as remaining_seats
+               (SELECT COALESCE(AVG(r2.rating), 0) 
+                FROM reviews r2 
+                WHERE r2.reviewed_id = u.id AND r2.type = 'driver') as driver_rating,
+               (SELECT COUNT(r3.id) 
+                FROM reviews r3 
+                WHERE r3.reviewed_id = u.id AND r3.type = 'driver') as reviews_count,
+               (t.available_seats - COALESCE(
+                 (SELECT SUM(b2.seats_booked) 
+                  FROM bookings b2 
+                  WHERE b2.trip_id = t.id AND b2.status != 'cancelled'), 0)
+               ) as remaining_seats
         FROM trips t
         JOIN users u ON t.driver_id = u.id
-        LEFT JOIN reviews r ON u.id = r.reviewed_id
-        LEFT JOIN bookings b ON t.id = b.trip_id AND b.status != 'cancelled'
         WHERE t.status = 'active'
-        AND t.departure_datetime > datetime('now')
+        AND t.departure_datetime > NOW()
       `;
 
       const params = [];
@@ -93,23 +105,26 @@ class TripController {
       }
 
       if (date) {
-        query += ` AND date(t.departure_datetime) = date(?)`;
+        query += ` AND DATE(t.departure_datetime) = DATE(?)`;
         params.push(date);
       }
 
-      query += ` GROUP BY t.id`;
-
       if (passengers) {
-        query += ` HAVING remaining_seats >= ?`;
+        query += ` AND (t.available_seats - COALESCE(
+          (SELECT SUM(b2.seats_booked) 
+           FROM bookings b2 
+           WHERE b2.trip_id = t.id AND b2.status != 'cancelled'), 0)
+        ) >= ?`;
         params.push(parseInt(passengers));
       }
 
       query += ` ORDER BY t.departure_datetime ASC`;
 
-      // Pagination
+      // Pagination - MySQL a des problèmes avec LIMIT/OFFSET en tant que paramètres préparés
       const offset = (page - 1) * limit;
-      query += ` LIMIT ? OFFSET ?`;
-      params.push(parseInt(limit), offset);
+      const limitValue = parseInt(limit);
+      const offsetValue = parseInt(offset);
+      query += ` LIMIT ${limitValue} OFFSET ${offsetValue}`;
 
       const trips = await db.all(query, params);
 
@@ -118,7 +133,7 @@ class TripController {
         SELECT COUNT(DISTINCT t.id) as total
         FROM trips t
         WHERE t.status = 'active'
-        AND t.departure_datetime > datetime('now')
+        AND t.departure_datetime > NOW()
       `;
       const countParams = [];
 
@@ -133,7 +148,7 @@ class TripController {
       }
 
       if (date) {
-        countQuery += ` AND date(t.departure_datetime) = date(?)`;
+        countQuery += ` AND DATE(t.departure_datetime) = DATE(?)`;
         countParams.push(date);
       }
 
@@ -168,14 +183,13 @@ class TripController {
       const trip = await db.get(
         `SELECT t.*, 
                 u.first_name, u.last_name, u.email, u.phone,
-                AVG(r.rating) as driver_rating,
-                COUNT(r.id) as reviews_count,
+                (SELECT AVG(rating) FROM reviews WHERE reviewed_id = u.id AND type = 'driver') as driver_rating,
+                (SELECT COUNT(id) FROM reviews WHERE reviewed_id = u.id AND type = 'driver') as reviews_count,
                 v.brand, v.model, v.color,
                 (t.available_seats - COALESCE(SUM(b.seats_booked), 0)) as remaining_seats
          FROM trips t
          JOIN users u ON t.driver_id = u.id
          LEFT JOIN vehicles v ON t.vehicle_id = v.id
-         LEFT JOIN reviews r ON u.id = r.reviewed_id
          LEFT JOIN bookings b ON t.id = b.trip_id AND b.status != 'cancelled'
          WHERE t.id = ?
          GROUP BY t.id`,
@@ -297,7 +311,7 @@ class TripController {
         'departure_location', 'arrival_location', 'departure_datetime',
         'available_seats', 'price_per_seat', 'description'
       ];
-      
+
       const updateFields = [];
       const updateValues = [];
 

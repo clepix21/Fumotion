@@ -92,15 +92,15 @@ export default function DashboardPage() {
 
   const formatAddress = (fullAddress) => {
     if (!fullAddress) return "Adresse non disponible"
-    
+
     // Extraire le numéro, rue et ville de l'adresse complète
     const parts = fullAddress.split(',').map(p => p.trim())
-    
+
     if (parts.length >= 2) {
       // Prendre les 2 premières parties (numéro + rue, ville)
       return `${parts[0]}, ${parts[1]}`
     }
-    
+
     return fullAddress
   }
 
@@ -199,7 +199,7 @@ export default function DashboardPage() {
             <span className="brand-name">Fumotion</span>
           </div>
 
-          <button 
+          <button
             className="navbar-mobile-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
@@ -252,7 +252,7 @@ export default function DashboardPage() {
               onClick={() => setActiveTab("trips")}
             >
               <span className="btn-icon">
-                <img src={voiture} alt="voiture logo" style={{ width: '30px', height: 'auto' }}/>
+                <img src={voiture} alt="voiture logo" style={{ width: '30px', height: 'auto' }} />
               </span>
               Mes trajets
             </button>
@@ -294,7 +294,7 @@ export default function DashboardPage() {
               <div className="stats-grid">
                 <div className="stat-card">
                   <div className="stat-icon">
-                    <img src={voiture} alt="voiture logo" style={{ width: '50px', height: 'auto' }}/>
+                    <img src={voiture} alt="voiture logo" style={{ width: '50px', height: 'auto' }} />
                   </div>
                   <div className="stat-content">
                     <h3>{myTrips.length}</h3>
@@ -354,7 +354,7 @@ export default function DashboardPage() {
               {myTrips.length === 0 ? (
                 <div className="empty-state">
                   <div className="empty-icon">
-                    <img src={voiture} alt="voiture logo" style={{ width: '50px', height: 'auto' }}/>
+                    <img src={voiture} alt="voiture logo" style={{ width: '50px', height: 'auto' }} />
                   </div>
                   <h3>Aucun trajet proposé</h3>
                   <p>Commencez par proposer votre premier trajet dans Amiens</p>
@@ -449,10 +449,10 @@ export default function DashboardPage() {
               <div className="profile-card">
                 {/* Bannière */}
                 <div className="profile-banner-container">
-                  <div 
+                  <div
                     className="profile-banner"
                     style={{
-                      backgroundImage: displayUser?.banner_picture 
+                      backgroundImage: displayUser?.banner_picture
                         ? `url(http://localhost:5000/uploads/${displayUser.banner_picture})`
                         : 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
                       backgroundSize: 'cover',
@@ -486,10 +486,10 @@ export default function DashboardPage() {
                       style={{ display: 'none' }}
                     />
                   </div>
-                  
+
                   {/* Avatar */}
                   <div className="profile-avatar-container">
-                    <Avatar 
+                    <Avatar
                       user={displayUser}
                       size="xlarge"
                       editable={editMode}
@@ -522,7 +522,7 @@ export default function DashboardPage() {
                         Étudiant à {displayUser?.university || 'IUT Amiens'}, Amiens
                       </p>
                     </div>
-                    <button 
+                    <button
                       className="edit-profile-btn"
                       onClick={() => setEditMode(!editMode)}
                     >
@@ -542,9 +542,15 @@ export default function DashboardPage() {
                     </div>
                     <div className="stat-item">
                       <span className="stat-value">
-                        {displayUser?.average_rating ? parseFloat(displayUser.average_rating).toFixed(1) : '4.8'}
+                        {displayUser?.driver_rating ? parseFloat(displayUser.driver_rating).toFixed(1) : '-'}
                       </span>
-                      <span className="stat-label">Note moyenne</span>
+                      <span className="stat-label">Note Conducteur</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-value">
+                        {displayUser?.passenger_rating ? parseFloat(displayUser.passenger_rating).toFixed(1) : '-'}
+                      </span>
+                      <span className="stat-label">Note Passager</span>
                     </div>
                   </div>
 

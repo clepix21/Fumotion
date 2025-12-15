@@ -117,9 +117,9 @@ class BookingController {
       }
 
       if (type === 'upcoming') {
-        query += ` AND t.departure_datetime > datetime('now')`;
+        query += ` AND t.departure_datetime > NOW()`;
       } else if (type === 'past') {
-        query += ` AND t.departure_datetime <= datetime('now')`;
+        query += ` AND t.departure_datetime <= NOW()`;
       }
 
       query += ` ORDER BY t.departure_datetime DESC`;

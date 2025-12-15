@@ -136,7 +136,7 @@ export default function SearchPage() {
       if (data.success) {
         alert("Réservation effectuée avec succès!")
         // Recharger les résultats de recherche
-        handleSearch({ preventDefault: () => {} })
+        handleSearch({ preventDefault: () => { } })
       } else {
         alert(data.message || "Erreur lors de la réservation")
       }
@@ -173,7 +173,7 @@ export default function SearchPage() {
             <span className="brand-name">Fumotion</span>
           </div>
 
-          <button 
+          <button
             className="navbar-mobile-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
@@ -191,15 +191,15 @@ export default function SearchPage() {
                 <button onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
                   Tableau de bord
                 </button>
-              <button onClick={() => { navigate("/create-trip"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
-                Créer un trajet
-              </button>
-              {user?.is_admin && (
-                <button onClick={() => { navigate("/admin"); setMobileMenuOpen(false); }} className="navbar-btn-admin">
-                  👑 Admin
+                <button onClick={() => { navigate("/create-trip"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
+                  Créer un trajet
                 </button>
-              )}
-              <div className="navbar-user-profile">
+                {user?.is_admin && (
+                  <button onClick={() => { navigate("/admin"); setMobileMenuOpen(false); }} className="navbar-btn-admin">
+                    👑 Admin
+                  </button>
+                )}
+                <div className="navbar-user-profile">
                   <Avatar user={user} size="medium" />
                   <div className="navbar-user-info">
                     <span className="navbar-user-name">{user?.first_name || user?.email}</span>
@@ -318,7 +318,7 @@ export default function SearchPage() {
                     {trips.length} trajet{trips.length > 1 ? "s" : ""} trouvé{trips.length > 1 ? "s" : ""}
                   </h2>
                   <MapComponent
-                    center={trips[0]?.departure_latitude && trips[0]?.departure_longitude 
+                    center={trips[0]?.departure_latitude && trips[0]?.departure_longitude
                       ? [trips[0].departure_latitude, trips[0].departure_longitude]
                       : [49.8942, 2.2957]}
                     zoom={12}
@@ -346,85 +346,85 @@ export default function SearchPage() {
                             }
                           }))
                       )}
-                    height="300px"
+                    height="500px"
                     interactive={true}
                   />
                 </div>
                 <div className="results-list">
                   {trips.map((trip) => (
-                  <div key={trip.id} className="trip-result-card">
-                    <div className="trip-info">
-                      <div className="trip-route">
-                        <div className="route-point">
-                          <span className="route-icon">📍</span>
-                          <div>
-                            <strong>{trip.departure_location}</strong>
-                            <p className="route-time">{formatDate(trip.departure_datetime)}</p>
+                    <div key={trip.id} className="trip-result-card">
+                      <div className="trip-info">
+                        <div className="trip-route">
+                          <div className="route-point">
+                            <span className="route-icon">📍</span>
+                            <div>
+                              <strong>{trip.departure_location}</strong>
+                              <p className="route-time">{formatDate(trip.departure_datetime)}</p>
+                            </div>
+                          </div>
+                          <div className="route-line"></div>
+                          <div className="route-point">
+                            <span className="route-icon">🎯</span>
+                            <div>
+                              <strong>{trip.arrival_location}</strong>
+                            </div>
                           </div>
                         </div>
-                        <div className="route-line"></div>
-                        <div className="route-point">
-                          <span className="route-icon">🎯</span>
-                          <div>
-                            <strong>{trip.arrival_location}</strong>
+
+                        <div className="trip-details">
+                          <div className="driver-info">
+                            <Avatar
+                              user={{
+                                first_name: trip.first_name || trip.driver_first_name,
+                                last_name: trip.last_name || trip.driver_last_name,
+                                profile_picture: trip.profile_picture || trip.driver_profile_picture
+                              }}
+                              size="medium"
+                            />
+                            <div>
+                              <strong>
+                                {trip.first_name || trip.driver_first_name || "Conducteur"} {trip.last_name || trip.driver_last_name || ""}
+                              </strong>
+                              {trip.driver_rating && (
+                                <p className="driver-rating">
+                                  ⭐ {parseFloat(trip.driver_rating).toFixed(1)}
+                                  {trip.reviews_count > 0 && ` (${trip.reviews_count} avis)`}
+                                </p>
+                              )}
+                            </div>
                           </div>
+
+                          <div className="trip-meta">
+                            <span className="meta-item">
+                              <span className="meta-icon">👥</span>
+                              {trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats} place
+                              {(trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats) > 1 ? "s" : ""} disponible
+                            </span>
+                            <span className="meta-item">
+                              <span className="meta-icon">💰</span>
+                              {parseFloat(trip.price_per_seat).toFixed(2)}€ / place
+                            </span>
+                          </div>
+
+                          {trip.description && <p className="trip-description">{trip.description}</p>}
                         </div>
                       </div>
 
-                      <div className="trip-details">
-                        <div className="driver-info">
-                          <Avatar 
-                            user={{
-                              first_name: trip.first_name || trip.driver_first_name,
-                              last_name: trip.last_name || trip.driver_last_name,
-                              profile_picture: trip.profile_picture || trip.driver_profile_picture
-                            }}
-                            size="medium"
-                          />
-                          <div>
-                            <strong>
-                              {trip.first_name || trip.driver_first_name || "Conducteur"} {trip.last_name || trip.driver_last_name || ""}
-                            </strong>
-                            {trip.driver_rating && (
-                              <p className="driver-rating">
-                                ⭐ {parseFloat(trip.driver_rating).toFixed(1)} 
-                                {trip.reviews_count > 0 && ` (${trip.reviews_count} avis)`}
-                              </p>
-                            )}
-                          </div>
+                      <div className="trip-actions">
+                        <div className="trip-price">
+                          <span className="price-label">Prix par place</span>
+                          <span className="price-amount">{parseFloat(trip.price_per_seat).toFixed(2)}€</span>
                         </div>
-
-                        <div className="trip-meta">
-                          <span className="meta-item">
-                            <span className="meta-icon">👥</span>
-                            {trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats} place
-                            {(trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats) > 1 ? "s" : ""} disponible
-                          </span>
-                          <span className="meta-item">
-                            <span className="meta-icon">💰</span>
-                            {parseFloat(trip.price_per_seat).toFixed(2)}€ / place
-                          </span>
-                        </div>
-
-                        {trip.description && <p className="trip-description">{trip.description}</p>}
+                        <button
+                          onClick={() => handleBooking(trip.id)}
+                          className="book-btn"
+                          disabled={(trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats) <= 0}
+                        >
+                          {(trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats) <= 0 ? "Complet" : "Réserver"}
+                        </button>
                       </div>
                     </div>
-
-                    <div className="trip-actions">
-                      <div className="trip-price">
-                        <span className="price-label">Prix par place</span>
-                        <span className="price-amount">{parseFloat(trip.price_per_seat).toFixed(2)}€</span>
-                      </div>
-                      <button
-                        onClick={() => handleBooking(trip.id)}
-                        className="book-btn"
-                        disabled={(trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats) <= 0}
-                      >
-                        {(trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats) <= 0 ? "Complet" : "Réserver"}
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  ))}
                 </div>
               </>
             )}
@@ -432,7 +432,7 @@ export default function SearchPage() {
             {!searched && !loading && (
               <div className="initial-state">
                 <div className="initial-icon">
-                <img src={voiture} alt="voiture logo" style={{ width: '100px', height: 'auto' }}/>
+                  <img src={voiture} alt="voiture logo" style={{ width: '100px', height: 'auto' }} />
                 </div>
                 <h3>Commencez votre recherche</h3>
                 <p>Entrez vos critères de recherche pour trouver des trajets disponibles</p>
