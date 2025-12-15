@@ -77,8 +77,6 @@ class TripController {
                u.first_name, u.last_name, u.email, u.profile_picture,
                (SELECT COALESCE(AVG(r2.rating), 0) 
                 FROM reviews r2 
-               (SELECT COALESCE(AVG(r2.rating), 0) 
-                FROM reviews r2 
                 WHERE r2.reviewed_id = u.id AND r2.type = 'driver') as driver_rating,
                (SELECT COUNT(r3.id) 
                 FROM reviews r3 
