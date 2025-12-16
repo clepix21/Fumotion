@@ -8,6 +8,7 @@ import bouclier from "../assets/icons/bouclier.svg"
 import speed from "../assets/icons/speed.svg"
 import placeholder from "../assets/images/placeholder.png"
 import "../styles/HomePage.css"
+import Footer from "../components/common/Footer"
 
 export default function HomePage() {
   const navigate = useNavigate()
@@ -27,7 +28,7 @@ export default function HomePage() {
 
   const handleSearch = (e) => {
     e.preventDefault()
-    
+
     // Construire les paramètres de recherche
     const params = new URLSearchParams()
     if (searchData.departure.trim()) {
@@ -42,7 +43,7 @@ export default function HomePage() {
     if (searchData.passengers) {
       params.append("passengers", searchData.passengers)
     }
-    
+
     // Rediriger vers la page de recherche avec les paramètres
     navigate(`/search?${params.toString()}`)
   }
@@ -56,7 +57,7 @@ export default function HomePage() {
             <span className="brand-name">Fumotion</span>
           </div>
 
-          <button 
+          <button
             className="navbar-mobile-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
@@ -69,9 +70,9 @@ export default function HomePage() {
               Pourquoi Fumotion ?
             </a>
             <a href="#popular-trips" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
-              Trajets populaires 
+              Trajets populaires
             </a>
-            
+
             {isAuthenticated() ? (
               <>
                 <div className="navbar-divider"></div>
@@ -181,7 +182,7 @@ export default function HomePage() {
           <div className="benefits-grid">
             <div className="benefit-card">
               <div className="benefit-icon">
-                <img src={voiture} alt="voiture logo" style={{ width: '50px', height: 'auto' }}/>
+                <img src={voiture} alt="voiture logo" style={{ width: '50px', height: 'auto' }} />
               </div>
               <h3 className="benefit-title">Vos trajets préférés à petits prix</h3>
               <p className="benefit-description">Où que vous alliez, en bus ou en covoiturage, trouvez le trajet idéal parmi notre large choix de destinations à petits prix.</p>
@@ -189,7 +190,7 @@ export default function HomePage() {
 
             <div className="benefit-card">
               <div className="benefit-icon">
-                <img src={bouclier} alt="bouclier logo" style={{ width: '50px', height: 'auto' }}/>
+                <img src={bouclier} alt="bouclier logo" style={{ width: '50px', height: 'auto' }} />
               </div>
               <h3 className="benefit-title">Voyagez en toute confiance</h3>
               <p className="benefit-description">Nous prenons le temps qu'il faut pour connaître nos membres et nos compagnies de bus partenaires. Nous vérifions les avis, les profils et les pièces d'identité. Vous savez donc avec qui vous allez voyager pour réserver en toute confiance sur notre plateforme sécurisée.</p>
@@ -197,7 +198,7 @@ export default function HomePage() {
 
             <div className="benefit-card">
               <div className="benefit-icon">
-                <img src={speed} alt="speed logo" style={{ width: '50px', height: 'auto' }}/>
+                <img src={speed} alt="speed logo" style={{ width: '50px', height: 'auto' }} />
               </div>
               <h3 className="benefit-title">Recherchez, cliquez et réservez !</h3>
               <p className="benefit-description">Réserver un trajet devient encore plus simple ! Facile d'utilisation et dotée de technologies avancées, notre appli vous permet de réserver un trajet à proximité en un rien de temps.</p>
@@ -209,34 +210,34 @@ export default function HomePage() {
       <section id="popular-trips" className="popular-trips-section">
         <div className="popular-container">
           <h2 className="section-title">Les trajets les plus populaires</h2>
-          
+
           <div className="popular-trips-grid">
             <div className="trip-card">
-              <div className="trip-image" style={{background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover`}}></div>
+              <div className="trip-image" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover` }}></div>
               <div className="trip-info">
                 <h3>Gare du Nord → IUT </h3>
                 <p>Dès 15€</p>
               </div>
             </div>
-            
+
             <div className="trip-card">
-              <div className="trip-image" style={{background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover`}}></div>
+              <div className="trip-image" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover` }}></div>
               <div className="trip-info">
                 <h3>Paris → Marseille</h3>
                 <p>Dès 20€</p>
               </div>
             </div>
-            
+
             <div className="trip-card">
-              <div className="trip-image" style={{background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover`}}></div>
+              <div className="trip-image" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover` }}></div>
               <div className="trip-info">
                 <h3>Paris → Bordeaux</h3>
                 <p>Dès 18€</p>
               </div>
             </div>
-            
+
             <div className="trip-card">
-              <div className="trip-image" style={{background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover`}}></div>
+              <div className="trip-image" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover` }}></div>
               <div className="trip-info">
                 <h3>Lyon → Nice</h3>
                 <p>Dès 22€</p>
@@ -275,68 +276,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="footer">
-        <div className="footer-container">
-          <div className="footer-grid">
-            <div className="footer-column">
-              <div className="footer-brand">
-                <img src={logo} alt="Fumotion" className="footer-logo-img" />
-                <span className="footer-name">Fumotion</span>
-              </div>
-              <p className="footer-tagline">
-                La plateforme de covoiturage
-                <br />
-                dédiée aux étudiants
-              </p>
-            </div>
-
-            <div className="footer-column">
-              <h4 className="footer-heading">À propos</h4>
-              <ul className="footer-links">
-                <li><a href="#how-it-works">Comment ça marche</a></li>
-                <li><a href="#pricing">Tarifs</a></li>
-                <li><a href="/about">Qui sommes-nous</a></li>
-                <li><a href="/blog">Blog</a></li>
-              </ul>
-            </div>
-
-            <div className="footer-column">
-              <h4 className="footer-heading">Support</h4>
-              <ul className="footer-links">
-                <li><a href="/help">Centre d'aide</a></li>
-                <li><a href="/contact">Nous contacter</a></li>
-                <li><a href="/security">Sécurité</a></li>
-                <li><a href="/insurance">Assurance</a></li>
-              </ul>
-            </div>
-
-            <div className="footer-column">
-              <h4 className="footer-heading">Légal</h4>
-              <ul className="footer-links">
-                <li><a href="/terms">Conditions générales</a></li>
-                <li><a href="/privacy">Politique de confidentialité</a></li>
-                <li><a href="/legal">Mentions légales</a></li>
-                <li><a href="/cookies">Cookies</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="footer-bottom">
-            <p>&copy; 2025 Fumotion. Tous droits réservés.</p>
-            <div className="footer-social">
-              <a href="https://facebook.com" className="social-link" target="_blank" rel="noopener noreferrer">
-                Facebook
-              </a>
-              <a href="https://twitter.com" className="social-link" target="_blank" rel="noopener noreferrer">
-                Twitter
-              </a>
-              <a href="https://instagram.com" className="social-link" target="_blank" rel="noopener noreferrer">
-                Instagram
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }
