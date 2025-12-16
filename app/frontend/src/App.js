@@ -1,4 +1,4 @@
-import './styles/App.css'; 
+import './styles/App.css';
 import { Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
@@ -8,6 +8,7 @@ import DashboardPage from './pages/DashboardPage';
 import CreateTripPage from './pages/CreateTripPage';
 import SearchPage from './pages/SearchPage';
 import AdminPage from './pages/AdminPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <Route path="/create-trip" element={<CreateTripPage />} />
       <Route path="/search" element={<SearchPage />} />
       <Route path="/admin" element={<AdminPage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
