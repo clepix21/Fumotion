@@ -16,5 +16,6 @@ router.put('/profile', authMiddleware, AuthController.updateProfile);
 router.get('/verify-token', authMiddleware, AuthController.verifyToken);
 router.post('/profile/banner', authMiddleware, upload.single('banner'), AuthController.uploadBanner);
 router.post('/profile/avatar', authMiddleware, upload.single('avatar'), AuthController.uploadAvatar);
+router.get('/users/:id', authMiddleware, AuthController.getUserPublicProfile);
 
 module.exports = router;

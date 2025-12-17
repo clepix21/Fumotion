@@ -133,13 +133,15 @@ class Database {
       // Table des messages
       `CREATE TABLE IF NOT EXISTS messages (
         id INTEGER PRIMARY KEY AUTO_INCREMENT,
-        trip_id INTEGER NOT NULL,
+        trip_id INTEGER,
         sender_id INTEGER NOT NULL,
+        receiver_id INTEGER,
         message TEXT NOT NULL,
         is_read BOOLEAN DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (trip_id) REFERENCES trips(id) ON DELETE CASCADE,
-        FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
+        FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
       )`,
     ]
 
@@ -174,6 +176,20 @@ class Database {
         await this.pool.query("ALTER TABLE users ADD COLUMN is_admin BOOLEAN DEFAULT 0")
         console.log("✅ Colonne is_admin ajoutée")
       }
+
+      // Migration for messages table
+      const [msgColumns] = await this.pool.query("DESCRIBE messages")
+      const msgColumnNames = msgColumns.map((col) => col.Field)
+
+      if (!msgColumnNames.includes("receiver_id")) {
+        await this.pool.query("ALTER TABLE messages ADD COLUMN receiver_id INTEGER")
+        await this.pool.query("ALTER TABLE messages ADD CONSTRAINT fk_messages_receiver FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE")
+        console.log("✅ Colonne receiver_id ajoutée à la table messages")
+      }
+
+      // Make trip_id nullable if it's currently NOT NULL (MySQL specific roughly, usually easier to just modify column)
+      // Note: modifying column to remove NOT NULL might vary by SQL dialect/version, but standard MySQL:
+      await this.pool.query("ALTER TABLE messages MODIFY COLUMN trip_id INTEGER NULL")
 
       await this.createAdminUser()
     } catch (err) {

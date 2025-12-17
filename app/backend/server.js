@@ -9,13 +9,14 @@ const authRoutes = require('./routes/auth');
 const tripRoutes = require('./routes/trips');
 const bookingRoutes = require('./routes/bookings');
 const adminRoutes = require('./routes/admin');
+const messageRoutes = require('./routes/messages');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
+  origin: process.env.NODE_ENV === 'production'
     ? ['https://fumotion.com', 'http://localhost', 'http://localhost:80', 'http://127.0.0.1', 'http://127.0.0.1:80', 'http://localhost:3000', 'http://127.0.0.1:3000']
     : ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost', 'http://localhost:80', 'http://127.0.0.1', 'http://127.0.0.1:80'],
   credentials: true
@@ -38,19 +39,20 @@ app.use('/api/auth', authRoutes);
 app.use('/api/trips', tripRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/messages', messageRoutes);
 
 // Route de base
 app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Backend Fumotion API', 
+  res.json({
+    message: 'Backend Fumotion API',
     version: '1.0.0',
     timestamp: new Date().toISOString()
   });
 });
 
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.json({
+    status: 'OK',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     memory: process.memoryUsage()
@@ -60,7 +62,7 @@ app.get('/api/health', (req, res) => {
 // Middleware de gestion d'erreurs
 app.use((err, req, res, next) => {
   console.error('Erreur serveur:', err);
-  
+
   if (err.name === 'ValidationError') {
     return res.status(400).json({
       success: false,
@@ -68,18 +70,18 @@ app.use((err, req, res, next) => {
       errors: err.errors
     });
   }
-  
+
   if (err.name === 'JsonWebTokenError') {
     return res.status(401).json({
       success: false,
       message: 'Token invalide'
     });
   }
-  
+
   res.status(500).json({
     success: false,
-    message: process.env.NODE_ENV === 'production' 
-      ? 'Erreur serveur interne' 
+    message: process.env.NODE_ENV === 'production'
+      ? 'Erreur serveur interne'
       : err.message
   });
 });
@@ -97,7 +99,7 @@ async function startServer() {
   try {
     await db.connect();
     console.log('Base de données initialisée avec succès');
-    
+
     app.listen(PORT, () => {
       console.log(`🚀 Backend server is running on http://localhost:${PORT}`);
       console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
