@@ -8,10 +8,7 @@ import DashboardPage from './pages/DashboardPage';
 import CreateTripPage from './pages/CreateTripPage';
 import SearchPage from './pages/SearchPage';
 import AdminPage from './pages/AdminPage';
-import ChatPage from './pages/ChatPage';
 import NotFoundPage from './pages/NotFoundPage';
-
-import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
   return (
@@ -37,30 +34,7 @@ function App() {
         }
       />
       <Route path="/search" element={<SearchPage />} />
-      <Route
-        path="/admin"
-        element={
-          <ProtectedRoute>
-            <AdminPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/chat"
-        element={
-          <ProtectedRoute>
-            <ChatPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/chat/:userId"
-        element={
-          <ProtectedRoute>
-            <ChatPage />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/admin" element={<AdminPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
