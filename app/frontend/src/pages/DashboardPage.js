@@ -10,7 +10,7 @@ import "../styles/HomePage.css"
 
 export default function DashboardPage() {
   const navigate = useNavigate()
-  const { user, token, isAuthenticated, logout, updateUser } = useAuth()
+  const { user, token, logout, updateUser } = useAuth()
   const [activeTab, setActiveTab] = useState("trips")
   const [myTrips, setMyTrips] = useState([])
   const [myBookings, setMyBookings] = useState([])
@@ -35,7 +35,7 @@ export default function DashboardPage() {
       }
 
       // Charger mes trajets
-      const tripsResponse = await fetch("http://localhost:5000/api/trips", {
+      const tripsResponse = await fetch("http://localhost:5000/api/trips?type=driving", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -65,14 +65,8 @@ export default function DashboardPage() {
   }, [token])
 
   useEffect(() => {
-    // Vérifier l'authentification avec le contexte
-    if (!isAuthenticated()) {
-      navigate("/login")
-      return
-    }
-
     loadDashboardData()
-  }, [navigate, isAuthenticated, loadDashboardData])
+  }, [loadDashboardData])
 
   const handleLogout = () => {
     logout()
@@ -274,7 +268,7 @@ export default function DashboardPage() {
               <span className="btn-icon">👤</span>
               Profil
             </button>
-            {user?.is_admin && (
+            {!!user?.is_admin && (
               <button
                 className="sidebar-btn admin-btn"
                 onClick={() => navigate("/admin")}
@@ -436,6 +430,14 @@ export default function DashboardPage() {
                                 ? "Annulé"
                                 : "Terminé"}
                         </span>
+                        {booking.driver_id && (
+                          <button
+                            onClick={() => navigate(`/chat/${booking.driver_id}`)}
+                            className="contact-driver-btn"
+                          >
+                            <span>💬</span> Contacter le conducteur
+                          </button>
+                        )}
                       </div>
                     </div>
                   ))}

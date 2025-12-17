@@ -9,18 +9,18 @@ const getAuthToken = () => {
 export async function apiRequest(path, options = {}) {
   const url = `${BASE_URL}${path}`;
   const token = getAuthToken();
-  
+
   const headers = {
     'Content-Type': 'application/json',
     ...(token && { 'Authorization': `Bearer ${token}` }),
     ...(options.headers || {}),
   };
-  
+
   try {
     const res = await fetch(url, { ...options, headers });
     const isJson = res.headers.get('content-type')?.includes('application/json');
     const data = isJson ? await res.json() : await res.text();
-    
+
     if (!res.ok) {
       // Si le token est invalide, rediriger vers la page de connexion
       if (res.status === 401) {
@@ -29,7 +29,7 @@ export async function apiRequest(path, options = {}) {
         window.location.href = '/login';
         return;
       }
-      
+
       // Créer une erreur avec les détails complets
       const error = new Error((data && data.message) || res.statusText || 'Erreur requête API');
       // Ajouter les détails de validation si disponibles
@@ -44,7 +44,7 @@ export async function apiRequest(path, options = {}) {
       error.data = data;
       throw error;
     }
-    
+
     return data;
   } catch (error) {
     console.error('Erreur API:', error);
@@ -74,6 +74,7 @@ export const authAPI = {
   login: (credentials) => post('/api/auth/login', credentials),
   register: (userData) => post('/api/auth/register', userData),
   getProfile: () => get('/api/auth/profile'),
+  getPublicProfile: (id) => get(`/api/auth/users/${id}`),
   updateProfile: (userData) => put('/api/auth/profile', userData),
   verifyToken: () => get('/api/auth/verify-token'),
 };

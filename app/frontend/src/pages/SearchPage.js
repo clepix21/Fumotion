@@ -415,13 +415,29 @@ export default function SearchPage() {
                           <span className="price-label">Prix par place</span>
                           <span className="price-amount">{parseFloat(trip.price_per_seat).toFixed(2)}€</span>
                         </div>
-                        <button
-                          onClick={() => handleBooking(trip.id)}
-                          className="book-btn"
-                          disabled={(trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats) <= 0}
-                        >
-                          {(trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats) <= 0 ? "Complet" : "Réserver"}
-                        </button>
+                        <div className="trip-buttons" style={{ display: 'flex', gap: '10px' }}>
+                          {user?.id !== trip.driver_id && (
+                            <button
+                              onClick={() => {
+                                if (!isAuthenticated()) {
+                                  navigate("/login");
+                                  return;
+                                }
+                                navigate(`/chat/${trip.driver_id}`);
+                              }}
+                              className="contact-btn"
+                            >
+                              💬
+                            </button>
+                          )}
+                          <button
+                            onClick={() => handleBooking(trip.id)}
+                            className="book-btn"
+                            disabled={(trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats) <= 0}
+                          >
+                            {(trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats) <= 0 ? "Complet" : "Réserver"}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -440,7 +456,7 @@ export default function SearchPage() {
             )}
           </div>
         </div>
-      </main>
-    </div>
+      </main >
+    </div >
   )
 }

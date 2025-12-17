@@ -100,7 +100,7 @@ class BookingController {
       const { status, type } = req.query;
 
       let query = `
-        SELECT b.*, t.departure_location, t.arrival_location, t.departure_datetime,
+        SELECT b.*, t.departure_location, t.arrival_location, t.departure_datetime, t.driver_id,
                u.first_name as driver_first_name, u.last_name as driver_last_name,
                u.phone as driver_phone
         FROM bookings b

@@ -334,6 +334,32 @@ class AuthController {
       })
     }
   }
+
+  // Récupérer le profil public d'un utilisateur par ID
+  async getUserPublicProfile(req, res) {
+    try {
+      const { id } = req.params;
+      const user = await db.get(
+        "SELECT id, first_name, last_name, profile_picture FROM users WHERE id = ?",
+        [id]
+      );
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "Utilisateur non trouvé"
+        });
+      }
+
+      res.json({
+        success: true,
+        data: user
+      });
+    } catch (error) {
+      console.error("Erreur getUserPublicProfile:", error);
+      res.status(500).json({ success: false, message: "Erreur serveur" });
+    }
+  }
 }
 
 module.exports = new AuthController()

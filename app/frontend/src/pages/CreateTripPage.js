@@ -11,7 +11,7 @@ import "../styles/HomePage.css"
 
 export default function CreateTripPage() {
   const navigate = useNavigate()
-  const { user, isAuthenticated, logout } = useAuth()
+  const { user, logout } = useAuth()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -33,11 +33,6 @@ export default function CreateTripPage() {
   })
 
   useEffect(() => {
-    if (!isAuthenticated()) {
-      navigate("/login")
-      return
-    }
-
     // Géolocalisation automatique au chargement
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -50,7 +45,7 @@ export default function CreateTripPage() {
         }
       )
     }
-  }, [navigate, isAuthenticated])
+  }, [])
 
   // Géocoder les adresses quand elles changent
   useEffect(() => {
