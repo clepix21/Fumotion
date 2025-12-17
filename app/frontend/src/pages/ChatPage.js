@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import ConversationList from '../components/Chat/ConversationList';
 import ChatWindow from '../components/Chat/ChatWindow';
 import { messageService } from '../services/messageService';
-import { getCurrentUser } from '../services/api';
+import '../styles/Chat.css';
 
 const ChatPage = () => {
     const { userId } = useParams(); // ID de l'utilisateur avec qui on veut chatter
     const navigate = useNavigate();
-    const currentUser = getCurrentUser();
+    const { user: currentUser } = useAuth();
 
     const [conversations, setConversations] = useState([]);
     const [messages, setMessages] = useState([]);
@@ -100,25 +101,23 @@ const ChatPage = () => {
     };
 
     if (!currentUser) return <div>Veuillez vous connecter.</div>;
-    if (loading && conversations.length === 0) return <div className="flex items-center justify-center h-screen">Chargement...</div>;
+    if (loading && conversations.length === 0) return <div className="chat-loading">Chargement...</div>;
 
     return (
-        <div className="flex h-[calc(100vh-64px)] bg-white overflow-hidden">
-            <div className="w-1/3 min-w-[300px] h-full">
+        <div className="chat-page-container">
+            <div className="conversation-sidebar">
                 <ConversationList
                     conversations={conversations}
                     selectedUserId={userId ? parseInt(userId) : null}
                     onSelectUser={handleSelectUser}
                 />
             </div>
-            <div className="flex-1 h-full">
-                <ChatWindow
-                    messages={messages}
-                    currentUser={currentUser}
-                    otherUser={selectedUser}
-                    onSendMessage={handleSendMessage}
-                />
-            </div>
+            <ChatWindow
+                messages={messages}
+                currentUser={currentUser}
+                otherUser={selectedUser}
+                onSendMessage={handleSendMessage}
+            />
         </div>
     );
 };

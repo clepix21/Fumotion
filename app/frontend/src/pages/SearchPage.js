@@ -426,17 +426,6 @@ export default function SearchPage() {
                                 navigate(`/chat/${trip.driver_id}`);
                               }}
                               className="contact-btn"
-                              style={{
-                                padding: '0.75rem 1.5rem',
-                                borderRadius: '12px',
-                                fontSize: '1rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s',
-                                backgroundColor: '#f3f4f6',
-                                color: '#1f2937',
-                                border: 'none'
-                              }}
                             >
                               💬
                             </button>

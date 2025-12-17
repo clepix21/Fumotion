@@ -22,8 +22,9 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage }) => {
 
     if (!otherUser) {
         return (
-            <div className="flex-1 flex items-center justify-center bg-gray-50">
-                <div className="text-center text-gray-500">
+            <div className="chat-window">
+                <div className="chat-placeholder">
+                    <span className="chat-placeholder-icon">💬</span>
                     <p className="text-xl">Sélectionnez une conversation</p>
                     <p className="text-sm">ou commencez un nouveau chat</p>
                 </div>
@@ -32,44 +33,37 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage }) => {
     }
 
     return (
-        <div className="flex-1 flex flex-col bg-gray-50 h-full">
+        <div className="chat-window">
             {/* Header */}
-            <div className="p-4 bg-white border-b flex items-center shadow-sm">
+            <div className="chat-header">
                 <img
                     src={otherUser.profile_picture || 'https://via.placeholder.com/40'}
                     alt={`${otherUser.first_name} ${otherUser.last_name}`}
-                    className="w-10 h-10 rounded-full object-cover mr-3"
+                    className="conversation-avatar"
+                    style={{ width: '40px', height: '40px' }} // Override specific size
                 />
-                <div>
-                    <h3 className="font-bold text-gray-800">
+                <div className="chat-partner-info">
+                    <h3 className="chat-partner-name">
                         {otherUser.first_name} {otherUser.last_name}
                     </h3>
-                    <span className="text-xs text-green-500">En ligne</span>
+                    <span className="chat-status">En ligne</span>
                 </div>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="messages-container">
                 {messages.map((msg) => {
                     const isMe = msg.sender_id === currentUser.id;
                     return (
                         <div
                             key={msg.id}
-                            className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}
+                            className={`message-wrapper ${isMe ? 'sent' : 'received'}`}
                         >
-                            <div
-                                className={`max-w-[70%] rounded-2xl px-4 py-2 shadow-sm ${isMe
-                                        ? 'bg-blue-600 text-white rounded-br-none'
-                                        : 'bg-white text-gray-800 rounded-bl-none'
-                                    }`}
-                            >
-                                <p>{msg.message}</p>
-                                <div
-                                    className={`text-xs mt-1 text-right ${isMe ? 'text-blue-200' : 'text-gray-400'
-                                        }`}
-                                >
+                            <div className="message-bubble">
+                                <p style={{ margin: 0 }}>{msg.message}</p>
+                                <span className="message-time">
                                     {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                </div>
+                                </span>
                             </div>
                         </div>
                     );
@@ -78,21 +72,21 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage }) => {
             </div>
 
             {/* Input */}
-            <div className="p-4 bg-white border-t">
-                <form onSubmit={handleSubmit} className="flex gap-2">
+            <div className="chat-input-container">
+                <form onSubmit={handleSubmit} className="chat-input-form">
                     <input
                         type="text"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         placeholder="Écrivez votre message..."
-                        className="flex-1 p-3 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100"
+                        className="chat-input"
                     />
                     <button
                         type="submit"
                         disabled={!newMessage.trim()}
-                        className="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="send-button"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" style={{ width: '20px', height: '20px' }}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
                         </svg>
                     </button>

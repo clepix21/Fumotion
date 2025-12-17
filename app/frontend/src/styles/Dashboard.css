@@ -367,7 +367,8 @@
   font-size: 1rem;
 }
 
-.departure, .arrival {
+.departure,
+.arrival {
   font-weight: 600;
   color: #1e293b;
   font-size: 0.9375rem;
@@ -406,7 +407,9 @@
   margin-bottom: 1rem;
 }
 
-.trip-date, .trip-price, .trip-seats {
+.trip-date,
+.trip-price,
+.trip-seats {
   color: #64748b;
   margin: 0.25rem 0;
 }
@@ -470,7 +473,8 @@
   margin-bottom: 0.5rem;
 }
 
-.booking-date, .booking-driver {
+.booking-date,
+.booking-driver {
   color: #64748b;
   margin: 0.25rem 0;
   font-size: 0.875rem;
@@ -517,6 +521,27 @@
   color: #991b1b;
 }
 
+.contact-driver-btn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #f3f4f6;
+  color: #374151;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  transition: all 0.2s;
+}
+
+.contact-driver-btn:hover {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
 /* Profile Section */
 .profile-section {
   max-width: 100%;
@@ -544,7 +569,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  }
+}
 
 .banner-edit-btn {
   position: absolute;
@@ -817,8 +842,13 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive Design */
@@ -828,32 +858,32 @@
     gap: 1rem;
     padding: 1rem;
   }
-  
+
   .header-content {
     flex-direction: column;
     gap: 1rem;
     text-align: center;
   }
-  
+
   .header-nav {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .stats-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .action-cards {
     grid-template-columns: 1fr;
   }
-  
+
   .booking-card {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
   }
-  
+
   .booking-details {
     align-items: flex-start;
   }

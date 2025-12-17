@@ -434,20 +434,6 @@ export default function DashboardPage() {
                           <button
                             onClick={() => navigate(`/chat/${booking.driver_id}`)}
                             className="contact-driver-btn"
-                            style={{
-                              marginTop: '10px',
-                              padding: '8px 16px',
-                              backgroundColor: '#e5e7eb',
-                              color: '#374151',
-                              borderRadius: '8px',
-                              border: 'none',
-                              cursor: 'pointer',
-                              fontWeight: '500',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '6px',
-                              width: 'fit-content'
-                            }}
                           >
                             <span>💬</span> Contacter le conducteur
                           </button>

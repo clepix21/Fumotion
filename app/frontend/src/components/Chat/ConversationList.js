@@ -5,14 +5,14 @@ const ConversationList = ({ conversations, selectedUserId, onSelectUser }) => {
     const navigate = useNavigate();
 
     return (
-        <div className="h-full flex flex-col bg-white border-r">
-            <div className="p-4 border-b">
-                <h2 className="text-xl font-bold text-gray-800">Messages</h2>
+        <>
+            <div className="conversation-header">
+                <h2>Messages</h2>
             </div>
 
-            <div className="flex-1 overflow-y-auto">
+            <div className="conversation-list">
                 {conversations.length === 0 ? (
-                    <div className="p-4 text-center text-gray-500">
+                    <div className="empty-conversations">
                         Aucune conversation pour le moment.
                     </div>
                 ) : (
@@ -20,31 +20,29 @@ const ConversationList = ({ conversations, selectedUserId, onSelectUser }) => {
                         <div
                             key={conv.id}
                             onClick={() => onSelectUser(conv.id)}
-                            className={`flex items-center p-4 cursor-pointer hover:bg-gray-50 transition-colors ${selectedUserId === conv.id ? 'bg-blue-50 border-r-4 border-blue-500' : ''
-                                }`}
+                            className={`conversation-item ${selectedUserId === conv.id ? 'active' : ''}`}
                         >
-                            <div className="relative">
+                            <div className="conversation-avatar-container">
                                 <img
                                     src={conv.profile_picture || 'https://via.placeholder.com/40'}
                                     alt={`${conv.first_name} ${conv.last_name}`}
-                                    className="w-12 h-12 rounded-full object-cover"
+                                    className="conversation-avatar"
                                 />
-                                {/* Indicateur de statut si besoin */}
                             </div>
 
-                            <div className="ml-4 flex-1">
-                                <div className="flex justify-between items-baseline">
-                                    <h3 className="font-semibold text-gray-900">
+                            <div className="conversation-info">
+                                <div className="conversation-top">
+                                    <span className="conversation-name">
                                         {conv.first_name} {conv.last_name}
-                                    </h3>
+                                    </span>
                                     {conv.last_message_date && (
-                                        <span className="text-xs text-gray-500">
+                                        <span className="conversation-date">
                                             {new Date(conv.last_message_date).toLocaleDateString()}
                                         </span>
                                     )}
                                 </div>
 
-                                <p className={`text-sm truncate ${!conv.is_read && conv.last_message_sender_id !== conv.id ? 'font-bold text-black' : 'text-gray-500'}`}>
+                                <p className={`conversation-preview ${!conv.is_read && conv.last_message_sender_id !== conv.id ? 'unread' : ''}`}>
                                     {conv.last_message_sender_id === conv.id ? 'Vous: ' : ''}{conv.last_message}
                                 </p>
                             </div>
@@ -52,7 +50,7 @@ const ConversationList = ({ conversations, selectedUserId, onSelectUser }) => {
                     ))
                 )}
             </div>
-        </div>
+        </>
     );
 };
 
