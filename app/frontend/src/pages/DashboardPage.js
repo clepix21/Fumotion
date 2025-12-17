@@ -274,7 +274,7 @@ export default function DashboardPage() {
               <span className="btn-icon">👤</span>
               Profil
             </button>
-            {user?.is_admin && (
+            {!!user?.is_admin && (
               <button
                 className="sidebar-btn admin-btn"
                 onClick={() => navigate("/admin")}
