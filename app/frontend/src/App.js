@@ -11,6 +11,8 @@ import AdminPage from './pages/AdminPage';
 import ChatPage from './pages/ChatPage';
 import NotFoundPage from './pages/NotFoundPage';
 
+import ProtectedRoute from './components/auth/ProtectedRoute';
+
 function App() {
   return (
     <Routes>
@@ -18,12 +20,47 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="/dashboard" element={<DashboardPage />} />
-      <Route path="/create-trip" element={<CreateTripPage />} />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/create-trip"
+        element={
+          <ProtectedRoute>
+            <CreateTripPage />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/search" element={<SearchPage />} />
-      <Route path="/admin" element={<AdminPage />} />
-      <Route path="/chat" element={<ChatPage />} />
-      <Route path="/chat/:userId" element={<ChatPage />} />
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <AdminPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/chat"
+        element={
+          <ProtectedRoute>
+            <ChatPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/chat/:userId"
+        element={
+          <ProtectedRoute>
+            <ChatPage />
+          </ProtectedRoute>
+        }
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

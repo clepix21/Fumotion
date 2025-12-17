@@ -33,11 +33,6 @@ export default function CreateTripPage() {
   })
 
   useEffect(() => {
-    if (!isAuthenticated()) {
-      navigate("/login")
-      return
-    }
-
     // Géolocalisation automatique au chargement
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -50,7 +45,7 @@ export default function CreateTripPage() {
         }
       )
     }
-  }, [navigate, isAuthenticated])
+  }, [])
 
   // Géocoder les adresses quand elles changent
   useEffect(() => {
