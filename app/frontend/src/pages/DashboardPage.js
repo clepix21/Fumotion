@@ -35,7 +35,7 @@ export default function DashboardPage() {
       }
 
       // Charger mes trajets
-      const tripsResponse = await fetch("http://localhost:5000/api/trips", {
+      const tripsResponse = await fetch("http://localhost:5000/api/trips?type=driving", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
