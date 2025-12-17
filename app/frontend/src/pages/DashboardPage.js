@@ -10,7 +10,7 @@ import "../styles/HomePage.css"
 
 export default function DashboardPage() {
   const navigate = useNavigate()
-  const { user, token, isAuthenticated, logout, updateUser } = useAuth()
+  const { user, token, logout, updateUser } = useAuth()
   const [activeTab, setActiveTab] = useState("trips")
   const [myTrips, setMyTrips] = useState([])
   const [myBookings, setMyBookings] = useState([])

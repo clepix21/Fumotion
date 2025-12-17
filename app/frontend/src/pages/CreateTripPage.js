@@ -11,7 +11,7 @@ import "../styles/HomePage.css"
 
 export default function CreateTripPage() {
   const navigate = useNavigate()
-  const { user, isAuthenticated, logout } = useAuth()
+  const { user, logout } = useAuth()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
