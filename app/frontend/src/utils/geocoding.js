@@ -1,9 +1,9 @@
-// Utilisation de Nominatim (OpenStreetMap) pour le géocodage
-const NOMINATIM_BASE_URL = 'https://nominatim.openstreetmap.org/search'
+// Utilisation du proxy backend pour le géocodage (évite les problèmes CORS)
+const API_URL = process.env.REACT_APP_API_URL || '/api'
 
 // Délai entre les requêtes pour respecter la politique d'utilisation de Nominatim
 let lastRequestTime = 0
-const MIN_REQUEST_INTERVAL = 1000 // 1 seconde minimum entre les requêtes
+const MIN_REQUEST_INTERVAL = 500 // 0.5 seconde minimum entre les requêtes
 
 export async function geocodeAddress(address) {
   if (!address || address.trim() === '') {
@@ -19,7 +19,7 @@ export async function geocodeAddress(address) {
       return {
         lat,
         lng,
-        address: address, // Garder le texte tel quel
+        address: address,
         formatted: {},
       }
     }
@@ -36,17 +36,10 @@ export async function geocodeAddress(address) {
   try {
     const params = new URLSearchParams({
       q: address,
-      format: 'json',
       limit: 1,
-      addressdetails: 1,
-      email: 'contact@fumotion.com'
     })
 
-    const response = await fetch(`${NOMINATIM_BASE_URL}?${params.toString()}`, {
-      headers: {
-        'User-Agent': 'Fumotion/1.0 (contact@fumotion.com)',
-      },
-    })
+    const response = await fetch(`${API_URL}/geocode/search?${params.toString()}`)
 
     if (!response.ok) {
       throw new Error('Erreur de géocodage')
@@ -84,16 +77,9 @@ export async function reverseGeocode(lat, lng) {
     const params = new URLSearchParams({
       lat: lat.toString(),
       lon: lng.toString(),
-      format: 'json',
-      addressdetails: 1,
-      email: 'contact@fumotion.com' // Ajout de l'email pour la politique Nominatim
     })
 
-    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?${params.toString()}`, {
-      headers: {
-        'User-Agent': 'Fumotion/1.0 (contact@fumotion.com)',
-      },
-    })
+    const response = await fetch(`${API_URL}/geocode/reverse?${params.toString()}`)
 
     if (!response.ok) {
       throw new Error('Erreur de géocodage inverse')

@@ -92,20 +92,12 @@ function AddressSearch({ onSelect, placeholder, value, onChange }) {
     try {
       const params = new URLSearchParams({
         q: query,
-        format: 'json',
         limit: 5,
-        addressdetails: 1,
-        countrycodes: 'fr',
       })
 
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?${params.toString()}`,
-        {
-          headers: {
-            'User-Agent': 'Fumotion/1.0 (contact@fumotion.com)',
-          },
-        }
-      )
+      // Utiliser le proxy backend pour éviter les problèmes CORS
+      const apiUrl = process.env.REACT_APP_API_URL || '/api'
+      const response = await fetch(`${apiUrl}/geocode/search?${params.toString()}`)
 
       if (response.ok) {
         const data = await response.json()
