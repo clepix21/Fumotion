@@ -91,7 +91,7 @@ exports.getAllUsers = async (req, res) => {
 
     query += " ORDER BY created_at DESC"
 
-    const offset = (page - 1) * limit
+    const offset = (parseInt(page) - 1) * parseInt(limit)
     query += ` LIMIT ? OFFSET ?`
     params.push(parseInt(limit), offset)
 
