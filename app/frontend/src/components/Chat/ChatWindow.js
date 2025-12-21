@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage }) => {
+const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, sending }) => {
     const [newMessage, setNewMessage] = useState('');
     const messagesEndRef = useRef(null);
+    const inputRef = useRef(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -12,12 +13,65 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage }) => {
         scrollToBottom();
     }, [messages]);
 
+    // Focus l'input quand on sélectionne une conversation
+    useEffect(() => {
+        if (otherUser && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [otherUser]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!newMessage.trim()) return;
+        if (!newMessage.trim() || sending) return;
 
-        onSendMessage(newMessage);
+        onSendMessage(newMessage.trim());
         setNewMessage('');
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSubmit(e);
+        }
+    };
+
+    const formatMessageTime = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    };
+
+    const formatMessageDate = (dateString) => {
+        const date = new Date(dateString);
+        const today = new Date();
+        
+        if (date.toDateString() === today.toDateString()) {
+            return "Aujourd'hui";
+        }
+        
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        if (date.toDateString() === yesterday.toDateString()) {
+            return "Hier";
+        }
+        
+        return date.toLocaleDateString('fr-FR', { 
+            weekday: 'long', 
+            day: 'numeric', 
+            month: 'long' 
+        });
+    };
+
+    // Grouper les messages par date
+    const groupMessagesByDate = (msgs) => {
+        const groups = {};
+        msgs.forEach(msg => {
+            const date = new Date(msg.created_at).toDateString();
+            if (!groups[date]) {
+                groups[date] = [];
+            }
+            groups[date].push(msg);
+        });
+        return groups;
     };
 
     if (!otherUser) {
@@ -25,49 +79,75 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage }) => {
             <div className="chat-window">
                 <div className="chat-placeholder">
                     <span className="chat-placeholder-icon">💬</span>
-                    <p className="text-xl">Sélectionnez une conversation</p>
-                    <p className="text-sm">ou commencez un nouveau chat</p>
+                    <h3>Bienvenue dans vos messages</h3>
+                    <p>Sélectionnez une conversation pour commencer à discuter</p>
                 </div>
             </div>
         );
     }
 
+    const groupedMessages = groupMessagesByDate(messages);
+
     return (
         <div className="chat-window">
             {/* Header */}
             <div className="chat-header">
+                <button className="back-button mobile-only" onClick={onBack}>
+                    ← 
+                </button>
                 <img
-                    src={otherUser.profile_picture || 'https://via.placeholder.com/40'}
+                    src={otherUser.profile_picture || `https://ui-avatars.com/api/?name=${otherUser.first_name}+${otherUser.last_name}&background=3b82f6&color=fff`}
                     alt={`${otherUser.first_name} ${otherUser.last_name}`}
-                    className="conversation-avatar"
-                    style={{ width: '40px', height: '40px' }} // Override specific size
+                    className="chat-avatar"
                 />
                 <div className="chat-partner-info">
                     <h3 className="chat-partner-name">
                         {otherUser.first_name} {otherUser.last_name}
                     </h3>
-                    <span className="chat-status">En ligne</span>
+                    <span className="chat-status">
+                        <span className="status-dot"></span>
+                        En ligne
+                    </span>
                 </div>
             </div>
 
             {/* Messages */}
             <div className="messages-container">
-                {messages.map((msg) => {
-                    const isMe = msg.sender_id === currentUser.id;
-                    return (
-                        <div
-                            key={msg.id}
-                            className={`message-wrapper ${isMe ? 'sent' : 'received'}`}
-                        >
-                            <div className="message-bubble">
-                                <p style={{ margin: 0 }}>{msg.message}</p>
-                                <span className="message-time">
-                                    {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                </span>
+                {messages.length === 0 ? (
+                    <div className="no-messages">
+                        <span>👋</span>
+                        <p>Commencez la conversation !</p>
+                    </div>
+                ) : (
+                    Object.entries(groupedMessages).map(([date, msgs]) => (
+                        <div key={date} className="message-date-group">
+                            <div className="date-separator">
+                                <span>{formatMessageDate(msgs[0].created_at)}</span>
                             </div>
+                            {msgs.map((msg) => {
+                                const isMe = msg.sender_id === currentUser.id;
+                                return (
+                                    <div
+                                        key={msg.id}
+                                        className={`message-wrapper ${isMe ? 'sent' : 'received'}`}
+                                    >
+                                        <div className="message-bubble">
+                                            <p className="message-text">{msg.message}</p>
+                                            <span className="message-time">
+                                                {formatMessageTime(msg.created_at)}
+                                                {isMe && (
+                                                    <span className="message-status">
+                                                        {msg.is_read ? ' ✓✓' : ' ✓'}
+                                                    </span>
+                                                )}
+                                            </span>
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
-                    );
-                })}
+                    ))
+                )}
                 <div ref={messagesEndRef} />
             </div>
 
@@ -75,20 +155,27 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage }) => {
             <div className="chat-input-container">
                 <form onSubmit={handleSubmit} className="chat-input-form">
                     <input
+                        ref={inputRef}
                         type="text"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
+                        onKeyDown={handleKeyDown}
                         placeholder="Écrivez votre message..."
                         className="chat-input"
+                        disabled={sending}
                     />
                     <button
                         type="submit"
-                        disabled={!newMessage.trim()}
+                        disabled={!newMessage.trim() || sending}
                         className="send-button"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" style={{ width: '20px', height: '20px' }}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                        </svg>
+                        {sending ? (
+                            <span className="sending-spinner">⟳</span>
+                        ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" style={{ width: '20px', height: '20px' }}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                            </svg>
+                        )}
                     </button>
                 </form>
             </div>
