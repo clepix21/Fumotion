@@ -450,3 +450,80 @@
     cursor: not-allowed;
     transform: none;
 }
+
+.sending-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+/* Statut des messages */
+.message-meta {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.35rem;
+    margin-top: 0.25rem;
+}
+
+.message-status {
+    font-size: 0.75rem;
+    opacity: 0.9;
+}
+
+.message-status.read {
+    color: #60a5fa;
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+    .chat-page-container {
+        flex-direction: column;
+    }
+
+    .conversation-sidebar {
+        width: 100%;
+        min-width: unset;
+        height: 100%;
+    }
+
+    .conversation-sidebar.hidden-mobile {
+        display: none;
+    }
+
+    .chat-main {
+        display: none;
+        height: 100%;
+    }
+
+    .chat-main.active {
+        display: flex;
+    }
+
+    .back-button {
+        display: flex;
+    }
+
+    .hidden-mobile {
+        display: none !important;
+    }
+
+    .message-bubble {
+        max-width: 85%;
+    }
+
+    .chat-header {
+        padding: 0.75rem 1rem;
+    }
+
+    .messages-container {
+        padding: 1rem;
+    }
+
+    .chat-input-container {
+        padding: 0.75rem 1rem;
+    }
+}
