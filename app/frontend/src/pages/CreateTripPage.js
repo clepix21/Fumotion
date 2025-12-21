@@ -47,60 +47,51 @@ export default function CreateTripPage() {
     }
   }, [])
 
-  // Géocoder les adresses quand elles changent
+  // Mettre à jour les marqueurs quand les coordonnées changent
   useEffect(() => {
-    if (geocodeTimeoutRef.current) {
-      clearTimeout(geocodeTimeoutRef.current)
+    const newMarkers = []
+    
+    if (formData.departure_latitude && formData.departure_longitude) {
+      newMarkers.push({
+        lat: formData.departure_latitude,
+        lng: formData.departure_longitude,
+        type: 'departure',
+        popup: { title: 'Départ', description: formData.departure_location }
+      })
     }
-
-    geocodeTimeoutRef.current = setTimeout(async () => {
-      const newMarkers = []
-      const loadingText = 'Recherche de l\'adresse...'
-
-      if (formData.departure_location.trim() && formData.departure_location !== loadingText) {
-        const geo = await geocodeAddress(formData.departure_location)
-        if (geo) {
-          setFormData(prev => ({
-            ...prev,
-            departure_latitude: geo.lat,
-            departure_longitude: geo.lng,
-          }))
-          newMarkers.push({
-            lat: geo.lat,
-            lng: geo.lng,
-            type: 'departure',
-            popup: { title: 'Départ', description: formData.departure_location }
-          })
-          setMapCenter([geo.lat, geo.lng])
-        }
-      }
-
-      if (formData.arrival_location.trim() && formData.arrival_location !== loadingText) {
-        const geo = await geocodeAddress(formData.arrival_location)
-        if (geo) {
-          setFormData(prev => ({
-            ...prev,
-            arrival_latitude: geo.lat,
-            arrival_longitude: geo.lng,
-          }))
-          newMarkers.push({
-            lat: geo.lat,
-            lng: geo.lng,
-            type: 'arrival',
-            popup: { title: 'Arrivée', description: formData.arrival_location }
-          })
-        }
-      }
-
-      setMarkers(newMarkers)
-    }, 1000) // Délai de 1 seconde après la saisie
-
-    return () => {
-      if (geocodeTimeoutRef.current) {
-        clearTimeout(geocodeTimeoutRef.current)
-      }
+    
+    if (formData.arrival_latitude && formData.arrival_longitude) {
+      newMarkers.push({
+        lat: formData.arrival_latitude,
+        lng: formData.arrival_longitude,
+        type: 'arrival',
+        popup: { title: 'Arrivée', description: formData.arrival_location }
+      })
     }
-  }, [formData.departure_location, formData.arrival_location])
+    
+    setMarkers(newMarkers)
+  }, [formData.departure_latitude, formData.departure_longitude, formData.arrival_latitude, formData.arrival_longitude, formData.departure_location, formData.arrival_location])
+
+  // Handler pour la sélection d'adresse de départ via recherche
+  const handleDepartureSelect = (suggestion) => {
+    setFormData(prev => ({
+      ...prev,
+      departure_location: formatAddressShort(suggestion) || suggestion.display_name.split(',').slice(0, 2).join(','),
+      departure_latitude: suggestion.lat,
+      departure_longitude: suggestion.lng,
+    }))
+    setMapCenter([suggestion.lat, suggestion.lng])
+  }
+
+  // Handler pour la sélection d'adresse d'arrivée via recherche
+  const handleArrivalSelect = (suggestion) => {
+    setFormData(prev => ({
+      ...prev,
+      arrival_location: formatAddressShort(suggestion) || suggestion.display_name.split(',').slice(0, 2).join(','),
+      arrival_latitude: suggestion.lat,
+      arrival_longitude: suggestion.lng,
+    }))
+  }
 
   const validateForm = () => {
     if (!formData.departure_location.trim()) {
