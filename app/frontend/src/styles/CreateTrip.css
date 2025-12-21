@@ -175,14 +175,32 @@
 }
 
 /* Input avec bouton */
-.input-with-button {
+.input-with-button,
+.address-input-group {
   display: flex;
   gap: 0.75rem;
   align-items: stretch;
 }
 
-.input-with-button .form-input {
+.input-with-button .form-input,
+.address-input-group .address-search-container {
   flex: 1;
+}
+
+.address-input-group .map-select-btn {
+  flex-shrink: 0;
+  min-width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coordinates-info {
+  display: block;
+  color: #22c55e;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
 }
 
 .map-select-btn {
