@@ -763,7 +763,7 @@ export default function DashboardPage() {
                     <h3>Itinéraire</h3>
                     <div className="route-details">
                       <div className="route-point departure-point">
-                        <span className="point-icon"></span>
+                        <div className="point-marker departure-marker"></div>
                         <div className="point-info">
                           <span className="point-label">Départ</span>
                           <span className="point-address">{selectedTrip.departure_location}</span>
@@ -771,7 +771,7 @@ export default function DashboardPage() {
                       </div>
                       <div className="route-line"></div>
                       <div className="route-point arrival-point">
-                        <span className="point-icon"></span>
+                        <div className="point-marker arrival-marker"></div>
                         <div className="point-info">
                           <span className="point-label">Arrivée</span>
                           <span className="point-address">{selectedTrip.arrival_location}</span>
@@ -785,28 +785,24 @@ export default function DashboardPage() {
                     <h3>Informations</h3>
                     <div className="info-grid">
                       <div className="info-item">
-                        <span className="info-icon"></span>
                         <div>
                           <span className="info-label">Date et heure</span>
                           <span className="info-value">{formatDate(selectedTrip.departure_datetime)}</span>
                         </div>
                       </div>
                       <div className="info-item">
-                        <span className="info-icon"></span>
                         <div>
                           <span className="info-label">Places disponibles</span>
                           <span className="info-value">{selectedTrip.remaining_seats || selectedTrip.available_seats} / {selectedTrip.available_seats}</span>
                         </div>
                       </div>
                       <div className="info-item">
-                        <span className="info-icon"></span>
                         <div>
                           <span className="info-label">Prix par place</span>
                           <span className="info-value price">{selectedTrip.price_per_seat}€</span>
                         </div>
                       </div>
                       <div className="info-item">
-                        <span className="info-icon"></span>
                         <div>
                           <span className="info-label">Réservations</span>
                           <span className="info-value">{selectedTrip.bookings_count || 0} réservation(s)</span>
@@ -855,14 +851,14 @@ export default function DashboardPage() {
                     }}
                     disabled={selectedTrip.status === 'cancelled'}
                   >
-                    ✏️ Modifier
+                    Modifier
                   </button>
                   <button 
                     className="btn-danger"
                     onClick={() => handleCancelTrip(selectedTrip.id)}
                     disabled={selectedTrip.status === 'cancelled'}
                   >
-                    ❌ Annuler le trajet
+                    Annuler le trajet
                   </button>
                 </div>
               </>
@@ -882,7 +878,7 @@ export default function DashboardPage() {
             </div>
             
             <form className="edit-trip-form" onSubmit={(e) => { e.preventDefault(); handleSaveTrip(); }}>
-              <div className="form-group">
+              <div className="modal-form-group">
                 <label>Lieu de départ</label>
                 <input
                   type="text"
@@ -892,7 +888,7 @@ export default function DashboardPage() {
                   required
                 />
               </div>
-              <div className="form-group">
+              <div className="modal-form-group">
                 <label>Lieu d'arrivée</label>
                 <input
                   type="text"
@@ -902,7 +898,7 @@ export default function DashboardPage() {
                   required
                 />
               </div>
-              <div className="form-group">
+              <div className="modal-form-group">
                 <label>Date et heure de départ</label>
                 <input
                   type="datetime-local"
@@ -911,8 +907,8 @@ export default function DashboardPage() {
                   required
                 />
               </div>
-              <div className="form-row">
-                <div className="form-group">
+              <div className="modal-form-row">
+                <div className="modal-form-group">
                   <label>Places disponibles</label>
                   <input
                     type="number"
@@ -923,7 +919,7 @@ export default function DashboardPage() {
                     required
                   />
                 </div>
-                <div className="form-group">
+                <div className="modal-form-group">
                   <label>Prix par place (€)</label>
                   <input
                     type="number"
@@ -935,7 +931,7 @@ export default function DashboardPage() {
                   />
                 </div>
               </div>
-              <div className="form-group">
+              <div className="modal-form-group">
                 <label>Description (optionnel)</label>
                 <textarea
                   value={editFormData.description}
