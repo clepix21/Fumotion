@@ -623,117 +623,209 @@ export default function AdminPage() {
 
           {activeTab === "users" && (
             <div className="admin-section">
-              <h1 className="admin-title">Gestion des utilisateurs</h1>
-              
-              <div className="admin-filters">
-                <input
-                  type="text"
-                  placeholder="Rechercher un utilisateur..."
-                  value={usersSearch}
-                  onChange={(e) => setUsersSearch(e.target.value)}
-                  className="admin-search"
-                />
-                <select
-                  value={usersFilter}
-                  onChange={(e) => setUsersFilter(e.target.value)}
-                  className="admin-filter"
+              <div className="admin-header">
+                <h1 className="admin-title">Gestion des utilisateurs</h1>
+                <button 
+                  className="admin-btn admin-btn-secondary"
+                  onClick={() => exportToCSV(users, 'utilisateurs')}
                 >
-                  <option value="">Tous</option>
-                  <option value="active">Actifs</option>
-                  <option value="inactive">Inactifs</option>
-                </select>
+                  Exporter CSV
+                </button>
+              </div>
+              
+              <div className="admin-toolbar">
+                <div className="admin-filters">
+                  <input
+                    type="text"
+                    placeholder="Rechercher par nom, email..."
+                    value={usersSearch}
+                    onChange={(e) => setUsersSearch(e.target.value)}
+                    className="admin-search"
+                  />
+                  <select
+                    value={usersFilter}
+                    onChange={(e) => setUsersFilter(e.target.value)}
+                    className="admin-filter"
+                  >
+                    <option value="">Tous les statuts</option>
+                    <option value="active">Actifs</option>
+                    <option value="inactive">Inactifs</option>
+                  </select>
+                </div>
+                
+                {selectedUsers.length > 0 && (
+                  <div className="bulk-actions">
+                    <span className="bulk-count">{selectedUsers.length} sélectionné(s)</span>
+                    <button 
+                      className="admin-btn admin-btn-sm"
+                      onClick={() => handleBulkUserAction('activate')}
+                    >
+                      Activer
+                    </button>
+                    <button 
+                      className="admin-btn admin-btn-sm"
+                      onClick={() => handleBulkUserAction('deactivate')}
+                    >
+                      Désactiver
+                    </button>
+                    <button 
+                      className="admin-btn admin-btn-sm admin-btn-danger"
+                      onClick={() => handleBulkUserAction('delete')}
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                )}
               </div>
 
               {loading ? (
-                <div className="loading">Chargement...</div>
+                <div className="admin-loading">
+                  <div className="admin-spinner"></div>
+                  <p>Chargement...</p>
+                </div>
               ) : (
                 <>
                   <div className="admin-table-container">
                     <table className="admin-table">
                       <thead>
                         <tr>
-                          <th>ID</th>
-                          <th>Nom</th>
-                          <th>Email</th>
-                          <th>Téléphone</th>
+                          <th>
+                            <input 
+                              type="checkbox"
+                              checked={selectedUsers.length === users.length && users.length > 0}
+                              onChange={toggleAllUsers}
+                            />
+                          </th>
+                          <th>Utilisateur</th>
+                          <th>Contact</th>
                           <th>Université</th>
                           <th>Statut</th>
+                          <th>Inscrit le</th>
                           <th>Actions</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {users.map(user => (
-                          <tr key={user.id}>
-                            <td>{user.id}</td>
-                            <td>{user.first_name} {user.last_name}</td>
-                            <td>{user.email}</td>
-                            <td>{user.phone || "-"}</td>
-                            <td>{user.university}</td>
-                            <td>
-                              <span className={`status-badge ${user.is_active ? 'active' : 'inactive'}`}>
-                                {user.is_active ? 'Actif' : 'Inactif'}
-                              </span>
-                              {user.is_verified && <span className="status-badge verified">✓</span>}
-                              {user.is_admin && <span className="status-badge admin">Admin</span>}
-                            </td>
-                            <td>
-                              <div className="table-actions">
-                                <button
-                                  onClick={() => handleUpdateUser(user.id, { is_active: !user.is_active })}
-                                  className="btn-action"
-                                  title={user.is_active ? "Désactiver" : "Activer"}
-                                >
-                                  {user.is_active ? "⏸" : "▶"}
-                                </button>
-                                <button
-                                  onClick={() => handleUpdateUser(user.id, { is_verified: !user.is_verified })}
-                                  className="btn-action"
-                                  title={user.is_verified ? "Retirer vérification" : "Vérifier"}
-                                >
-                                  {user.is_verified ? "✓" : "?"}
-                                </button>
-                                <button
-                                  onClick={() => handleUpdateUser(user.id, { is_admin: !user.is_admin })}
-                                  className="btn-action"
-                                  title={user.is_admin ? "Retirer admin" : "Promouvoir admin"}
-                                  disabled={user.email === "admin@fumotion.com"}
-                                >
-                                  👑
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteUser(user.id)}
-                                  className="btn-action btn-danger"
-                                  title="Supprimer"
-                                  disabled={user.email === "admin@fumotion.com"}
-                                >
-                                  🗑
-                                </button>
-                              </div>
-                            </td>
+                        {users.length === 0 ? (
+                          <tr>
+                            <td colSpan="7" className="empty-row">Aucun utilisateur trouvé</td>
                           </tr>
-                        ))}
+                        ) : (
+                          users.map(u => (
+                            <tr key={u.id} className={selectedUsers.includes(u.id) ? 'selected' : ''}>
+                              <td>
+                                <input 
+                                  type="checkbox"
+                                  checked={selectedUsers.includes(u.id)}
+                                  onChange={() => toggleUserSelection(u.id)}
+                                />
+                              </td>
+                              <td>
+                                <div className="user-cell">
+                                  <Avatar user={u} size="small" />
+                                  <div>
+                                    <div className="user-name">{u.first_name} {u.last_name}</div>
+                                    <div className="user-id">ID: {u.id}</div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td>
+                                <div className="contact-cell">
+                                  <div>{u.email}</div>
+                                  <div className="text-muted">{u.phone || "-"}</div>
+                                </div>
+                              </td>
+                              <td>{u.university || "-"}</td>
+                              <td>
+                                <div className="status-badges">
+                                  <span className={`admin-badge ${u.is_active ? 'success' : 'danger'}`}>
+                                    {u.is_active ? 'Actif' : 'Inactif'}
+                                  </span>
+                                  {u.is_verified && <span className="admin-badge info">Vérifié</span>}
+                                  {u.is_admin && <span className="admin-badge warning">Admin</span>}
+                                </div>
+                              </td>
+                              <td>{formatDate(u.created_at)}</td>
+                              <td>
+                                <div className="table-actions">
+                                  <button
+                                    onClick={() => setUserDetailModal(u)}
+                                    className="action-btn"
+                                    title="Voir détails"
+                                  >
+                                    Voir
+                                  </button>
+                                  <button
+                                    onClick={() => handleUpdateUser(u.id, { is_active: !u.is_active })}
+                                    className="action-btn"
+                                    title={u.is_active ? "Désactiver" : "Activer"}
+                                  >
+                                    {u.is_active ? "Pause" : "Play"}
+                                  </button>
+                                  <button
+                                    onClick={() => handleUpdateUser(u.id, { is_verified: !u.is_verified })}
+                                    className="action-btn"
+                                    title={u.is_verified ? "Retirer vérification" : "Vérifier"}
+                                  >
+                                    V
+                                  </button>
+                                  <button
+                                    onClick={() => handleUpdateUser(u.id, { is_admin: !u.is_admin })}
+                                    className="action-btn"
+                                    title={u.is_admin ? "Retirer admin" : "Promouvoir admin"}
+                                    disabled={u.email === "admin@fumotion.com"}
+                                  >
+                                    A
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteUser(u.id)}
+                                    className="action-btn danger"
+                                    title="Supprimer"
+                                    disabled={u.email === "admin@fumotion.com"}
+                                  >
+                                    X
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))
+                        )}
                       </tbody>
                     </table>
                   </div>
 
-                  {usersPagination && (
-                    <div className="pagination">
+                  {usersPagination && usersPagination.pages > 1 && (
+                    <div className="admin-pagination">
+                      <button
+                        onClick={() => setUsersPage(1)}
+                        disabled={usersPage === 1}
+                        className="pagination-btn"
+                      >
+                        Premier
+                      </button>
                       <button
                         onClick={() => setUsersPage(usersPage - 1)}
                         disabled={usersPage === 1}
                         className="pagination-btn"
                       >
-                        ← Précédent
+                        Précédent
                       </button>
                       <span className="pagination-info">
-                        Page {usersPagination.page} / {usersPagination.pages}
+                        Page {usersPagination.page} sur {usersPagination.pages}
+                        <span className="pagination-total">({usersPagination.total} résultats)</span>
                       </span>
                       <button
                         onClick={() => setUsersPage(usersPage + 1)}
                         disabled={usersPage >= usersPagination.pages}
                         className="pagination-btn"
                       >
-                        Suivant →
+                        Suivant
+                      </button>
+                      <button
+                        onClick={() => setUsersPage(usersPagination.pages)}
+                        disabled={usersPage >= usersPagination.pages}
+                        className="pagination-btn"
+                      >
+                        Dernier
                       </button>
                     </div>
                   )}
@@ -744,33 +836,83 @@ export default function AdminPage() {
 
           {activeTab === "trips" && (
             <div className="admin-section">
-              <h1 className="admin-title">Gestion des trajets</h1>
-              
-              <div className="admin-filters">
-                <select
-                  value={tripsFilter}
-                  onChange={(e) => setTripsFilter(e.target.value)}
-                  className="admin-filter"
+              <div className="admin-header">
+                <h1 className="admin-title">Gestion des trajets</h1>
+                <button 
+                  className="admin-btn admin-btn-secondary"
+                  onClick={() => exportToCSV(trips, 'trajets')}
                 >
-                  <option value="">Tous</option>
-                  <option value="active">Actifs</option>
-                  <option value="completed">Terminés</option>
-                  <option value="cancelled">Annulés</option>
-                </select>
+                  Exporter CSV
+                </button>
+              </div>
+              
+              <div className="admin-toolbar">
+                <div className="admin-filters">
+                  <input
+                    type="text"
+                    placeholder="Rechercher un trajet..."
+                    value={tripsSearch}
+                    onChange={(e) => setTripsSearch(e.target.value)}
+                    className="admin-search"
+                  />
+                  <select
+                    value={tripsFilter}
+                    onChange={(e) => setTripsFilter(e.target.value)}
+                    className="admin-filter"
+                  >
+                    <option value="">Tous les statuts</option>
+                    <option value="active">Actifs</option>
+                    <option value="completed">Terminés</option>
+                    <option value="cancelled">Annulés</option>
+                  </select>
+                </div>
+                
+                {selectedTrips.length > 0 && (
+                  <div className="bulk-actions">
+                    <span className="bulk-count">{selectedTrips.length} sélectionné(s)</span>
+                    <button 
+                      className="admin-btn admin-btn-sm"
+                      onClick={() => handleBulkTripAction('completed')}
+                    >
+                      Marquer terminé
+                    </button>
+                    <button 
+                      className="admin-btn admin-btn-sm"
+                      onClick={() => handleBulkTripAction('cancelled')}
+                    >
+                      Annuler
+                    </button>
+                    <button 
+                      className="admin-btn admin-btn-sm admin-btn-danger"
+                      onClick={() => handleBulkTripAction('delete')}
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                )}
               </div>
 
               {loading ? (
-                <div className="loading">Chargement...</div>
+                <div className="admin-loading">
+                  <div className="admin-spinner"></div>
+                  <p>Chargement...</p>
+                </div>
               ) : (
                 <>
                   <div className="admin-table-container">
                     <table className="admin-table">
                       <thead>
                         <tr>
+                          <th>
+                            <input 
+                              type="checkbox"
+                              checked={selectedTrips.length === trips.length && trips.length > 0}
+                              onChange={toggleAllTrips}
+                            />
+                          </th>
                           <th>ID</th>
                           <th>Conducteur</th>
-                          <th>Départ</th>
-                          <th>Arrivée</th>
+                          <th>Itinéraire</th>
                           <th>Date</th>
                           <th>Places</th>
                           <th>Prix</th>
@@ -779,64 +921,108 @@ export default function AdminPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {trips.map(trip => (
-                          <tr key={trip.id}>
-                            <td>{trip.id}</td>
-                            <td>{trip.first_name} {trip.last_name}</td>
-                            <td>{trip.departure_location}</td>
-                            <td>{trip.arrival_location}</td>
-                            <td>{new Date(trip.departure_datetime).toLocaleString()}</td>
-                            <td>{trip.available_seats}</td>
-                            <td>{trip.price_per_seat}€</td>
-                            <td>
-                              <span className={`status-badge ${trip.status}`}>
-                                {trip.status === 'active' ? 'Actif' : trip.status === 'completed' ? 'Terminé' : 'Annulé'}
-                              </span>
-                            </td>
-                            <td>
-                              <div className="table-actions">
-                                <select
-                                  value={trip.status}
-                                  onChange={(e) => handleUpdateTrip(trip.id, e.target.value)}
-                                  className="status-select"
-                                >
-                                  <option value="active">Actif</option>
-                                  <option value="completed">Terminé</option>
-                                  <option value="cancelled">Annulé</option>
-                                </select>
-                                <button
-                                  onClick={() => handleDeleteTrip(trip.id)}
-                                  className="btn-action btn-danger"
-                                  title="Supprimer"
-                                >
-                                  🗑
-                                </button>
-                              </div>
-                            </td>
+                        {trips.length === 0 ? (
+                          <tr>
+                            <td colSpan="9" className="empty-row">Aucun trajet trouvé</td>
                           </tr>
-                        ))}
+                        ) : (
+                          trips.map(trip => (
+                            <tr key={trip.id} className={selectedTrips.includes(trip.id) ? 'selected' : ''}>
+                              <td>
+                                <input 
+                                  type="checkbox"
+                                  checked={selectedTrips.includes(trip.id)}
+                                  onChange={() => toggleTripSelection(trip.id)}
+                                />
+                              </td>
+                              <td>#{trip.id}</td>
+                              <td>
+                                <div className="user-cell">
+                                  <div>
+                                    <div className="user-name">{trip.first_name} {trip.last_name}</div>
+                                    <div className="text-muted">{trip.email}</div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td>
+                                <div className="route-cell">
+                                  <span className="route-from">{formatAddress(trip.departure_location)}</span>
+                                  <span className="route-arrow">-</span>
+                                  <span className="route-to">{formatAddress(trip.arrival_location)}</span>
+                                </div>
+                              </td>
+                              <td>{formatDate(trip.departure_datetime)}</td>
+                              <td>{trip.available_seats}</td>
+                              <td><strong>{trip.price_per_seat}€</strong></td>
+                              <td>
+                                <span className={`admin-badge ${
+                                  trip.status === 'active' ? 'success' : 
+                                  trip.status === 'completed' ? 'info' : 'danger'
+                                }`}>
+                                  {trip.status === 'active' ? 'Actif' : 
+                                   trip.status === 'completed' ? 'Terminé' : 'Annulé'}
+                                </span>
+                              </td>
+                              <td>
+                                <div className="table-actions">
+                                  <select
+                                    value={trip.status}
+                                    onChange={(e) => handleUpdateTrip(trip.id, e.target.value)}
+                                    className="status-select"
+                                  >
+                                    <option value="active">Actif</option>
+                                    <option value="completed">Terminé</option>
+                                    <option value="cancelled">Annulé</option>
+                                  </select>
+                                  <button
+                                    onClick={() => handleDeleteTrip(trip.id)}
+                                    className="action-btn danger"
+                                    title="Supprimer"
+                                  >
+                                    X
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))
+                        )}
                       </tbody>
                     </table>
                   </div>
 
-                  {tripsPagination && (
-                    <div className="pagination">
+                  {tripsPagination && tripsPagination.pages > 1 && (
+                    <div className="admin-pagination">
+                      <button
+                        onClick={() => setTripsPage(1)}
+                        disabled={tripsPage === 1}
+                        className="pagination-btn"
+                      >
+                        Premier
+                      </button>
                       <button
                         onClick={() => setTripsPage(tripsPage - 1)}
                         disabled={tripsPage === 1}
                         className="pagination-btn"
                       >
-                        ← Précédent
+                        Précédent
                       </button>
                       <span className="pagination-info">
-                        Page {tripsPagination.page} / {tripsPagination.pages}
+                        Page {tripsPagination.page} sur {tripsPagination.pages}
+                        <span className="pagination-total">({tripsPagination.total} résultats)</span>
                       </span>
                       <button
                         onClick={() => setTripsPage(tripsPage + 1)}
                         disabled={tripsPage >= tripsPagination.pages}
                         className="pagination-btn"
                       >
-                        Suivant →
+                        Suivant
+                      </button>
+                      <button
+                        onClick={() => setTripsPage(tripsPagination.pages)}
+                        disabled={tripsPage >= tripsPagination.pages}
+                        className="pagination-btn"
+                      >
+                        Dernier
                       </button>
                     </div>
                   )}
