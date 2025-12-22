@@ -760,10 +760,10 @@ export default function DashboardPage() {
                 <div className="trip-details-content">
                   {/* Itinéraire */}
                   <div className="detail-section">
-                    <h3>🗺️ Itinéraire</h3>
+                    <h3>Itinéraire</h3>
                     <div className="route-details">
                       <div className="route-point departure-point">
-                        <span className="point-icon">📍</span>
+                        <span className="point-icon"></span>
                         <div className="point-info">
                           <span className="point-label">Départ</span>
                           <span className="point-address">{selectedTrip.departure_location}</span>
@@ -771,7 +771,7 @@ export default function DashboardPage() {
                       </div>
                       <div className="route-line"></div>
                       <div className="route-point arrival-point">
-                        <span className="point-icon">🏁</span>
+                        <span className="point-icon"></span>
                         <div className="point-info">
                           <span className="point-label">Arrivée</span>
                           <span className="point-address">{selectedTrip.arrival_location}</span>
@@ -782,31 +782,31 @@ export default function DashboardPage() {
 
                   {/* Informations */}
                   <div className="detail-section">
-                    <h3>📋 Informations</h3>
+                    <h3>Informations</h3>
                     <div className="info-grid">
                       <div className="info-item">
-                        <span className="info-icon">📅</span>
+                        <span className="info-icon"></span>
                         <div>
                           <span className="info-label">Date et heure</span>
                           <span className="info-value">{formatDate(selectedTrip.departure_datetime)}</span>
                         </div>
                       </div>
                       <div className="info-item">
-                        <span className="info-icon">💺</span>
+                        <span className="info-icon"></span>
                         <div>
                           <span className="info-label">Places disponibles</span>
                           <span className="info-value">{selectedTrip.remaining_seats || selectedTrip.available_seats} / {selectedTrip.available_seats}</span>
                         </div>
                       </div>
                       <div className="info-item">
-                        <span className="info-icon">💰</span>
+                        <span className="info-icon"></span>
                         <div>
                           <span className="info-label">Prix par place</span>
                           <span className="info-value price">{selectedTrip.price_per_seat}€</span>
                         </div>
                       </div>
                       <div className="info-item">
-                        <span className="info-icon">📊</span>
+                        <span className="info-icon"></span>
                         <div>
                           <span className="info-label">Réservations</span>
                           <span className="info-value">{selectedTrip.bookings_count || 0} réservation(s)</span>
@@ -818,14 +818,14 @@ export default function DashboardPage() {
                   {/* Description */}
                   {selectedTrip.description && (
                     <div className="detail-section">
-                      <h3>📝 Description</h3>
+                      <h3>Description</h3>
                       <p className="trip-description">{selectedTrip.description}</p>
                     </div>
                   )}
 
                   {/* Passagers */}
                   <div className="detail-section">
-                    <h3>👥 Passagers confirmés ({tripPassengers.length})</h3>
+                    <h3>Passagers confirmés ({tripPassengers.length})</h3>
                     {tripPassengers.length === 0 ? (
                       <p className="no-passengers">Aucun passager pour le moment</p>
                     ) : (
@@ -883,7 +883,7 @@ export default function DashboardPage() {
             
             <form className="edit-trip-form" onSubmit={(e) => { e.preventDefault(); handleSaveTrip(); }}>
               <div className="form-group">
-                <label>📍 Lieu de départ</label>
+                <label>Lieu de départ</label>
                 <input
                   type="text"
                   value={editFormData.departure_location}
@@ -892,9 +892,8 @@ export default function DashboardPage() {
                   required
                 />
               </div>
-              
               <div className="form-group">
-                <label>🏁 Lieu d'arrivée</label>
+                <label>Lieu d'arrivée</label>
                 <input
                   type="text"
                   value={editFormData.arrival_location}
@@ -903,9 +902,8 @@ export default function DashboardPage() {
                   required
                 />
               </div>
-              
               <div className="form-group">
-                <label>📅 Date et heure de départ</label>
+                <label>Date et heure de départ</label>
                 <input
                   type="datetime-local"
                   value={editFormData.departure_datetime}
@@ -913,10 +911,9 @@ export default function DashboardPage() {
                   required
                 />
               </div>
-              
               <div className="form-row">
                 <div className="form-group">
-                  <label>💺 Places disponibles</label>
+                  <label>Places disponibles</label>
                   <input
                     type="number"
                     min="1"
@@ -926,9 +923,8 @@ export default function DashboardPage() {
                     required
                   />
                 </div>
-                
                 <div className="form-group">
-                  <label>💰 Prix par place (€)</label>
+                  <label>Prix par place (€)</label>
                   <input
                     type="number"
                     min="0"
@@ -939,9 +935,8 @@ export default function DashboardPage() {
                   />
                 </div>
               </div>
-              
               <div className="form-group">
-                <label>📝 Description (optionnel)</label>
+                <label>Description (optionnel)</label>
                 <textarea
                   value={editFormData.description}
                   onChange={(e) => setEditFormData({...editFormData, description: e.target.value})}
@@ -949,7 +944,6 @@ export default function DashboardPage() {
                   rows="3"
                 />
               </div>
-              
               <div className="modal-actions">
                 <button type="button" className="btn-secondary" onClick={closeModals}>
                   Annuler
@@ -961,7 +955,7 @@ export default function DashboardPage() {
                       Enregistrement...
                     </>
                   ) : (
-                    '💾 Enregistrer'
+                    'Enregistrer'
                   )}
                 </button>
               </div>
