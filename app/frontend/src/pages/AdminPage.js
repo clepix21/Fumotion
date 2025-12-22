@@ -380,6 +380,13 @@ export default function AdminPage() {
 
   return (
     <div className="admin-page">
+      {/* Notification Toast */}
+      {notification && (
+        <div className={`admin-notification ${notification.type}`}>
+          {notification.message}
+        </div>
+      )}
+
       {/* Navbar */}
       <nav className="navbar">
         <div className="navbar-container">
@@ -421,30 +428,42 @@ export default function AdminPage() {
               className={`sidebar-item ${activeTab === "dashboard" ? "active" : ""}`}
               onClick={() => setActiveTab("dashboard")}
             >
-              <span className="sidebar-icon">📊</span>
-              <span>Tableau de bord</span>
+              <span className="sidebar-icon">Tableau de bord</span>
             </button>
             <button 
               className={`sidebar-item ${activeTab === "users" ? "active" : ""}`}
               onClick={() => setActiveTab("users")}
             >
-              <span className="sidebar-icon">👥</span>
-              <span>Utilisateurs</span>
+              <span className="sidebar-icon">Utilisateurs</span>
+              {statistics?.users?.total && (
+                <span className="sidebar-badge">{statistics.users.total}</span>
+              )}
             </button>
             <button 
               className={`sidebar-item ${activeTab === "trips" ? "active" : ""}`}
               onClick={() => setActiveTab("trips")}
             >
-              <span className="sidebar-icon">🚗</span>
-              <span>Trajets</span>
+              <span className="sidebar-icon">Trajets</span>
+              {statistics?.trips?.total && (
+                <span className="sidebar-badge">{statistics.trips.total}</span>
+              )}
             </button>
             <button 
               className={`sidebar-item ${activeTab === "bookings" ? "active" : ""}`}
               onClick={() => setActiveTab("bookings")}
             >
-              <span className="sidebar-icon">📝</span>
-              <span>Réservations</span>
+              <span className="sidebar-icon">Réservations</span>
+              {statistics?.bookings?.pending > 0 && (
+                <span className="sidebar-badge warning">{statistics.bookings.pending}</span>
+              )}
             </button>
+          </div>
+
+          <div className="sidebar-footer">
+            <div className="sidebar-info">
+              <p>Connecté en tant que</p>
+              <strong>{user?.email}</strong>
+            </div>
           </div>
         </aside>
 
@@ -452,83 +471,153 @@ export default function AdminPage() {
         <main className="admin-content">
           {activeTab === "dashboard" && (
             <div className="admin-section">
-              <h1 className="admin-title">Tableau de bord</h1>
+              <div className="admin-header">
+                <h1 className="admin-title">Tableau de bord</h1>
+                <button 
+                  className="admin-btn admin-btn-secondary"
+                  onClick={loadStatistics}
+                  disabled={loading}
+                >
+                  Actualiser
+                </button>
+              </div>
               
               {loading ? (
-                <div className="loading">Chargement...</div>
+                <div className="admin-loading">
+                  <div className="admin-spinner"></div>
+                  <p>Chargement des statistiques...</p>
+                </div>
               ) : statistics ? (
                 <>
                   <div className="stats-grid">
-                    <div className="stat-card">
-                      <div className="stat-icon">👥</div>
+                    <div className="stat-card users">
                       <div className="stat-content">
                         <div className="stat-value">{statistics.users.total}</div>
                         <div className="stat-label">Utilisateurs</div>
                         <div className="stat-details">
-                          {statistics.users.active} actifs • {statistics.users.verified} vérifiés
+                          <span className="stat-detail-item">
+                            <span className="stat-dot active"></span>
+                            {statistics.users.active} actifs
+                          </span>
+                          <span className="stat-detail-item">
+                            <span className="stat-dot verified"></span>
+                            {statistics.users.verified} vérifiés
+                          </span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="stat-card">
-                      <div className="stat-icon">🚗</div>
+                    <div className="stat-card trips">
                       <div className="stat-content">
                         <div className="stat-value">{statistics.trips.total}</div>
                         <div className="stat-label">Trajets</div>
                         <div className="stat-details">
-                          {statistics.trips.active} actifs • {statistics.trips.completed} terminés
+                          <span className="stat-detail-item">
+                            <span className="stat-dot active"></span>
+                            {statistics.trips.active} actifs
+                          </span>
+                          <span className="stat-detail-item">
+                            <span className="stat-dot completed"></span>
+                            {statistics.trips.completed} terminés
+                          </span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="stat-card">
-                      <div className="stat-icon">📝</div>
+                    <div className="stat-card bookings">
                       <div className="stat-content">
                         <div className="stat-value">{statistics.bookings.total}</div>
                         <div className="stat-label">Réservations</div>
                         <div className="stat-details">
-                          {statistics.bookings.confirmed} confirmées • {statistics.bookings.pending} en attente
+                          <span className="stat-detail-item">
+                            <span className="stat-dot confirmed"></span>
+                            {statistics.bookings.confirmed} confirmées
+                          </span>
+                          <span className="stat-detail-item">
+                            <span className="stat-dot pending"></span>
+                            {statistics.bookings.pending} en attente
+                          </span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="stat-card">
-                      <div className="stat-icon">💰</div>
+                    <div className="stat-card revenue">
                       <div className="stat-content">
-                        <div className="stat-value">{statistics.revenue.total.toFixed(2)}€</div>
+                        <div className="stat-value">{(statistics.revenue.total || 0).toFixed(2)}€</div>
                         <div className="stat-label">Revenu total</div>
-                        <div className="stat-details">Transactions payées</div>
+                        <div className="stat-details">
+                          <span className="stat-detail-item">Transactions payées</span>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="recent-section">
-                    <h2>Derniers utilisateurs</h2>
-                    <div className="recent-list">
-                      {statistics.recent.users.map(user => (
-                        <div key={user.id} className="recent-item">
-                          <div>{user.first_name} {user.last_name}</div>
-                          <div className="recent-detail">{user.email}</div>
-                          <div className="recent-date">{new Date(user.created_at).toLocaleDateString()}</div>
-                        </div>
-                      ))}
+                  <div className="admin-grid-2">
+                    <div className="recent-section">
+                      <div className="recent-header">
+                        <h2>Derniers utilisateurs</h2>
+                        <button 
+                          className="admin-btn-link"
+                          onClick={() => setActiveTab("users")}
+                        >
+                          Voir tout
+                        </button>
+                      </div>
+                      <div className="recent-list">
+                        {statistics.recent.users.length === 0 ? (
+                          <p className="empty-text">Aucun utilisateur récent</p>
+                        ) : (
+                          statistics.recent.users.map(u => (
+                            <div key={u.id} className="recent-item">
+                              <Avatar user={u} size="small" />
+                              <div className="recent-info">
+                                <div className="recent-name">{u.first_name} {u.last_name}</div>
+                                <div className="recent-detail">{u.email}</div>
+                              </div>
+                              <div className="recent-date">{formatDate(u.created_at)}</div>
+                            </div>
+                          ))
+                        )}
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="recent-section">
-                    <h2>Derniers trajets</h2>
-                    <div className="recent-list">
-                      {statistics.recent.trips.map(trip => (
-                        <div key={trip.id} className="recent-item">
-                          <div>{trip.departure_location} → {trip.arrival_location}</div>
-                          <div className="recent-detail">Par {trip.first_name} {trip.last_name}</div>
-                          <div className="recent-date">{new Date(trip.created_at).toLocaleDateString()}</div>
-                        </div>
-                      ))}
+                    <div className="recent-section">
+                      <div className="recent-header">
+                        <h2>Derniers trajets</h2>
+                        <button 
+                          className="admin-btn-link"
+                          onClick={() => setActiveTab("trips")}
+                        >
+                          Voir tout
+                        </button>
+                      </div>
+                      <div className="recent-list">
+                        {statistics.recent.trips.length === 0 ? (
+                          <p className="empty-text">Aucun trajet récent</p>
+                        ) : (
+                          statistics.recent.trips.map(trip => (
+                            <div key={trip.id} className="recent-item">
+                              <div className="recent-trip-icon">T</div>
+                              <div className="recent-info">
+                                <div className="recent-name">{formatAddress(trip.departure_location)} - {formatAddress(trip.arrival_location)}</div>
+                                <div className="recent-detail">Par {trip.first_name} {trip.last_name}</div>
+                              </div>
+                              <div className="recent-date">{formatDate(trip.created_at)}</div>
+                            </div>
+                          ))
+                        )}
+                      </div>
                     </div>
                   </div>
                 </>
-              ) : null}
+              ) : (
+                <div className="empty-state">
+                  <p>Impossible de charger les statistiques</p>
+                  <button className="admin-btn admin-btn-primary" onClick={loadStatistics}>
+                    Réessayer
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
