@@ -1033,24 +1033,37 @@ export default function AdminPage() {
 
           {activeTab === "bookings" && (
             <div className="admin-section">
-              <h1 className="admin-title">Gestion des réservations</h1>
-              
-              <div className="admin-filters">
-                <select
-                  value={bookingsFilter}
-                  onChange={(e) => setBookingsFilter(e.target.value)}
-                  className="admin-filter"
+              <div className="admin-header">
+                <h1 className="admin-title">Gestion des réservations</h1>
+                <button 
+                  className="admin-btn admin-btn-secondary"
+                  onClick={() => exportToCSV(bookings, 'reservations')}
                 >
-                  <option value="">Tous</option>
-                  <option value="pending">En attente</option>
-                  <option value="confirmed">Confirmées</option>
-                  <option value="cancelled">Annulées</option>
-                  <option value="completed">Terminées</option>
-                </select>
+                  Exporter CSV
+                </button>
+              </div>
+              
+              <div className="admin-toolbar">
+                <div className="admin-filters">
+                  <select
+                    value={bookingsFilter}
+                    onChange={(e) => setBookingsFilter(e.target.value)}
+                    className="admin-filter"
+                  >
+                    <option value="">Tous les statuts</option>
+                    <option value="pending">En attente</option>
+                    <option value="confirmed">Confirmées</option>
+                    <option value="cancelled">Annulées</option>
+                    <option value="completed">Terminées</option>
+                  </select>
+                </div>
               </div>
 
               {loading ? (
-                <div className="loading">Chargement...</div>
+                <div className="admin-loading">
+                  <div className="admin-spinner"></div>
+                  <p>Chargement...</p>
+                </div>
               ) : (
                 <>
                   <div className="admin-table-container">
@@ -1070,73 +1083,103 @@ export default function AdminPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {bookings.map(booking => (
-                          <tr key={booking.id}>
-                            <td>{booking.id}</td>
-                            <td>{booking.passenger_first_name} {booking.passenger_last_name}</td>
-                            <td>{booking.driver_first_name} {booking.driver_last_name}</td>
-                            <td>{booking.departure_location} → {booking.arrival_location}</td>
-                            <td>{new Date(booking.departure_datetime).toLocaleDateString()}</td>
-                            <td>{booking.seats_booked}</td>
-                            <td>{booking.total_price}€</td>
-                            <td>
-                              <select
-                                value={booking.status}
-                                onChange={(e) => handleUpdateBooking(booking.id, { status: e.target.value })}
-                                className="status-select"
-                              >
-                                <option value="pending">En attente</option>
-                                <option value="confirmed">Confirmée</option>
-                                <option value="cancelled">Annulée</option>
-                                <option value="completed">Terminée</option>
-                              </select>
-                            </td>
-                            <td>
-                              <select
-                                value={booking.payment_status}
-                                onChange={(e) => handleUpdateBooking(booking.id, { payment_status: e.target.value })}
-                                className="status-select"
-                              >
-                                <option value="pending">En attente</option>
-                                <option value="paid">Payé</option>
-                                <option value="refunded">Remboursé</option>
-                              </select>
-                            </td>
-                            <td>
-                              <div className="table-actions">
-                                <button
-                                  onClick={() => handleDeleteBooking(booking.id)}
-                                  className="btn-action btn-danger"
-                                  title="Supprimer"
-                                >
-                                  🗑
-                                </button>
-                              </div>
-                            </td>
+                        {bookings.length === 0 ? (
+                          <tr>
+                            <td colSpan="10" className="empty-row">Aucune réservation trouvée</td>
                           </tr>
-                        ))}
+                        ) : (
+                          bookings.map(booking => (
+                            <tr key={booking.id}>
+                              <td>#{booking.id}</td>
+                              <td>
+                                <div className="user-name">{booking.passenger_first_name} {booking.passenger_last_name}</div>
+                                <div className="text-muted">{booking.passenger_email}</div>
+                              </td>
+                              <td>{booking.driver_first_name} {booking.driver_last_name}</td>
+                              <td>
+                                <div className="route-cell">
+                                  <span className="route-from">{formatAddress(booking.departure_location)}</span>
+                                  <span className="route-arrow">-</span>
+                                  <span className="route-to">{formatAddress(booking.arrival_location)}</span>
+                                </div>
+                              </td>
+                              <td>{formatDate(booking.departure_datetime)}</td>
+                              <td>{booking.seats_booked}</td>
+                              <td><strong>{booking.total_price}€</strong></td>
+                              <td>
+                                <select
+                                  value={booking.status}
+                                  onChange={(e) => handleUpdateBooking(booking.id, { status: e.target.value })}
+                                  className="status-select"
+                                >
+                                  <option value="pending">En attente</option>
+                                  <option value="confirmed">Confirmée</option>
+                                  <option value="cancelled">Annulée</option>
+                                  <option value="completed">Terminée</option>
+                                </select>
+                              </td>
+                              <td>
+                                <select
+                                  value={booking.payment_status || 'pending'}
+                                  onChange={(e) => handleUpdateBooking(booking.id, { payment_status: e.target.value })}
+                                  className={`status-select payment-${booking.payment_status || 'pending'}`}
+                                >
+                                  <option value="pending">En attente</option>
+                                  <option value="paid">Payé</option>
+                                  <option value="refunded">Remboursé</option>
+                                </select>
+                              </td>
+                              <td>
+                                <div className="table-actions">
+                                  <button
+                                    onClick={() => handleDeleteBooking(booking.id)}
+                                    className="action-btn danger"
+                                    title="Supprimer"
+                                  >
+                                    X
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))
+                        )}
                       </tbody>
                     </table>
                   </div>
 
-                  {bookingsPagination && (
-                    <div className="pagination">
+                  {bookingsPagination && bookingsPagination.pages > 1 && (
+                    <div className="admin-pagination">
+                      <button
+                        onClick={() => setBookingsPage(1)}
+                        disabled={bookingsPage === 1}
+                        className="pagination-btn"
+                      >
+                        Premier
+                      </button>
                       <button
                         onClick={() => setBookingsPage(bookingsPage - 1)}
                         disabled={bookingsPage === 1}
                         className="pagination-btn"
                       >
-                        ← Précédent
+                        Précédent
                       </button>
                       <span className="pagination-info">
-                        Page {bookingsPagination.page} / {bookingsPagination.pages}
+                        Page {bookingsPagination.page} sur {bookingsPagination.pages}
+                        <span className="pagination-total">({bookingsPagination.total} résultats)</span>
                       </span>
                       <button
                         onClick={() => setBookingsPage(bookingsPage + 1)}
                         disabled={bookingsPage >= bookingsPagination.pages}
                         className="pagination-btn"
                       >
-                        Suivant →
+                        Suivant
+                      </button>
+                      <button
+                        onClick={() => setBookingsPage(bookingsPagination.pages)}
+                        disabled={bookingsPage >= bookingsPagination.pages}
+                        className="pagination-btn"
+                      >
+                        Dernier
                       </button>
                     </div>
                   )}
@@ -1146,6 +1189,76 @@ export default function AdminPage() {
           )}
         </main>
       </div>
+
+      {/* Modal détail utilisateur */}
+      {userDetailModal && (
+        <div className="admin-modal-overlay" onClick={() => setUserDetailModal(null)}>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="admin-modal-close" onClick={() => setUserDetailModal(null)}>X</button>
+            
+            <div className="admin-modal-header">
+              <Avatar user={userDetailModal} size="large" />
+              <div className="admin-modal-title">
+                <h2>{userDetailModal.first_name} {userDetailModal.last_name}</h2>
+                <p>{userDetailModal.email}</p>
+              </div>
+            </div>
+
+            <div className="admin-modal-body">
+              <div className="detail-grid">
+                <div className="detail-item">
+                  <label>ID</label>
+                  <span>{userDetailModal.id}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Téléphone</label>
+                  <span>{userDetailModal.phone || "Non renseigné"}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Numéro étudiant</label>
+                  <span>{userDetailModal.student_id || "Non renseigné"}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Université</label>
+                  <span>{userDetailModal.university || "Non renseigné"}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Inscrit le</label>
+                  <span>{formatDate(userDetailModal.created_at)}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Statuts</label>
+                  <div className="status-badges">
+                    <span className={`admin-badge ${userDetailModal.is_active ? 'success' : 'danger'}`}>
+                      {userDetailModal.is_active ? 'Actif' : 'Inactif'}
+                    </span>
+                    {userDetailModal.is_verified && <span className="admin-badge info">Vérifié</span>}
+                    {userDetailModal.is_admin && <span className="admin-badge warning">Admin</span>}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="admin-modal-footer">
+              <button 
+                className="admin-btn admin-btn-secondary"
+                onClick={() => {
+                  handleUpdateUser(userDetailModal.id, { is_active: !userDetailModal.is_active })
+                  setUserDetailModal(null)
+                }}
+              >
+                {userDetailModal.is_active ? 'Désactiver' : 'Activer'}
+              </button>
+              <button 
+                className="admin-btn admin-btn-primary"
+                onClick={() => setUserDetailModal(null)}
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
