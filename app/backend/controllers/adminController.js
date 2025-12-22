@@ -223,9 +223,11 @@ exports.getAllTrips = async (req, res) => {
 
     query += " ORDER BY t.created_at DESC"
 
-    const offset = (page - 1) * limit
+    const pageNum = parseInt(page)
+    const limitNum = parseInt(limit)
+    const offset = (pageNum - 1) * limitNum
     query += ` LIMIT ? OFFSET ?`
-    params.push(parseInt(limit), offset)
+    params.push(limitNum, offset)
 
     const trips = await db.all(query, params)
 
@@ -329,9 +331,11 @@ exports.getAllBookings = async (req, res) => {
 
     query += " ORDER BY b.booking_date DESC"
 
-    const offset = (page - 1) * limit
+    const pageNum = parseInt(page)
+    const limitNum = parseInt(limit)
+    const offset = (pageNum - 1) * limitNum
     query += ` LIMIT ? OFFSET ?`
-    params.push(parseInt(limit), offset)
+    params.push(limitNum, offset)
 
     const bookings = await db.all(query, params)
 
