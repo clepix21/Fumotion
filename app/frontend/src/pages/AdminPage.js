@@ -13,6 +13,7 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("dashboard")
   const [loading, setLoading] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [notification, setNotification] = useState(null)
   
   // États pour le dashboard
   const [statistics, setStatistics] = useState(null)
@@ -23,18 +24,106 @@ export default function AdminPage() {
   const [usersPagination, setUsersPagination] = useState(null)
   const [usersSearch, setUsersSearch] = useState("")
   const [usersFilter, setUsersFilter] = useState("")
+  const [selectedUsers, setSelectedUsers] = useState([])
+  const [userDetailModal, setUserDetailModal] = useState(null)
   
   // États pour les trajets
   const [trips, setTrips] = useState([])
   const [tripsPage, setTripsPage] = useState(1)
   const [tripsPagination, setTripsPagination] = useState(null)
   const [tripsFilter, setTripsFilter] = useState("")
+  const [tripsSearch, setTripsSearch] = useState("")
+  const [selectedTrips, setSelectedTrips] = useState([])
   
   // États pour les réservations
   const [bookings, setBookings] = useState([])
   const [bookingsPage, setBookingsPage] = useState(1)
   const [bookingsPagination, setBookingsPagination] = useState(null)
   const [bookingsFilter, setBookingsFilter] = useState("")
+
+  // Notification helper
+  const showNotification = (message, type = 'success') => {
+    setNotification({ message, type })
+    setTimeout(() => setNotification(null), 3000)
+  }
+
+  // Format helpers
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
+
+  const formatAddress = (address) => {
+    if (!address) return "-"
+    const parts = address.split(',')
+    return parts.length > 1 ? `${parts[0]}, ${parts[1]}` : address
+  }
+
+  // Export CSV
+  const exportToCSV = (data, filename) => {
+    if (!data || data.length === 0) {
+      showNotification("Aucune donnée à exporter", "warning")
+      return
+    }
+
+    const headers = Object.keys(data[0])
+    const csvContent = [
+      headers.join(','),
+      ...data.map(row => headers.map(header => {
+        let value = row[header]
+        if (value === null || value === undefined) value = ''
+        if (typeof value === 'string' && value.includes(',')) {
+          value = `"${value}"`
+        }
+        return value
+      }).join(','))
+    ].join('\n')
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = `${filename}_${new Date().toISOString().split('T')[0]}.csv`
+    link.click()
+    showNotification("Export réussi !")
+  }
+
+  // Toggle selection helpers
+  const toggleUserSelection = (userId) => {
+    setSelectedUsers(prev => 
+      prev.includes(userId) 
+        ? prev.filter(id => id !== userId)
+        : [...prev, userId]
+    )
+  }
+
+  const toggleTripSelection = (tripId) => {
+    setSelectedTrips(prev => 
+      prev.includes(tripId) 
+        ? prev.filter(id => id !== tripId)
+        : [...prev, tripId]
+    )
+  }
+
+  const toggleAllUsers = () => {
+    if (selectedUsers.length === users.length) {
+      setSelectedUsers([])
+    } else {
+      setSelectedUsers(users.map(u => u.id))
+    }
+  }
+
+  const toggleAllTrips = () => {
+    if (selectedTrips.length === trips.length) {
+      setSelectedTrips([])
+    } else {
+      setSelectedTrips(trips.map(t => t.id))
+    }
+  }
 
   // Vérifier si l'utilisateur est admin
   useEffect(() => {
@@ -56,6 +145,7 @@ export default function AdminPage() {
       }
     } catch (error) {
       console.error("Erreur chargement statistiques:", error)
+      showNotification("Erreur lors du chargement des statistiques", "error")
     } finally {
       setLoading(false)
     }
@@ -75,6 +165,7 @@ export default function AdminPage() {
       }
     } catch (error) {
       console.error("Erreur chargement utilisateurs:", error)
+      showNotification("Erreur lors du chargement des utilisateurs", "error")
     } finally {
       setLoading(false)
     }
@@ -85,6 +176,7 @@ export default function AdminPage() {
       setLoading(true)
       const params = { page: tripsPage, limit: 20 }
       if (tripsFilter) params.status = tripsFilter
+      if (tripsSearch) params.search = tripsSearch
 
       const response = await adminAPI.getAllTrips(params)
       if (response.success) {
@@ -93,10 +185,11 @@ export default function AdminPage() {
       }
     } catch (error) {
       console.error("Erreur chargement trajets:", error)
+      showNotification("Erreur lors du chargement des trajets", "error")
     } finally {
       setLoading(false)
     }
-  }, [tripsPage, tripsFilter])
+  }, [tripsPage, tripsFilter, tripsSearch])
 
   const loadBookings = useCallback(async () => {
     try {
@@ -111,6 +204,7 @@ export default function AdminPage() {
       }
     } catch (error) {
       console.error("Erreur chargement réservations:", error)
+      showNotification("Erreur lors du chargement des réservations", "error")
     } finally {
       setLoading(false)
     }
@@ -146,24 +240,56 @@ export default function AdminPage() {
       const response = await adminAPI.updateUser(userId, updates)
       if (response.success) {
         loadUsers()
+        showNotification("Utilisateur mis à jour avec succès")
       }
     } catch (error) {
       console.error("Erreur mise à jour utilisateur:", error)
-      alert("Erreur lors de la mise à jour")
+      showNotification("Erreur lors de la mise à jour", "error")
     }
   }
 
   const handleDeleteUser = async (userId) => {
-    if (!window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) return
+    if (!window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.")) return
 
     try {
       const response = await adminAPI.deleteUser(userId)
       if (response.success) {
         loadUsers()
+        showNotification("Utilisateur supprimé avec succès")
       }
     } catch (error) {
       console.error("Erreur suppression utilisateur:", error)
-      alert("Erreur lors de la suppression")
+      showNotification("Erreur lors de la suppression", "error")
+    }
+  }
+
+  const handleBulkUserAction = async (action) => {
+    if (selectedUsers.length === 0) {
+      showNotification("Sélectionnez au moins un utilisateur", "warning")
+      return
+    }
+
+    const confirmMsg = action === 'delete' 
+      ? `Supprimer ${selectedUsers.length} utilisateur(s) ?`
+      : `Appliquer l'action sur ${selectedUsers.length} utilisateur(s) ?`
+    
+    if (!window.confirm(confirmMsg)) return
+
+    try {
+      for (const userId of selectedUsers) {
+        if (action === 'delete') {
+          await adminAPI.deleteUser(userId)
+        } else if (action === 'activate') {
+          await adminAPI.updateUser(userId, { is_active: true })
+        } else if (action === 'deactivate') {
+          await adminAPI.updateUser(userId, { is_active: false })
+        }
+      }
+      setSelectedUsers([])
+      loadUsers()
+      showNotification(`Action effectuée sur ${selectedUsers.length} utilisateur(s)`)
+    } catch (error) {
+      showNotification("Erreur lors de l'action groupée", "error")
     }
   }
 
@@ -172,10 +298,11 @@ export default function AdminPage() {
       const response = await adminAPI.updateTrip(tripId, { status })
       if (response.success) {
         loadTrips()
+        showNotification("Trajet mis à jour avec succès")
       }
     } catch (error) {
       console.error("Erreur mise à jour trajet:", error)
-      alert("Erreur lors de la mise à jour")
+      showNotification("Erreur lors de la mise à jour", "error")
     }
   }
 
@@ -186,10 +313,35 @@ export default function AdminPage() {
       const response = await adminAPI.deleteTrip(tripId)
       if (response.success) {
         loadTrips()
+        showNotification("Trajet supprimé avec succès")
       }
     } catch (error) {
       console.error("Erreur suppression trajet:", error)
-      alert("Erreur lors de la suppression")
+      showNotification("Erreur lors de la suppression", "error")
+    }
+  }
+
+  const handleBulkTripAction = async (action) => {
+    if (selectedTrips.length === 0) {
+      showNotification("Sélectionnez au moins un trajet", "warning")
+      return
+    }
+
+    if (!window.confirm(`Appliquer l'action sur ${selectedTrips.length} trajet(s) ?`)) return
+
+    try {
+      for (const tripId of selectedTrips) {
+        if (action === 'delete') {
+          await adminAPI.deleteTrip(tripId)
+        } else {
+          await adminAPI.updateTrip(tripId, { status: action })
+        }
+      }
+      setSelectedTrips([])
+      loadTrips()
+      showNotification(`Action effectuée sur ${selectedTrips.length} trajet(s)`)
+    } catch (error) {
+      showNotification("Erreur lors de l'action groupée", "error")
     }
   }
 
@@ -198,10 +350,11 @@ export default function AdminPage() {
       const response = await adminAPI.updateBooking(bookingId, updates)
       if (response.success) {
         loadBookings()
+        showNotification("Réservation mise à jour avec succès")
       }
     } catch (error) {
       console.error("Erreur mise à jour réservation:", error)
-      alert("Erreur lors de la mise à jour")
+      showNotification("Erreur lors de la mise à jour", "error")
     }
   }
 
@@ -212,10 +365,11 @@ export default function AdminPage() {
       const response = await adminAPI.deleteBooking(bookingId)
       if (response.success) {
         loadBookings()
+        showNotification("Réservation supprimée avec succès")
       }
     } catch (error) {
       console.error("Erreur suppression réservation:", error)
-      alert("Erreur lors de la suppression")
+      showNotification("Erreur lors de la suppression", "error")
     }
   }
 
