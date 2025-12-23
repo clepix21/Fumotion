@@ -19,8 +19,6 @@ import FAQPage from './pages/FAQPage';
 // Pages Légal
 import TermsPage from './pages/TermsPage';
 import PrivacyPage from './pages/PrivacyPage';
-import CookiesPage from './pages/CookiesPage';
-import LegalPage from './pages/LegalPage';
 
 function App() {
   return (
@@ -71,8 +69,6 @@ function App() {
       {/* Pages Légal */}
       <Route path="/terms" element={<TermsPage />} />
       <Route path="/privacy" element={<PrivacyPage />} />
-      <Route path="/cookies" element={<CookiesPage />} />
-      <Route path="/legal" element={<LegalPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
