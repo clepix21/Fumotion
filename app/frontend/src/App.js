@@ -60,12 +60,9 @@ function App() {
       />
       {/* Pages Support */}
       <Route path="/help" element={<HelpPage />} />
-      <Route path="/contact" element={<ContactPage />} />
-      <Route path="/security" element={<SecurityPage />} />
-      <Route path="/faq" element={<FAQPage />} />
-      {/* Pages Légal */}
+      {/* Pages Légal & Autres */}
       <Route path="/terms" element={<TermsPage />} />
-      <Route path="/privacy" element={<PrivacyPage />} />
+      <Route path="/credits" element={<CreditsPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
