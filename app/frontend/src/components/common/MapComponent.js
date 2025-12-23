@@ -291,8 +291,6 @@ export default function MapComponent({
     }
   }, [markers, showRoute])
 
-  const totalHeight = showSearch ? `calc(${height} + 80px)` : height
-
   return (
     <div style={{ width: '100%' }}>
       {/* Champs de recherche d'adresse */}
