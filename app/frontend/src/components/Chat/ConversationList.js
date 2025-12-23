@@ -58,11 +58,17 @@ const ConversationList = ({ conversations, selectedUserId, onSelectUser, loading
                                 className={`conversation-item ${selectedUserId === conv.id ? 'active' : ''} ${isUnread ? 'unread' : ''}`}
                             >
                                 <div className="conversation-avatar-container">
-                                    <img
-                                        src={conv.profile_picture || `https://ui-avatars.com/api/?name=${conv.first_name}+${conv.last_name}&background=3b82f6&color=fff`}
-                                        alt={`${conv.first_name} ${conv.last_name}`}
-                                        className="conversation-avatar"
-                                    />
+                                    {conv.profile_picture ? (
+                                        <img
+                                            src={`http://localhost:5000/uploads/${conv.profile_picture}`}
+                                            alt={`${conv.first_name} ${conv.last_name}`}
+                                            className="conversation-avatar"
+                                        />
+                                    ) : (
+                                        <div className="conversation-avatar conversation-avatar-initials">
+                                            {conv.first_name?.charAt(0).toUpperCase()}
+                                        </div>
+                                    )}
                                     {isUnread && <span className="unread-dot"></span>}
                                 </div>
 
