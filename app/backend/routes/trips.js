@@ -12,6 +12,7 @@ router.get('/:id', optionalAuth, TripController.getTripById);
 router.post('/', authMiddleware, validateTripCreation, TripController.createTrip);
 router.get('/', authMiddleware, TripController.getMyTrips);
 router.put('/:id', authMiddleware, TripController.updateTrip);
+router.put('/:id/complete', authMiddleware, TripController.completeTrip);
 router.delete('/:id', authMiddleware, TripController.cancelTrip);
 
 module.exports = router;

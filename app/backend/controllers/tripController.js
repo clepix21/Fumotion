@@ -409,6 +409,67 @@ class TripController {
       });
     }
   }
+
+  // Marquer un trajet comme terminé
+  async completeTrip(req, res) {
+    try {
+      const { id } = req.params;
+      const userId = req.user.id;
+
+      // Vérifier que l'utilisateur est le conducteur
+      const trip = await db.get('SELECT driver_id, status, departure_datetime FROM trips WHERE id = ?', [id]);
+      if (!trip) {
+        return res.status(404).json({
+          success: false,
+          message: 'Trajet non trouvé'
+        });
+      }
+
+      if (trip.driver_id !== userId) {
+        return res.status(403).json({
+          success: false,
+          message: 'Non autorisé à modifier ce trajet'
+        });
+      }
+
+      if (trip.status === 'completed') {
+        return res.status(400).json({
+          success: false,
+          message: 'Le trajet est déjà marqué comme terminé'
+        });
+      }
+
+      if (trip.status === 'cancelled') {
+        return res.status(400).json({
+          success: false,
+          message: 'Impossible de terminer un trajet annulé'
+        });
+      }
+
+      // Marquer le trajet comme terminé
+      await db.run(
+        'UPDATE trips SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+        ['completed', id]
+      );
+
+      // Mettre à jour le statut des réservations confirmées
+      await db.run(
+        'UPDATE bookings SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE trip_id = ? AND status = ?',
+        ['completed', id, 'confirmed']
+      );
+
+      res.json({
+        success: true,
+        message: 'Trajet marqué comme terminé avec succès'
+      });
+    } catch (error) {
+      console.error('Erreur lors de la finalisation du trajet:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Erreur serveur'
+      });
+    }
+  }
 }
 
 module.exports = new TripController();

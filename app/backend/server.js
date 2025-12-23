@@ -10,6 +10,7 @@ const tripRoutes = require('./routes/trips');
 const bookingRoutes = require('./routes/bookings');
 const adminRoutes = require('./routes/admin');
 const messageRoutes = require('./routes/messages');
+const reviewRoutes = require('./routes/reviews');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -40,6 +41,7 @@ app.use('/api/trips', tripRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 // Route de base
 app.get('/', (req, res) => {
