@@ -1054,20 +1054,28 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="modal-actions">
+                  {selectedTrip.status === 'active' && (
+                    <button 
+                      className="btn-success"
+                      onClick={() => handleCompleteTrip(selectedTrip.id)}
+                    >
+                      ✓ Trajet effectué
+                    </button>
+                  )}
                   <button 
                     className="btn-secondary" 
                     onClick={() => {
                       closeModals()
                       openEditModal(selectedTrip)
                     }}
-                    disabled={selectedTrip.status === 'cancelled'}
+                    disabled={selectedTrip.status !== 'active'}
                   >
                     Modifier
                   </button>
                   <button 
                     className="btn-danger"
                     onClick={() => handleCancelTrip(selectedTrip.id)}
-                    disabled={selectedTrip.status === 'cancelled'}
+                    disabled={selectedTrip.status !== 'active'}
                   >
                     Annuler le trajet
                   </button>
