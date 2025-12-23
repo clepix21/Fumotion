@@ -439,7 +439,7 @@
 .form-row {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: stretch;
 }
 
 .form-group {
@@ -463,9 +463,10 @@
   margin-bottom: 0.25rem;
 }
 
-.form-input {
+.search-card .form-input {
   padding: 0.5rem 0;
   border: none;
+  border-radius: 0;
   font-size: 1rem;
   color: #1e293b;
   background: transparent;
@@ -475,17 +476,19 @@
   box-sizing: border-box;
 }
 
-.form-input:focus {
+.search-card .form-input:focus {
   outline: none;
+  border: none;
+  border-color: transparent;
 }
 
-.form-input::placeholder {
+.search-card .form-input::placeholder {
   color: #64748b;
   font-weight: 400;
 }
 
 /* Style pour le select */
-.form-group select.form-input {
+.search-card select.form-input {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -494,10 +497,12 @@
   background-position: right 0 center;
   padding-right: 1rem;
   cursor: pointer;
+  border: none;
+  border-radius: 0;
 }
 
 /* Style pour le champ date */
-.form-group input[type="date"].form-input {
+.search-card input[type="date"].form-input {
   cursor: pointer;
 }
 
