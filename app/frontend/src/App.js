@@ -63,6 +63,16 @@ function App() {
           </ProtectedRoute>
         }
       />
+      {/* Pages Support */}
+      <Route path="/help" element={<HelpPage />} />
+      <Route path="/contact" element={<ContactPage />} />
+      <Route path="/security" element={<SecurityPage />} />
+      <Route path="/faq" element={<FAQPage />} />
+      {/* Pages Légal */}
+      <Route path="/terms" element={<TermsPage />} />
+      <Route path="/privacy" element={<PrivacyPage />} />
+      <Route path="/cookies" element={<CookiesPage />} />
+      <Route path="/legal" element={<LegalPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
