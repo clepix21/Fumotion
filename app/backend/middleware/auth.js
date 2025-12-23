@@ -19,7 +19,7 @@ const authMiddleware = async (req, res, next) => {
       
       // Vérifier que l'utilisateur existe toujours
       const user = await db.get(
-        'SELECT id, email, first_name, last_name, is_active FROM users WHERE id = ? AND is_active = 1',
+        'SELECT id, email, first_name, last_name, is_active, is_admin FROM users WHERE id = ? AND is_active = 1',
         [decoded.userId]
       );
       
