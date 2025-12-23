@@ -213,31 +213,51 @@ export default function AdminPage() {
   // Charger les données selon l'onglet actif
   useEffect(() => {
     if (authLoading || !token || !user?.is_admin) return
-    if (activeTab === "dashboard") {
-      loadStatistics()
+    
+    const loadData = async () => {
+      if (activeTab === "dashboard") {
+        try {
+          setLoading(true)
+          const response = await adminAPI.getStatistics()
+          if (response.success) {
+            setStatistics(response.data)
+          }
+        } catch (error) {
+          console.error("Erreur chargement statistiques:", error)
+          showNotification("Erreur lors du chargement des statistiques", "error")
+        } finally {
+          setLoading(false)
+        }
+      }
     }
-  }, [activeTab, loadStatistics, authLoading, token, user])
+    
+    loadData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, authLoading, token, user?.is_admin])
 
   useEffect(() => {
     if (authLoading || !token || !user?.is_admin) return
     if (activeTab === "users") {
       loadUsers()
     }
-  }, [activeTab, loadUsers, authLoading, token, user])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, authLoading, token, user?.is_admin, usersPage, usersSearch, usersFilter])
 
   useEffect(() => {
     if (authLoading || !token || !user?.is_admin) return
     if (activeTab === "trips") {
       loadTrips()
     }
-  }, [activeTab, loadTrips, authLoading, token, user])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, authLoading, token, user?.is_admin, tripsPage, tripsFilter, tripsSearch])
 
   useEffect(() => {
     if (authLoading || !token || !user?.is_admin) return
     if (activeTab === "bookings") {
       loadBookings()
     }
-  }, [activeTab, loadBookings, authLoading, token, user])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, authLoading, token, user?.is_admin, bookingsPage, bookingsFilter])
 
   const handleUpdateUser = async (userId, updates) => {
     try {
