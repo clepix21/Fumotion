@@ -437,19 +437,17 @@
 }
 
 .form-row {
-  display: grid;
-  grid-template-columns: 2fr 2fr 1.5fr 1.2fr;
-  gap: 0;
-  align-items: stretch;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .form-group {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
   border-right: 1px solid #e2e8f0;
-  justify-content: center;
 }
 
 .form-group:last-child {
@@ -462,16 +460,19 @@
   color: #1e293b;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
 }
 
 .form-input {
-  padding: 0.25rem 0;
+  padding: 0.5rem 0;
   border: none;
   font-size: 1rem;
   color: #1e293b;
   background: transparent;
   font-weight: 500;
   width: 100%;
+  height: 40px;
+  box-sizing: border-box;
 }
 
 .form-input:focus {
@@ -897,7 +898,21 @@
   }
 
   .form-row {
-    grid-template-columns: repeat(2, 1fr);
+    flex-wrap: wrap;
+  }
+
+  .form-group {
+    flex: 1 1 45%;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .form-group:nth-child(2n) {
+    border-left: 1px solid #e2e8f0;
+  }
+
+  .form-group:nth-last-child(-n+2) {
+    border-bottom: none;
   }
 
   .benefits-grid,
@@ -935,7 +950,18 @@
   }
 
   .form-row {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+
+  .form-group {
+    flex: 1 1 100%;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .form-group:last-child {
+    border-bottom: none;
   }
 
   .trust-indicators {
