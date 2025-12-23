@@ -23,7 +23,6 @@ export default function Footer() {
                         <ul className="footer-links">
                             <li><Link to="/search">Rechercher un trajet</Link></li>
                             <li><Link to="/create-trip">Proposer un trajet</Link></li>
-                            <li><Link to="/credits">Crédits</Link></li>
                             <li><Link to="#features">Fonctionnalités</Link></li>
                         </ul>
                     </div>
@@ -38,6 +37,7 @@ export default function Footer() {
                     <div className="footer-column">
                         <h4 className="footer-heading">Légal</h4>
                         <ul className="footer-links">
+                            <li><Link to="/credits">Crédits</Link></li>
                             <li><Link to="/terms">Conditions générales</Link></li>
                         </ul>
                     </div>
