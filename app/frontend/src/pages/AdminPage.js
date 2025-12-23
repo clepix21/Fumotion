@@ -212,28 +212,32 @@ export default function AdminPage() {
 
   // Charger les données selon l'onglet actif
   useEffect(() => {
+    if (authLoading || !isAuthenticated() || !user?.is_admin) return
     if (activeTab === "dashboard") {
       loadStatistics()
     }
-  }, [activeTab, loadStatistics])
+  }, [activeTab, loadStatistics, authLoading, isAuthenticated, user])
 
   useEffect(() => {
+    if (authLoading || !isAuthenticated() || !user?.is_admin) return
     if (activeTab === "users") {
       loadUsers()
     }
-  }, [activeTab, loadUsers])
+  }, [activeTab, loadUsers, authLoading, isAuthenticated, user])
 
   useEffect(() => {
+    if (authLoading || !isAuthenticated() || !user?.is_admin) return
     if (activeTab === "trips") {
       loadTrips()
     }
-  }, [activeTab, loadTrips])
+  }, [activeTab, loadTrips, authLoading, isAuthenticated, user])
 
   useEffect(() => {
+    if (authLoading || !isAuthenticated() || !user?.is_admin) return
     if (activeTab === "bookings") {
       loadBookings()
     }
-  }, [activeTab, loadBookings])
+  }, [activeTab, loadBookings, authLoading, isAuthenticated, user])
 
   const handleUpdateUser = async (userId, updates) => {
     try {
