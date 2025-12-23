@@ -11,6 +11,16 @@ import SearchPage from './pages/SearchPage';
 import AdminPage from './pages/AdminPage';
 import ChatPage from './pages/ChatPage';
 import NotFoundPage from './pages/NotFoundPage';
+// Pages Support
+import HelpPage from './pages/HelpPage';
+import ContactPage from './pages/ContactPage';
+import SecurityPage from './pages/SecurityPage';
+import FAQPage from './pages/FAQPage';
+// Pages Légal
+import TermsPage from './pages/TermsPage';
+import PrivacyPage from './pages/PrivacyPage';
+import CookiesPage from './pages/CookiesPage';
+import LegalPage from './pages/LegalPage';
 
 function App() {
   return (
