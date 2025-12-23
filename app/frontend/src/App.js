@@ -13,12 +13,9 @@ import ChatPage from './pages/ChatPage';
 import NotFoundPage from './pages/NotFoundPage';
 // Pages Support
 import HelpPage from './pages/HelpPage';
-import ContactPage from './pages/ContactPage';
-import SecurityPage from './pages/SecurityPage';
-import FAQPage from './pages/FAQPage';
-// Pages Légal
+// Pages Légal & Autres
 import TermsPage from './pages/TermsPage';
-import PrivacyPage from './pages/PrivacyPage';
+import CreditsPage from './pages/CreditsPage';
 
 function App() {
   return (
