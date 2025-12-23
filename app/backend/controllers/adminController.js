@@ -74,6 +74,9 @@ exports.getStatistics = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   try {
     const { page = 1, limit = 20, search = "", status = "" } = req.query
+    const pageNum = Math.max(1, parseInt(page) || 1)
+    const limitNum = Math.max(1, Math.min(100, parseInt(limit) || 20))
+    const offset = (pageNum - 1) * limitNum
 
     let query = "SELECT id, email, first_name, last_name, phone, student_id, university, is_verified, is_active, is_admin, created_at FROM users WHERE 1=1"
     const params = []
@@ -89,11 +92,7 @@ exports.getAllUsers = async (req, res) => {
       query += " AND is_active = 0"
     }
 
-    query += " ORDER BY created_at DESC"
-
-    const offset = (page - 1) * limit
-    query += ` LIMIT ? OFFSET ?`
-    params.push(parseInt(limit), offset)
+    query += ` ORDER BY created_at DESC LIMIT ${limitNum} OFFSET ${offset}`
 
     const users = await db.all(query, params)
 
@@ -105,10 +104,10 @@ exports.getAllUsers = async (req, res) => {
       success: true,
       data: users,
       pagination: {
-        page: parseInt(page),
-        limit: parseInt(limit),
+        page: pageNum,
+        limit: limitNum,
         total: totalResult.count,
-        pages: Math.ceil(totalResult.count / limit)
+        pages: Math.ceil(totalResult.count / limitNum)
       }
     })
   } catch (error) {
@@ -209,6 +208,9 @@ exports.deleteUser = async (req, res) => {
 exports.getAllTrips = async (req, res) => {
   try {
     const { page = 1, limit = 20, status = "" } = req.query
+    const pageNum = Math.max(1, parseInt(page) || 1)
+    const limitNum = Math.max(1, Math.min(100, parseInt(limit) || 20))
+    const offset = (pageNum - 1) * limitNum
 
     let query = `SELECT t.*, u.first_name, u.last_name, u.email 
                  FROM trips t 
@@ -221,11 +223,7 @@ exports.getAllTrips = async (req, res) => {
       params.push(status)
     }
 
-    query += " ORDER BY t.created_at DESC"
-
-    const offset = (page - 1) * limit
-    query += ` LIMIT ? OFFSET ?`
-    params.push(parseInt(limit), offset)
+    query += ` ORDER BY t.created_at DESC LIMIT ${limitNum} OFFSET ${offset}`
 
     const trips = await db.all(query, params)
 
@@ -237,10 +235,10 @@ exports.getAllTrips = async (req, res) => {
       success: true,
       data: trips,
       pagination: {
-        page: parseInt(page),
-        limit: parseInt(limit),
+        page: pageNum,
+        limit: limitNum,
         total: totalResult.count,
-        pages: Math.ceil(totalResult.count / limit)
+        pages: Math.ceil(totalResult.count / limitNum)
       }
     })
   } catch (error) {
@@ -310,6 +308,9 @@ exports.deleteTrip = async (req, res) => {
 exports.getAllBookings = async (req, res) => {
   try {
     const { page = 1, limit = 20, status = "" } = req.query
+    const pageNum = Math.max(1, parseInt(page) || 1)
+    const limitNum = Math.max(1, Math.min(100, parseInt(limit) || 20))
+    const offset = (pageNum - 1) * limitNum
 
     let query = `SELECT b.*, 
                  u.first_name as passenger_first_name, u.last_name as passenger_last_name, u.email as passenger_email,
@@ -327,11 +328,7 @@ exports.getAllBookings = async (req, res) => {
       params.push(status)
     }
 
-    query += " ORDER BY b.booking_date DESC"
-
-    const offset = (page - 1) * limit
-    query += ` LIMIT ? OFFSET ?`
-    params.push(parseInt(limit), offset)
+    query += ` ORDER BY b.booking_date DESC LIMIT ${limitNum} OFFSET ${offset}`
 
     const bookings = await db.all(query, params)
 
@@ -343,10 +340,10 @@ exports.getAllBookings = async (req, res) => {
       success: true,
       data: bookings,
       pagination: {
-        page: parseInt(page),
-        limit: parseInt(limit),
+        page: pageNum,
+        limit: limitNum,
         total: totalResult.count,
-        pages: Math.ceil(totalResult.count / limit)
+        pages: Math.ceil(totalResult.count / limitNum)
       }
     })
   } catch (error) {

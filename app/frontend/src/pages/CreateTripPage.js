@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { tripsAPI } from "../services/api"
-import MapComponent from "../components/common/MapComponent"
+import MapComponent, { AddressSearch } from "../components/common/MapComponent"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
-import { geocodeAddress, reverseGeocode, formatAddressShort } from "../utils/geocoding"
+import { reverseGeocode, formatAddressShort } from "../utils/geocoding"
 import "../styles/CreateTrip.css"
 import "../styles/HomePage.css"
 
@@ -18,7 +18,6 @@ export default function CreateTripPage() {
   const [mapCenter, setMapCenter] = useState([49.8942, 2.2957]) // Amiens par défaut
   const [markers, setMarkers] = useState([])
   const [selectingPoint, setSelectingPoint] = useState(null) // 'departure' ou 'arrival'
-  const geocodeTimeoutRef = useRef(null)
   const [formData, setFormData] = useState({
     departure_location: "",
     arrival_location: "",
@@ -47,60 +46,51 @@ export default function CreateTripPage() {
     }
   }, [])
 
-  // Géocoder les adresses quand elles changent
+  // Mettre à jour les marqueurs quand les coordonnées changent
   useEffect(() => {
-    if (geocodeTimeoutRef.current) {
-      clearTimeout(geocodeTimeoutRef.current)
+    const newMarkers = []
+    
+    if (formData.departure_latitude && formData.departure_longitude) {
+      newMarkers.push({
+        lat: formData.departure_latitude,
+        lng: formData.departure_longitude,
+        type: 'departure',
+        popup: { title: 'Départ', description: formData.departure_location }
+      })
     }
-
-    geocodeTimeoutRef.current = setTimeout(async () => {
-      const newMarkers = []
-      const loadingText = 'Recherche de l\'adresse...'
-
-      if (formData.departure_location.trim() && formData.departure_location !== loadingText) {
-        const geo = await geocodeAddress(formData.departure_location)
-        if (geo) {
-          setFormData(prev => ({
-            ...prev,
-            departure_latitude: geo.lat,
-            departure_longitude: geo.lng,
-          }))
-          newMarkers.push({
-            lat: geo.lat,
-            lng: geo.lng,
-            type: 'departure',
-            popup: { title: 'Départ', description: formData.departure_location }
-          })
-          setMapCenter([geo.lat, geo.lng])
-        }
-      }
-
-      if (formData.arrival_location.trim() && formData.arrival_location !== loadingText) {
-        const geo = await geocodeAddress(formData.arrival_location)
-        if (geo) {
-          setFormData(prev => ({
-            ...prev,
-            arrival_latitude: geo.lat,
-            arrival_longitude: geo.lng,
-          }))
-          newMarkers.push({
-            lat: geo.lat,
-            lng: geo.lng,
-            type: 'arrival',
-            popup: { title: 'Arrivée', description: formData.arrival_location }
-          })
-        }
-      }
-
-      setMarkers(newMarkers)
-    }, 1000) // Délai de 1 seconde après la saisie
-
-    return () => {
-      if (geocodeTimeoutRef.current) {
-        clearTimeout(geocodeTimeoutRef.current)
-      }
+    
+    if (formData.arrival_latitude && formData.arrival_longitude) {
+      newMarkers.push({
+        lat: formData.arrival_latitude,
+        lng: formData.arrival_longitude,
+        type: 'arrival',
+        popup: { title: 'Arrivée', description: formData.arrival_location }
+      })
     }
-  }, [formData.departure_location, formData.arrival_location])
+    
+    setMarkers(newMarkers)
+  }, [formData.departure_latitude, formData.departure_longitude, formData.arrival_latitude, formData.arrival_longitude, formData.departure_location, formData.arrival_location])
+
+  // Handler pour la sélection d'adresse de départ via recherche
+  const handleDepartureSelect = (suggestion) => {
+    setFormData(prev => ({
+      ...prev,
+      departure_location: formatAddressShort(suggestion) || suggestion.display_name.split(',').slice(0, 2).join(','),
+      departure_latitude: suggestion.lat,
+      departure_longitude: suggestion.lng,
+    }))
+    setMapCenter([suggestion.lat, suggestion.lng])
+  }
+
+  // Handler pour la sélection d'adresse d'arrivée via recherche
+  const handleArrivalSelect = (suggestion) => {
+    setFormData(prev => ({
+      ...prev,
+      arrival_location: formatAddressShort(suggestion) || suggestion.display_name.split(',').slice(0, 2).join(','),
+      arrival_latitude: suggestion.lat,
+      arrival_longitude: suggestion.lng,
+    }))
+  }
 
   const validateForm = () => {
     if (!formData.departure_location.trim()) {
@@ -373,61 +363,55 @@ export default function CreateTripPage() {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="departure_location" className="form-label">
+                  <label className="form-label">
                     Lieu de départ
                   </label>
-                  <div className="input-with-button">
-                    <input
-                      type="text"
-                      id="departure_location"
-                      name="departure_location"
+                  <div className="address-input-group">
+                    <AddressSearch
                       value={formData.departure_location}
-                      onChange={handleChange}
-                      placeholder="Ex: Amiens, Gare SNCF"
-                      required
-                      className="form-input"
+                      onChange={(value) => setFormData(prev => ({ ...prev, departure_location: value }))}
+                      onSelect={handleDepartureSelect}
+                      placeholder="Rechercher une adresse de départ..."
                     />
                     <button
                       type="button"
                       onClick={() => setSelectingPoint(selectingPoint === 'departure' ? null : 'departure')}
                       className={`map-select-btn ${selectingPoint === 'departure' ? 'active' : ''}`}
+                      title="Sélectionner sur la carte"
                     >
-                      {selectingPoint === 'departure' ? 'Annuler' : '📍 Carte'}
+                      {selectingPoint === 'departure' ? '✕' : '🗺️'}
                     </button>
                   </div>
-                  {selectingPoint === 'departure' && (
-                    <small className="helper-text">
-                      Cliquez sur la carte pour sélectionner le point de départ
+                  {formData.departure_latitude && (
+                    <small className="coordinates-info">
+                      ✓ Position: {formData.departure_latitude.toFixed(4)}, {formData.departure_longitude.toFixed(4)}
                     </small>
                   )}
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="arrival_location" className="form-label">
+                  <label className="form-label">
                     Lieu d'arrivée
                   </label>
-                  <div className="input-with-button">
-                    <input
-                      type="text"
-                      id="arrival_location"
-                      name="arrival_location"
+                  <div className="address-input-group">
+                    <AddressSearch
                       value={formData.arrival_location}
-                      onChange={handleChange}
-                      placeholder="Ex: IUT Amiens"
-                      required
-                      className="form-input"
+                      onChange={(value) => setFormData(prev => ({ ...prev, arrival_location: value }))}
+                      onSelect={handleArrivalSelect}
+                      placeholder="Rechercher une adresse d'arrivée..."
                     />
                     <button
                       type="button"
                       onClick={() => setSelectingPoint(selectingPoint === 'arrival' ? null : 'arrival')}
                       className={`map-select-btn ${selectingPoint === 'arrival' ? 'active' : ''}`}
+                      title="Sélectionner sur la carte"
                     >
-                      {selectingPoint === 'arrival' ? 'Annuler' : '📍 Carte'}
+                      {selectingPoint === 'arrival' ? '✕' : '🗺️'}
                     </button>
                   </div>
-                  {selectingPoint === 'arrival' && (
-                    <small className="helper-text">
-                      Cliquez sur la carte pour sélectionner le point d'arrivée
+                  {formData.arrival_latitude && (
+                    <small className="coordinates-info">
+                      ✓ Position: {formData.arrival_latitude.toFixed(4)}, {formData.arrival_longitude.toFixed(4)}
                     </small>
                   )}
                 </div>
@@ -447,8 +431,9 @@ export default function CreateTripPage() {
                       zoom={13}
                       markers={markers}
                       onMapClick={handleMapClick}
-                      height="300px"
+                      height="350px"
                       interactive={true}
+                      showRoute={true}
                     />
                     {selectingPoint && (
                       <div className="map-overlay-hint">

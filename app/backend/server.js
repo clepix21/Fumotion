@@ -59,6 +59,80 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Proxy pour le géocodage Nominatim (évite les problèmes CORS)
+app.get('/api/geocode/search', async (req, res) => {
+  try {
+    const { q, limit = 5 } = req.query;
+    
+    if (!q || q.length < 2) {
+      return res.json([]);
+    }
+
+    const params = new URLSearchParams({
+      q,
+      format: 'json',
+      limit,
+      addressdetails: 1,
+      countrycodes: 'fr',
+    });
+
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?${params.toString()}`,
+      {
+        headers: {
+          'User-Agent': 'Fumotion/1.0 (contact@fumotion.com)',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Erreur Nominatim');
+    }
+
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Erreur geocode search:', error);
+    res.status(500).json({ error: 'Erreur de géocodage' });
+  }
+});
+
+app.get('/api/geocode/reverse', async (req, res) => {
+  try {
+    const { lat, lon } = req.query;
+    
+    if (!lat || !lon) {
+      return res.status(400).json({ error: 'lat et lon requis' });
+    }
+
+    const params = new URLSearchParams({
+      lat,
+      lon,
+      format: 'json',
+      addressdetails: 1,
+    });
+
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?${params.toString()}`,
+      {
+        headers: {
+          'User-Agent': 'Fumotion/1.0 (contact@fumotion.com)',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Erreur Nominatim');
+    }
+
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Erreur geocode reverse:', error);
+    res.status(500).json({ error: 'Erreur de géocodage inverse' });
+  }
+});
+
 // Middleware de gestion d'erreurs
 app.use((err, req, res, next) => {
   console.error('Erreur serveur:', err);

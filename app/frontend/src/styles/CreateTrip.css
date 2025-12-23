@@ -175,14 +175,32 @@
 }
 
 /* Input avec bouton */
-.input-with-button {
+.input-with-button,
+.address-input-group {
   display: flex;
   gap: 0.75rem;
   align-items: stretch;
 }
 
-.input-with-button .form-input {
+.input-with-button .form-input,
+.address-input-group .address-search-container {
   flex: 1;
+}
+
+.address-input-group .map-select-btn {
+  flex-shrink: 0;
+  min-width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coordinates-info {
+  display: block;
+  color: #22c55e;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
 }
 
 .map-select-btn {
@@ -533,6 +551,147 @@
   }
 }
 
+/* Styles pour la recherche d'adresse dans la carte */
+.map-search-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.search-field-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-field-icon {
+  font-size: 1rem;
+  width: 20px;
+  text-align: center;
+}
+
+.search-field-icon.departure {
+  color: #22c55e;
+}
+
+.search-field-icon.arrival {
+  color: #ef4444;
+}
+
+.address-search-container {
+  flex: 1;
+  position: relative;
+}
+
+.address-search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.address-search-input {
+  width: 100%;
+  padding-right: 2.5rem !important;
+}
+
+.search-loading {
+  position: absolute;
+  right: 0.75rem;
+  font-size: 1rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.address-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 1100;
+  margin-top: 4px;
+  list-style: none;
+  padding: 0;
+}
+
+.address-suggestion-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.address-suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.address-suggestion-item:hover {
+  background: #f8fafc;
+}
+
+.suggestion-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.suggestion-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  overflow: hidden;
+}
+
+.suggestion-main {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 0.875rem;
+}
+
+.suggestion-detail {
+  font-size: 0.75rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Barre d'info de la route */
+.route-info-bar {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  color: white;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.route-info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.route-info-icon {
+  font-size: 1rem;
+}
+
 @media (max-width: 768px) {
   .create-trip-main {
     padding: 1rem 0 2rem;
@@ -578,5 +737,14 @@
 
   .header-content {
     padding: 0 1rem;
+  }
+
+  .address-suggestions {
+    max-height: 200px;
+  }
+
+  .route-info-bar {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }
