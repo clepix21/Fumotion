@@ -122,6 +122,16 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+.conversation-avatar-initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
 .unread-dot {
     position: absolute;
     top: 0;
@@ -237,6 +247,16 @@
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #e5e7eb;
+}
+
+.chat-avatar-initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
 }
 
 .chat-partner-info {
