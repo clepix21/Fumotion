@@ -9,7 +9,7 @@ import "../styles/HomePage.css"
 
 export default function AdminPage() {
   const navigate = useNavigate()
-  const { user, isAuthenticated, logout, loading: authLoading } = useAuth()
+  const { user, token, logout, loading: authLoading } = useAuth()
   const [activeTab, setActiveTab] = useState("dashboard")
   const [loading, setLoading] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -129,11 +129,11 @@ export default function AdminPage() {
   useEffect(() => {
     if (authLoading) return // Attendre que l'authentification soit chargée
     
-    if (!isAuthenticated() || !user?.is_admin) {
-      console.log("Accès admin refusé:", { isAuthenticated: isAuthenticated(), user })
+    if (!token || !user?.is_admin) {
+      console.log("Accès admin refusé:", { token: !!token, user })
       navigate("/")
     }
-  }, [user, isAuthenticated, navigate, authLoading])
+  }, [user, token, navigate, authLoading])
 
   // Charger les statistiques
   const loadStatistics = useCallback(async () => {
@@ -212,32 +212,32 @@ export default function AdminPage() {
 
   // Charger les données selon l'onglet actif
   useEffect(() => {
-    if (authLoading || !isAuthenticated() || !user?.is_admin) return
+    if (authLoading || !token || !user?.is_admin) return
     if (activeTab === "dashboard") {
       loadStatistics()
     }
-  }, [activeTab, loadStatistics, authLoading, isAuthenticated, user])
+  }, [activeTab, loadStatistics, authLoading, token, user])
 
   useEffect(() => {
-    if (authLoading || !isAuthenticated() || !user?.is_admin) return
+    if (authLoading || !token || !user?.is_admin) return
     if (activeTab === "users") {
       loadUsers()
     }
-  }, [activeTab, loadUsers, authLoading, isAuthenticated, user])
+  }, [activeTab, loadUsers, authLoading, token, user])
 
   useEffect(() => {
-    if (authLoading || !isAuthenticated() || !user?.is_admin) return
+    if (authLoading || !token || !user?.is_admin) return
     if (activeTab === "trips") {
       loadTrips()
     }
-  }, [activeTab, loadTrips, authLoading, isAuthenticated, user])
+  }, [activeTab, loadTrips, authLoading, token, user])
 
   useEffect(() => {
-    if (authLoading || !isAuthenticated() || !user?.is_admin) return
+    if (authLoading || !token || !user?.is_admin) return
     if (activeTab === "bookings") {
       loadBookings()
     }
-  }, [activeTab, loadBookings, authLoading, isAuthenticated, user])
+  }, [activeTab, loadBookings, authLoading, token, user])
 
   const handleUpdateUser = async (userId, updates) => {
     try {
