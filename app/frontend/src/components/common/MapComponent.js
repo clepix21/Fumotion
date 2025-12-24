@@ -225,6 +225,7 @@ export default function MapComponent({
   arrivalValue = '',
   onDepartureChange,
   onArrivalChange,
+  onRouteCalculated,
 }) {
   const [routeCoordinates, setRouteCoordinates] = useState([])
   const [routeInfo, setRouteInfo] = useState(null)
@@ -262,15 +263,21 @@ export default function MapComponent({
 
       getRoute(start, end).then(route => {
         if (route) {
+          const distanceKm = parseFloat((route.distance / 1000).toFixed(1))
+          const durationMin = Math.round(route.duration / 60)
           setRouteCoordinates(route.coordinates)
           setRouteInfo({
-            distance: (route.distance / 1000).toFixed(1),
-            duration: Math.round(route.duration / 60),
+            distance: distanceKm,
+            duration: durationMin,
           })
           setBounds([
             [departureMarker.lat, departureMarker.lng],
             [arrivalMarker.lat, arrivalMarker.lng]
           ])
+          // Appeler le callback avec les infos de route
+          if (onRouteCalculated) {
+            onRouteCalculated({ distance: distanceKm, duration: durationMin })
+          }
         } else {
           // Fallback: ligne droite si OSRM échoue
           setRouteCoordinates([
@@ -288,8 +295,11 @@ export default function MapComponent({
       setRouteCoordinates([])
       setRouteInfo(null)
       setBounds(null)
+      if (onRouteCalculated) {
+        onRouteCalculated(null)
+      }
     }
-  }, [markers, showRoute])
+  }, [markers, showRoute, onRouteCalculated])
 
   return (
     <div style={{ width: '100%' }}>
