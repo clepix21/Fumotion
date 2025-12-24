@@ -747,4 +747,126 @@
     flex-direction: column;
     gap: 0.5rem;
   }
+
+  .eco-impact-card {
+    padding: 1rem;
+  }
+
+  .eco-stats {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .eco-stat {
+    min-width: auto;
+  }
+}
+
+/* Carte d'impact écologique CO2 */
+.eco-impact-card {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 1px solid #6ee7b7;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.eco-impact-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.eco-impact-header .eco-icon {
+  font-size: 1.5rem;
+}
+
+.eco-impact-header h4 {
+  color: #065f46;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.eco-stats {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.eco-stat {
+  flex: 1;
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  min-width: 80px;
+}
+
+.eco-stat.highlight {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.eco-stat.highlight .eco-stat-label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.eco-stat-value {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #065f46;
+  margin-bottom: 0.25rem;
+}
+
+.eco-stat.highlight .eco-stat-value {
+  color: white;
+}
+
+.eco-stat-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.eco-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.eco-message .eco-tree {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.eco-message p {
+  margin: 0;
+  color: #374151;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.eco-message strong {
+  color: #059669;
 }
