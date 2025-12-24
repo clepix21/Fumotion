@@ -1,6 +1,8 @@
 import React from 'react';
 import './Avatar.css';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 /**
  * Composant Avatar réutilisable
  * Affiche soit une photo de profil, soit les initiales de l'utilisateur
@@ -33,7 +35,7 @@ const Avatar = ({
 
   const avatarStyle = user?.profile_picture 
     ? {
-        backgroundImage: `url(http://localhost:5000/uploads/${user.profile_picture})`,
+        backgroundImage: `url(${API_URL}/uploads/${user.profile_picture})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundColor: 'transparent'
