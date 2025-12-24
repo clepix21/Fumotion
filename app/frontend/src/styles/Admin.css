@@ -567,34 +567,6 @@
 .admin-btn-link:hover {
   background: #0066ff10;
 }
-  margin-bottom: 1rem;
-}
-
-.recent-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.recent-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem;
-  background: #f8fafc;
-  border-radius: 0.5rem;
-  border: 1px solid #e2e8f0;
-}
-
-.recent-detail {
-  color: #64748b;
-  font-size: 0.875rem;
-}
-
-.recent-date {
-  color: #94a3b8;
-  font-size: 0.875rem;
-}
 
 /* Filtres */
 .admin-filters {
