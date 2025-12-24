@@ -197,7 +197,7 @@ class ReviewController {
          JOIN users u ON t.driver_id = u.id
          WHERE b.passenger_id = ? 
          AND t.status = 'completed'
-         AND b.status = 'confirmed'
+         AND b.status IN ('confirmed', 'completed')
          AND NOT EXISTS (
            SELECT 1 FROM reviews r 
            WHERE r.booking_id = b.id AND r.reviewer_id = ? AND r.type = 'driver'
@@ -217,7 +217,7 @@ class ReviewController {
          JOIN users u ON b.passenger_id = u.id
          WHERE t.driver_id = ? 
          AND t.status = 'completed'
-         AND b.status = 'confirmed'
+         AND b.status IN ('confirmed', 'completed')
          AND NOT EXISTS (
            SELECT 1 FROM reviews r 
            WHERE r.booking_id = b.id AND r.reviewer_id = ? AND r.type = 'passenger'
