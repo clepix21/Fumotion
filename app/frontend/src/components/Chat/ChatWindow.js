@@ -95,11 +95,17 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, s
                 <button className="back-button mobile-only" onClick={onBack}>
                     ← 
                 </button>
-                <img
-                    src={otherUser.profile_picture || `https://ui-avatars.com/api/?name=${otherUser.first_name}+${otherUser.last_name}&background=3b82f6&color=fff`}
-                    alt={`${otherUser.first_name} ${otherUser.last_name}`}
-                    className="chat-avatar"
-                />
+                {otherUser.profile_picture ? (
+                    <img
+                        src={`http://localhost:5000/uploads/${otherUser.profile_picture}`}
+                        alt={`${otherUser.first_name} ${otherUser.last_name}`}
+                        className="chat-avatar"
+                    />
+                ) : (
+                    <div className="chat-avatar chat-avatar-initials">
+                        {otherUser.first_name?.charAt(0).toUpperCase()}
+                    </div>
+                )}
                 <div className="chat-partner-info">
                     <h3 className="chat-partner-name">
                         {otherUser.first_name} {otherUser.last_name}

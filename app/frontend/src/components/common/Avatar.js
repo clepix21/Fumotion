@@ -15,9 +15,6 @@ const Avatar = ({
   uploading = false
 }) => {
   const getInitials = () => {
-    if (user?.first_name && user?.last_name) {
-      return `${user.first_name.charAt(0)}${user.last_name.charAt(0)}`.toUpperCase();
-    }
     if (user?.first_name) {
       return user.first_name.charAt(0).toUpperCase();
     }

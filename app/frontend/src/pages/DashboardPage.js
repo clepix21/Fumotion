@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { authAPI } from "../services/api"
+import { reviewAPI } from "../services/reviewApi"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
 import voiture from "../assets/icons/voiture.svg"
@@ -37,6 +38,13 @@ export default function DashboardPage() {
   const [tripPassengers, setTripPassengers] = useState([])
   const [modalLoading, setModalLoading] = useState(false)
   const [saving, setSaving] = useState(false)
+  
+  // États pour les évaluations
+  const [showReviewModal, setShowReviewModal] = useState(false)
+  const [pendingReviews, setPendingReviews] = useState({ asPassenger: [], asDriver: [] })
+  const [reviewData, setReviewData] = useState({ rating: 5, comment: '' })
+  const [currentReview, setCurrentReview] = useState(null)
+  const [submittingReview, setSubmittingReview] = useState(false)
 
   const loadDashboardData = useCallback(async () => {
     try {
@@ -72,6 +80,16 @@ export default function DashboardPage() {
       if (bookingsResponse.ok) {
         const bookingsData = await bookingsResponse.json()
         setMyBookings(bookingsData.data || [])
+      }
+
+      // Charger les évaluations en attente
+      try {
+        const pendingData = await reviewAPI.getPendingReviews()
+        if (pendingData.success) {
+          setPendingReviews(pendingData.data)
+        }
+      } catch (error) {
+        console.error("Erreur lors du chargement des évaluations:", error)
       }
     } catch (error) {
       console.error("Erreur lors du chargement des données:", error)
@@ -301,6 +319,85 @@ export default function DashboardPage() {
     }
   }
 
+  // Marquer un trajet comme terminé
+  const handleCompleteTrip = async (tripId) => {
+    if (!window.confirm("Confirmer que ce trajet a bien été effectué ?")) {
+      return
+    }
+    
+    try {
+      const data = await reviewAPI.completeTrip(tripId)
+      if (data.success) {
+        setMyTrips(prev => prev.map(t => 
+          t.id === tripId ? { ...t, status: 'completed' } : t
+        ))
+        closeModals()
+        
+        // Recharger les évaluations en attente et ouvrir la modale automatiquement
+        try {
+          const pendingData = await reviewAPI.getPendingReviews()
+          if (pendingData.success) {
+            setPendingReviews(pendingData.data)
+            
+            // Ouvrir automatiquement la modale d'évaluation si des évaluations sont en attente
+            const firstDriverReview = pendingData.data.asDriver?.[0]
+            const firstPassengerReview = pendingData.data.asPassenger?.[0]
+            
+            if (firstDriverReview || firstPassengerReview) {
+              // Priorité aux évaluations en tant que conducteur (évaluer les passagers)
+              const reviewToOpen = firstDriverReview || firstPassengerReview
+              openReviewModal(reviewToOpen)
+            }
+          }
+        } catch (error) {
+          console.error("Erreur lors du chargement des évaluations:", error)
+        }
+        
+        loadDashboardData() // Recharger le reste des données
+      } else {
+        alert(data.message || "Erreur lors de la finalisation")
+      }
+    } catch (error) {
+      console.error("Erreur:", error)
+      alert("Erreur lors de la finalisation du trajet")
+    }
+  }
+
+  // Ouvrir la modale d'évaluation
+  const openReviewModal = (reviewItem) => {
+    setCurrentReview(reviewItem)
+    setReviewData({ rating: 5, comment: '' })
+    setShowReviewModal(true)
+  }
+
+  // Soumettre une évaluation
+  const handleSubmitReview = async () => {
+    if (!currentReview) return
+    
+    setSubmittingReview(true)
+    try {
+      const data = await reviewAPI.createReview(currentReview.booking_id, {
+        rating: reviewData.rating,
+        comment: reviewData.comment,
+        type: currentReview.review_type
+      })
+      
+      if (data.success) {
+        alert("Évaluation envoyée avec succès !")
+        setShowReviewModal(false)
+        setCurrentReview(null)
+        loadDashboardData() // Recharger les données
+      } else {
+        alert(data.message || "Erreur lors de l'envoi de l'évaluation")
+      }
+    } catch (error) {
+      console.error("Erreur:", error)
+      alert("Erreur lors de l'envoi de l'évaluation")
+    } finally {
+      setSubmittingReview(false)
+    }
+  }
+
   const displayUser = profileUser || user
 
   if (loading) {
@@ -385,6 +482,18 @@ export default function DashboardPage() {
             >
               <span className="btn-icon">🎫</span>
               Mes réservations
+            </button>
+            <button
+              className={`sidebar-btn ${activeTab === "reviews" ? "active" : ""}`}
+              onClick={() => setActiveTab("reviews")}
+            >
+              <span className="btn-icon">⭐</span>
+              Évaluations
+              {(pendingReviews.asPassenger?.length > 0 || pendingReviews.asDriver?.length > 0) && (
+                <span className="badge-notification">
+                  {(pendingReviews.asPassenger?.length || 0) + (pendingReviews.asDriver?.length || 0)}
+                </span>
+              )}
             </button>
           </div>
 
@@ -509,10 +618,18 @@ export default function DashboardPage() {
                         <p className="trip-seats">{trip.remaining_seats || trip.available_seats} places disponibles</p>
                       </div>
                       <div className="trip-actions">
+                        {trip.status === 'active' && (
+                          <button 
+                            className="trip-btn success"
+                            onClick={() => handleCompleteTrip(trip.id)}
+                          >
+                            ✓ Trajet effectué
+                          </button>
+                        )}
                         <button 
                           className="trip-btn secondary"
                           onClick={() => openEditModal(trip)}
-                          disabled={trip.status === 'cancelled'}
+                          disabled={trip.status !== 'active'}
                         >
                           Modifier
                         </button>
@@ -583,6 +700,120 @@ export default function DashboardPage() {
                   ))}
                 </div>
               )}
+            </div>
+          )}
+
+          {activeTab === "reviews" && (
+            <div className="reviews-section">
+              <h1>Évaluations</h1>
+              
+              {/* Évaluations en attente */}
+              {(pendingReviews.asPassenger?.length > 0 || pendingReviews.asDriver?.length > 0) && (
+                <div className="pending-reviews-section">
+                  <h2>🔔 Évaluations en attente</h2>
+                  <p className="section-description">
+                    Évaluez les personnes avec qui vous avez voyagé pour aider la communauté !
+                  </p>
+                  
+                  <div className="pending-reviews-grid">
+                    {/* Évaluer les conducteurs (en tant que passager) */}
+                    {pendingReviews.asPassenger?.map((item, index) => (
+                      <div key={`driver-${index}`} className="pending-review-card">
+                        <div className="pending-review-header">
+                          <div className="pending-review-avatar">
+                            {item.driver_first_name?.charAt(0)}
+                          </div>
+                          <div className="pending-review-info">
+                            <span className="pending-review-name">
+                              {item.driver_first_name} {item.driver_last_name}
+                            </span>
+                            <span className="pending-review-role">Conducteur</span>
+                          </div>
+                        </div>
+                        <div className="pending-review-trip">
+                          <span className="trip-route-mini">
+                            {item.departure_location?.split(',')[0]} → {item.arrival_location?.split(',')[0]}
+                          </span>
+                          <span className="trip-date-mini">
+                            {new Date(item.departure_datetime).toLocaleDateString('fr-FR')}
+                          </span>
+                        </div>
+                        <button 
+                          className="review-now-btn"
+                          onClick={() => openReviewModal(item)}
+                        >
+                          ⭐ Évaluer
+                        </button>
+                      </div>
+                    ))}
+                    
+                    {/* Évaluer les passagers (en tant que conducteur) */}
+                    {pendingReviews.asDriver?.map((item, index) => (
+                      <div key={`passenger-${index}`} className="pending-review-card">
+                        <div className="pending-review-header">
+                          <div className="pending-review-avatar">
+                            {item.passenger_first_name?.charAt(0)}
+                          </div>
+                          <div className="pending-review-info">
+                            <span className="pending-review-name">
+                              {item.passenger_first_name} {item.passenger_last_name}
+                            </span>
+                            <span className="pending-review-role">Passager</span>
+                          </div>
+                        </div>
+                        <div className="pending-review-trip">
+                          <span className="trip-route-mini">
+                            {item.departure_location?.split(',')[0]} → {item.arrival_location?.split(',')[0]}
+                          </span>
+                          <span className="trip-date-mini">
+                            {new Date(item.departure_datetime).toLocaleDateString('fr-FR')}
+                          </span>
+                        </div>
+                        <button 
+                          className="review-now-btn"
+                          onClick={() => openReviewModal(item)}
+                        >
+                          ⭐ Évaluer
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Aucune évaluation en attente */}
+              {pendingReviews.asPassenger?.length === 0 && pendingReviews.asDriver?.length === 0 && (
+                <div className="empty-state">
+                  <div className="empty-icon">⭐</div>
+                  <h3>Aucune évaluation en attente</h3>
+                  <p>Vous avez évalué tous vos trajets terminés !</p>
+                </div>
+              )}
+              
+              {/* Mes notes */}
+              <div className="my-ratings-section">
+                <h2>📊 Mes notes</h2>
+                <div className="ratings-grid">
+                  <div className="rating-card">
+                    <div className="rating-icon">🚗</div>
+                    <div className="rating-info">
+                      <span className="rating-value-large">
+                        {displayUser?.driver_rating ? parseFloat(displayUser.driver_rating).toFixed(1) : '-'}
+                      </span>
+                      <span className="rating-label">Note Conducteur</span>
+                    </div>
+                  </div>
+                  <div className="rating-card">
+                    <div className="rating-icon">👤</div>
+                    <div className="rating-info">
+                      <span className="rating-value-large">
+                        {displayUser?.passenger_rating ? parseFloat(displayUser.passenger_rating).toFixed(1) : '-'}
+                      </span>
+                      <span className="rating-label">Note Passager</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -843,20 +1074,28 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="modal-actions">
+                  {selectedTrip.status === 'active' && (
+                    <button 
+                      className="btn-success"
+                      onClick={() => handleCompleteTrip(selectedTrip.id)}
+                    >
+                      ✓ Trajet effectué
+                    </button>
+                  )}
                   <button 
                     className="btn-secondary" 
                     onClick={() => {
                       closeModals()
                       openEditModal(selectedTrip)
                     }}
-                    disabled={selectedTrip.status === 'cancelled'}
+                    disabled={selectedTrip.status !== 'active'}
                   >
                     Modifier
                   </button>
                   <button 
                     className="btn-danger"
                     onClick={() => handleCancelTrip(selectedTrip.id)}
-                    disabled={selectedTrip.status === 'cancelled'}
+                    disabled={selectedTrip.status !== 'active'}
                   >
                     Annuler le trajet
                   </button>
@@ -956,6 +1195,104 @@ export default function DashboardPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modale d'évaluation */}
+      {showReviewModal && currentReview && (
+        <div className="modal-overlay" onClick={() => setShowReviewModal(false)}>
+          <div className="modal-content review-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setShowReviewModal(false)}>✕</button>
+            
+            <div className="modal-header">
+              <h2>Évaluer {currentReview.review_type === 'driver' ? 'le conducteur' : 'le passager'}</h2>
+            </div>
+            
+            <div className="review-content">
+              <div className="review-user-info">
+                <div className="review-avatar">
+                  {currentReview.review_type === 'driver' 
+                    ? (currentReview.driver_first_name?.charAt(0) || '?')
+                    : (currentReview.passenger_first_name?.charAt(0) || '?')
+                  }
+                </div>
+                <div className="review-user-details">
+                  <span className="review-user-name">
+                    {currentReview.review_type === 'driver' 
+                      ? `${currentReview.driver_first_name} ${currentReview.driver_last_name}`
+                      : `${currentReview.passenger_first_name} ${currentReview.passenger_last_name}`
+                    }
+                  </span>
+                  <span className="review-trip-info">
+                    {currentReview.departure_location?.split(',')[0]} → {currentReview.arrival_location?.split(',')[0]}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="rating-section">
+                <label>Note</label>
+                <div className="star-rating">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      className={`star-btn ${star <= reviewData.rating ? 'active' : ''}`}
+                      onClick={() => setReviewData({...reviewData, rating: star})}
+                    >
+                      ⭐
+                    </button>
+                  ))}
+                </div>
+                <span className="rating-value">{reviewData.rating}/5</span>
+              </div>
+              
+              <div className="modal-form-group">
+                <label>Commentaire (optionnel)</label>
+                <textarea
+                  value={reviewData.comment}
+                  onChange={(e) => setReviewData({...reviewData, comment: e.target.value})}
+                  placeholder="Partagez votre expérience..."
+                  rows="4"
+                />
+              </div>
+            </div>
+            
+            <div className="modal-actions">
+              <button 
+                type="button" 
+                className="btn-secondary" 
+                onClick={() => setShowReviewModal(false)}
+              >
+                Annuler
+              </button>
+              <button 
+                type="button" 
+                className="btn-primary"
+                onClick={handleSubmitReview}
+                disabled={submittingReview}
+              >
+                {submittingReview ? 'Envoi...' : 'Envoyer l\'évaluation'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Notification évaluations en attente */}
+      {(pendingReviews.asPassenger?.length > 0 || pendingReviews.asDriver?.length > 0) && (
+        <div className="pending-reviews-notification">
+          <div className="notification-content">
+            <span className="notification-icon">⭐</span>
+            <span className="notification-text">
+              Vous avez {(pendingReviews.asPassenger?.length || 0) + (pendingReviews.asDriver?.length || 0)} évaluation(s) en attente
+            </span>
+            <button 
+              className="notification-btn"
+              onClick={() => setActiveTab("reviews")}
+            >
+              Évaluer maintenant
+            </button>
           </div>
         </div>
       )}

@@ -26,25 +26,25 @@
 .avatar-small .avatar {
   width: 32px;
   height: 32px;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
 }
 
 .avatar-medium .avatar {
   width: 36px;
   height: 36px;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
 }
 
 .avatar-large .avatar {
   width: 48px;
   height: 48px;
-  font-size: 1rem;
+  font-size: 0.875rem;
 }
 
 .avatar-xlarge .avatar {
   width: 80px;
   height: 80px;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
 }
 
 /* État clickable */

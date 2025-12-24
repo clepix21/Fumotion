@@ -23,7 +23,6 @@ export default function Footer() {
                         <ul className="footer-links">
                             <li><Link to="/search">Rechercher un trajet</Link></li>
                             <li><Link to="/create-trip">Proposer un trajet</Link></li>
-                            <li><Link to="/about">Qui sommes-nous</Link></li>
                             <li><Link to="#features">Fonctionnalités</Link></li>
                         </ul>
                     </div>
@@ -32,19 +31,14 @@ export default function Footer() {
                         <h4 className="footer-heading">Support</h4>
                         <ul className="footer-links">
                             <li><Link to="/help">Centre d'aide</Link></li>
-                            <li><Link to="/contact">Nous contacter</Link></li>
-                            <li><Link to="/security">Confiance et sérénité</Link></li>
-                            <li><Link to="/faq">FAQ</Link></li>
                         </ul>
                     </div>
 
                     <div className="footer-column">
                         <h4 className="footer-heading">Légal</h4>
                         <ul className="footer-links">
+                            <li><Link to="/credits">Crédits</Link></li>
                             <li><Link to="/terms">Conditions générales</Link></li>
-                            <li><Link to="/privacy">Confidentialité</Link></li>
-                            <li><Link to="/cookies">Cookies</Link></li>
-                            <li><Link to="/legal">Mentions légales</Link></li>
                         </ul>
                     </div>
                 </div>

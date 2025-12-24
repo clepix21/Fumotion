@@ -18,6 +18,7 @@ export default function CreateTripPage() {
   const [mapCenter, setMapCenter] = useState([49.8942, 2.2957]) // Amiens par défaut
   const [markers, setMarkers] = useState([])
   const [selectingPoint, setSelectingPoint] = useState(null) // 'departure' ou 'arrival'
+  const [routeInfo, setRouteInfo] = useState(null) // Infos sur la route (distance, durée)
   const [formData, setFormData] = useState({
     departure_location: "",
     arrival_location: "",
@@ -278,6 +279,26 @@ export default function CreateTripPage() {
     }
   }
 
+  // Calcul des économies de CO2
+  // Émissions moyennes: voiture seule = 120g CO2/km, covoiturage = divisé par nb personnes
+  const calculateCO2Savings = (distanceKm, seats) => {
+    if (!distanceKm || distanceKm <= 0) return null
+    const co2PerKm = 120 // grammes de CO2 par km pour une voiture moyenne
+    const totalCO2 = distanceKm * co2PerKm // CO2 total du trajet
+    // Économie = CO2 que les passagers auraient émis s'ils avaient pris leur propre voiture
+    const savedCO2 = totalCO2 * seats // CO2 économisé par les passagers
+    return {
+      totalKg: (totalCO2 / 1000).toFixed(2),
+      savedKg: (savedCO2 / 1000).toFixed(2),
+      savedTrees: (savedCO2 / 21000).toFixed(2), // Un arbre absorbe ~21kg CO2/an
+    }
+  }
+
+  // Callback quand la route est calculée
+  const handleRouteCalculated = (info) => {
+    setRouteInfo(info)
+  }
+
   const handleLogout = () => {
     logout()
     navigate("/")
@@ -434,6 +455,7 @@ export default function CreateTripPage() {
                       height="350px"
                       interactive={true}
                       showRoute={true}
+                      onRouteCalculated={handleRouteCalculated}
                     />
                     {selectingPoint && (
                       <div className="map-overlay-hint">
@@ -444,6 +466,40 @@ export default function CreateTripPage() {
                       </div>
                     )}
                   </div>
+
+                  {/* Affichage de l'économie CO2 */}
+                  {routeInfo && routeInfo.distance > 0 && (
+                    <div className="eco-impact-card">
+                      <div className="eco-impact-header">
+                        <span className="eco-icon">🌱</span>
+                        <h4>Impact écologique du covoiturage</h4>
+                      </div>
+                      <div className="eco-stats">
+                        <div className="eco-stat">
+                          <span className="eco-stat-value">{routeInfo.distance} km</span>
+                          <span className="eco-stat-label">Distance</span>
+                        </div>
+                        <div className="eco-stat">
+                          <span className="eco-stat-value">{routeInfo.duration} min</span>
+                          <span className="eco-stat-label">Durée estimée</span>
+                        </div>
+                        <div className="eco-stat highlight">
+                          <span className="eco-stat-value">
+                            {calculateCO2Savings(routeInfo.distance, parseInt(formData.available_seats) || 1)?.savedKg || '0'} kg
+                          </span>
+                          <span className="eco-stat-label">CO₂ économisé</span>
+                        </div>
+                      </div>
+                      <div className="eco-message">
+                        <span className="eco-tree">🌳</span>
+                        <p>
+                          En partageant ce trajet avec <strong>{formData.available_seats} passager{parseInt(formData.available_seats) > 1 ? 's' : ''}</strong>, 
+                          vous économisez l'équivalent de <strong>{calculateCO2Savings(routeInfo.distance, parseInt(formData.available_seats) || 1)?.savedTrees || '0'}</strong> arbres 
+                          absorbant du CO₂ pendant un an !
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="form-group">
