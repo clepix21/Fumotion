@@ -332,8 +332,28 @@ export default function DashboardPage() {
           t.id === tripId ? { ...t, status: 'completed' } : t
         ))
         closeModals()
-        alert("Trajet marqué comme terminé ! Vous pouvez maintenant évaluer vos passagers.")
-        loadDashboardData() // Recharger pour avoir les évaluations en attente
+        
+        // Recharger les évaluations en attente et ouvrir la modale automatiquement
+        try {
+          const pendingData = await reviewAPI.getPendingReviews()
+          if (pendingData.success) {
+            setPendingReviews(pendingData.data)
+            
+            // Ouvrir automatiquement la modale d'évaluation si des évaluations sont en attente
+            const firstDriverReview = pendingData.data.asDriver?.[0]
+            const firstPassengerReview = pendingData.data.asPassenger?.[0]
+            
+            if (firstDriverReview || firstPassengerReview) {
+              // Priorité aux évaluations en tant que conducteur (évaluer les passagers)
+              const reviewToOpen = firstDriverReview || firstPassengerReview
+              openReviewModal(reviewToOpen)
+            }
+          }
+        } catch (error) {
+          console.error("Erreur lors du chargement des évaluations:", error)
+        }
+        
+        loadDashboardData() // Recharger le reste des données
       } else {
         alert(data.message || "Erreur lors de la finalisation")
       }
