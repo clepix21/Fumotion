@@ -6,6 +6,7 @@ import logo from "../assets/images/logo.png"
 import voiture from "../assets/icons/voiture.svg"
 import bouclier from "../assets/icons/bouclier.svg"
 import speed from "../assets/icons/speed.svg"
+import chatIcon from "../assets/icons/chat.svg"
 import placeholder from "../assets/images/placeholder.png"
 import "../styles/HomePage.css"
 import Footer from "../components/common/Footer"
@@ -284,7 +285,7 @@ export default function HomePage() {
         onClick={() => isAuthenticated() ? navigate("/chat") : navigate("/login")}
         title="Messagerie"
       >
-        <span className="chat-icon">💬</span>
+        <img src={chatIcon} alt="Chat" className="chat-icon-img" />
         <span className="chat-tooltip">Chat</span>
       </button>
     </div>
