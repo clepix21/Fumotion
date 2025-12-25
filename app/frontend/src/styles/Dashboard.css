@@ -181,6 +181,40 @@
   height: 50px;
 }
 
+.icon-svg-inline {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.icon-svg-alert {
+  width: 32px;
+  height: 32px;
+}
+
+.icon-svg-star {
+  width: 24px;
+  height: 24px;
+  filter: grayscale(100%) brightness(1.5);
+  transition: filter 0.2s ease;
+}
+
+.star-btn.active .icon-svg-star {
+  filter: none;
+}
+
+.icon-svg-notif {
+  width: 24px;
+  height: 24px;
+}
+
+.icon-svg-rating {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+}
+
 /* Main Content */
 .dashboard-main {
   background: white;
