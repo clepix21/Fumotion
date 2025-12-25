@@ -160,6 +160,25 @@
 
 .btn-icon {
   font-size: 1.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Styles pour les icônes SVG */
+.icon-svg {
+  width: 24px;
+  height: 24px;
+}
+
+.icon-svg-stat {
+  width: 28px;
+  height: 28px;
+}
+
+.icon-svg-large {
+  width: 50px;
+  height: 50px;
 }
 
 /* Main Content */
