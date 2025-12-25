@@ -232,6 +232,11 @@
   height: 48px;
 }
 
+.icon-svg-sidebar {
+  width: 20px;
+  height: 20px;
+}
+
 /* Main Content */
 .dashboard-main {
   background: white;
