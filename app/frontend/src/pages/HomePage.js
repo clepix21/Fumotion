@@ -277,6 +277,16 @@ export default function HomePage() {
       </section>
 
       <Footer />
+
+      {/* Icône de chat fixe */}
+      <button 
+        className="fixed-chat-button"
+        onClick={() => isAuthenticated() ? navigate("/chat") : navigate("/login")}
+        title="Messagerie"
+      >
+        <span className="chat-icon">💬</span>
+        <span className="chat-tooltip">Chat</span>
+      </button>
     </div>
   )
 }
