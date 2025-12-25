@@ -9,6 +9,7 @@ import voiture from "../assets/icons/voiture.svg"
 import ticketIcon from "../assets/icons/ticket.svg"
 import starIcon from "../assets/icons/star.svg"
 import statsIcon from "../assets/icons/stats.svg"
+import profileIcon from "../assets/icons/profile.svg"
 import "../styles/Dashboard.css"
 import "../styles/HomePage.css"
 
@@ -512,7 +513,7 @@ export default function DashboardPage() {
               className={`sidebar-btn ${activeTab === "profile" ? "active" : ""}`}
               onClick={() => setActiveTab("profile")}
             >
-              <span className="btn-icon">👤</span>
+              <img src={profileIcon} alt="" className="icon-svg-sidebar" />
               Profil
             </button>
             {!!user?.is_admin && (
@@ -965,7 +966,7 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   <div className="rating-card">
-                    <div className="rating-icon">👤</div>
+                    <div className="rating-icon"><img src={profileIcon} alt="" className="icon-svg-rating" /></div>
                     <div className="rating-info">
                       <span className="rating-value-large">
                         {displayUser?.passenger_rating ? parseFloat(displayUser.passenger_rating).toFixed(1) : '-'}

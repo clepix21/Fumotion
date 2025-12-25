@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Footer from '../components/common/Footer';
 import logo from '../assets/images/logo.png';
+import profileIcon from '../assets/icons/profile.svg';
 import '../styles/StaticPages.css';
 
 export default function HelpPage() {
@@ -15,7 +16,7 @@ export default function HelpPage() {
             link: '/faq#trajets'
         },
         {
-            icon: '👤',
+            icon: <img src={profileIcon} alt="" className="help-icon-svg" />,
             title: 'Mon Compte',
             description: 'Gérer votre profil, vos préférences et vos informations personnelles.',
             link: '/faq#compte'

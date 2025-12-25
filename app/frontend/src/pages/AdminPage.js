@@ -5,6 +5,7 @@ import { adminAPI } from "../services/adminApi"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
 import statsIcon from "../assets/icons/stats.svg"
+import profileIcon from "../assets/icons/profile.svg"
 import "../styles/Admin.css"
 import "../styles/HomePage.css"
 
@@ -681,7 +682,7 @@ export default function AdminPage() {
                     <div className="recent-section">
                       <div className="recent-header">
                         <div className="recent-header-title">
-                          <span className="recent-header-icon">👤</span>
+                          <img src={profileIcon} alt="" className="icon-svg-heading" />
                           <h2>Derniers utilisateurs</h2>
                         </div>
                         <button 
@@ -694,7 +695,7 @@ export default function AdminPage() {
                       <div className="recent-list">
                         {statistics.recent.users.length === 0 ? (
                           <div className="empty-state-small">
-                            <span>👤</span>
+                            <img src={profileIcon} alt="" className="icon-svg-empty" />
                             <p>Aucun utilisateur récent</p>
                           </div>
                         ) : (

@@ -166,8 +166,13 @@
 }
 
 .navbar-user::before {
-  content: '👤';
-  font-size: 1.125rem;
+  content: '';
+  width: 1.125rem;
+  height: 1.125rem;
+  background-image: url('../assets/icons/profile.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .navbar-btn-secondary {
