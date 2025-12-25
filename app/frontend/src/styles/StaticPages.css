@@ -178,6 +178,11 @@
     margin-bottom: 1rem;
 }
 
+.help-icon-svg {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
 .help-card h3 {
     font-size: 1.2rem;
     font-weight: 600;
