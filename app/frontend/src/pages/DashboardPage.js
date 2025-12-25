@@ -8,6 +8,7 @@ import logo from "../assets/images/logo.png"
 import voiture from "../assets/icons/voiture.svg"
 import ticketIcon from "../assets/icons/ticket.svg"
 import starIcon from "../assets/icons/star.svg"
+import statsIcon from "../assets/icons/stats.svg"
 import "../styles/Dashboard.css"
 import "../styles/HomePage.css"
 
@@ -462,7 +463,9 @@ export default function DashboardPage() {
               className={`sidebar-btn ${activeTab === "overview" ? "active" : ""}`}
               onClick={() => setActiveTab("overview")}
             >
-              <span className="btn-icon">📊</span>
+              <span className="btn-icon">
+                <img src={statsIcon} alt="stats" className="icon-svg" />
+              </span>
               Vue d'ensemble
             </button>
           </div>
@@ -950,7 +953,7 @@ export default function DashboardPage() {
               
               {/* Mes notes */}
               <div className="my-ratings-section">
-                <h2>📊 Mes notes</h2>
+                <h2><img src={statsIcon} alt="stats" className="icon-svg-heading" /> Mes notes</h2>
                 <div className="ratings-grid">
                   <div className="rating-card">
                     <div className="rating-icon">🚗</div>

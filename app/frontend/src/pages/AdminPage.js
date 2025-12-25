@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext"
 import { adminAPI } from "../services/adminApi"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
+import statsIcon from "../assets/icons/stats.svg"
 import "../styles/Admin.css"
 import "../styles/HomePage.css"
 
@@ -662,7 +663,9 @@ export default function AdminPage() {
                       </div>
                     </div>
                     <div className="quick-stat-item">
-                      <span className="quick-stat-icon">📊</span>
+                      <span className="quick-stat-icon">
+                        <img src={statsIcon} alt="stats" className="icon-svg-quick" />
+                      </span>
                       <div className="quick-stat-info">
                         <span className="quick-stat-value">
                           {statistics.bookings.total > 0 
@@ -766,7 +769,9 @@ export default function AdminPage() {
                 </>
               ) : (
                 <div className="empty-state">
-                  <span className="empty-state-icon">📊</span>
+                  <span className="empty-state-icon">
+                    <img src={statsIcon} alt="stats" className="icon-svg-empty" />
+                  </span>
                   <p>Impossible de charger les statistiques</p>
                   <button className="admin-btn admin-btn-primary" onClick={loadStatistics}>
                     🔄 Réessayer

@@ -215,6 +215,23 @@
   vertical-align: middle;
 }
 
+.icon-svg-heading {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.icon-svg-quick {
+  width: 24px;
+  height: 24px;
+}
+
+.icon-svg-empty {
+  width: 48px;
+  height: 48px;
+}
+
 /* Main Content */
 .dashboard-main {
   background: white;
