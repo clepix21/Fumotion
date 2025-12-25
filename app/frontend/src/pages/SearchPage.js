@@ -6,6 +6,7 @@ import MapComponent from "../components/common/MapComponent"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
 import voiture from "../assets/icons/voiture.svg"
+import starIcon from "../assets/icons/star.svg"
 import "../styles/Search.css"
 import "../styles/HomePage.css"
 
@@ -387,7 +388,7 @@ export default function SearchPage() {
                               </strong>
                               {trip.driver_rating && (
                                 <p className="driver-rating">
-                                  ⭐ {parseFloat(trip.driver_rating).toFixed(1)}
+                                  <img src={starIcon} alt="star" className="icon-svg-rating" /> {parseFloat(trip.driver_rating).toFixed(1)}
                                   {trip.reviews_count > 0 && ` (${trip.reviews_count} avis)`}
                                 </p>
                               )}

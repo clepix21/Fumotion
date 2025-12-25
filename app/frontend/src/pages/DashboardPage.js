@@ -7,6 +7,7 @@ import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
 import voiture from "../assets/icons/voiture.svg"
 import ticketIcon from "../assets/icons/ticket.svg"
+import starIcon from "../assets/icons/star.svg"
 import "../styles/Dashboard.css"
 import "../styles/HomePage.css"
 
@@ -490,7 +491,9 @@ export default function DashboardPage() {
               className={`sidebar-btn ${activeTab === "reviews" ? "active" : ""}`}
               onClick={() => setActiveTab("reviews")}
             >
-              <span className="btn-icon">⭐</span>
+              <span className="btn-icon">
+                <img src={starIcon} alt="star" className="icon-svg" />
+              </span>
               Évaluations
               {(pendingReviews.asPassenger?.length > 0 || pendingReviews.asDriver?.length > 0) && (
                 <span className="badge-notification">
@@ -579,7 +582,7 @@ export default function DashboardPage() {
 
                 <div className="stat-card stat-rating">
                   <div className="stat-icon-wrapper">
-                    <span>⭐</span>
+                    <img src={starIcon} alt="star" className="icon-svg-stat" />
                   </div>
                   <div className="stat-content">
                     <div className="stat-header-row">
@@ -709,7 +712,9 @@ export default function DashboardPage() {
               {(pendingReviews.asPassenger?.length > 0 || pendingReviews.asDriver?.length > 0) && (
                 <div className="pending-reviews-overview">
                   <div className="reviews-alert">
-                    <span className="alert-icon">⭐</span>
+                    <span className="alert-icon">
+                      <img src={starIcon} alt="star" className="icon-svg-alert" />
+                    </span>
                     <div className="alert-content">
                       <h3>Évaluations en attente</h3>
                       <p>Vous avez {(pendingReviews.asPassenger?.length || 0) + (pendingReviews.asDriver?.length || 0)} évaluation(s) à effectuer</p>
@@ -893,7 +898,7 @@ export default function DashboardPage() {
                           className="review-now-btn"
                           onClick={() => openReviewModal(item)}
                         >
-                          ⭐ Évaluer
+                          <img src={starIcon} alt="star" className="icon-svg-inline" /> Évaluer
                         </button>
                       </div>
                     ))}
@@ -924,7 +929,7 @@ export default function DashboardPage() {
                           className="review-now-btn"
                           onClick={() => openReviewModal(item)}
                         >
-                          ⭐ Évaluer
+                          <img src={starIcon} alt="star" className="icon-svg-inline" /> Évaluer
                         </button>
                       </div>
                     ))}
@@ -935,7 +940,9 @@ export default function DashboardPage() {
               {/* Aucune évaluation en attente */}
               {pendingReviews.asPassenger?.length === 0 && pendingReviews.asDriver?.length === 0 && (
                 <div className="empty-state">
-                  <div className="empty-icon">⭐</div>
+                  <div className="empty-icon">
+                    <img src={starIcon} alt="star" className="icon-svg-large" />
+                  </div>
                   <h3>Aucune évaluation en attente</h3>
                   <p>Vous avez évalué tous vos trajets terminés !</p>
                 </div>
@@ -1391,7 +1398,7 @@ export default function DashboardPage() {
                       className={`star-btn ${star <= reviewData.rating ? 'active' : ''}`}
                       onClick={() => setReviewData({...reviewData, rating: star})}
                     >
-                      ⭐
+                      <img src={starIcon} alt="star" className="icon-svg-star" />
                     </button>
                   ))}
                 </div>
@@ -1434,7 +1441,9 @@ export default function DashboardPage() {
       {(pendingReviews.asPassenger?.length > 0 || pendingReviews.asDriver?.length > 0) && (
         <div className="pending-reviews-notification">
           <div className="notification-content">
-            <span className="notification-icon">⭐</span>
+            <span className="notification-icon">
+              <img src={starIcon} alt="star" className="icon-svg-notif" />
+            </span>
             <span className="notification-text">
               Vous avez {(pendingReviews.asPassenger?.length || 0) + (pendingReviews.asDriver?.length || 0)} évaluation(s) en attente
             </span>
