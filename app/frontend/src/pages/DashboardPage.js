@@ -6,6 +6,7 @@ import { reviewAPI } from "../services/reviewApi"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
 import voiture from "../assets/icons/voiture.svg"
+import ticketIcon from "../assets/icons/ticket.svg"
 import "../styles/Dashboard.css"
 import "../styles/HomePage.css"
 
@@ -480,7 +481,9 @@ export default function DashboardPage() {
               className={`sidebar-btn ${activeTab === "bookings" ? "active" : ""}`}
               onClick={() => setActiveTab("bookings")}
             >
-              <span className="btn-icon">🎫</span>
+              <span className="btn-icon">
+                <img src={ticketIcon} alt="ticket" className="icon-svg" />
+              </span>
               Mes réservations
             </button>
             <button
@@ -556,7 +559,7 @@ export default function DashboardPage() {
 
                 <div className="stat-card stat-bookings">
                   <div className="stat-icon-wrapper">
-                    <span>🎫</span>
+                    <img src={ticketIcon} alt="ticket" className="icon-svg-stat" />
                   </div>
                   <div className="stat-content">
                     <div className="stat-header-row">
@@ -799,7 +802,9 @@ export default function DashboardPage() {
 
               {myBookings.length === 0 ? (
                 <div className="empty-state">
-                  <div className="empty-icon">🎫</div>
+                  <div className="empty-icon">
+                    <img src={ticketIcon} alt="ticket" className="icon-svg-large" />
+                  </div>
                   <h3>Aucune réservation</h3>
                   <p>Vous n'avez pas encore réservé de trajet dans Amiens</p>
                   <Link to="/search" className="empty-action">
