@@ -602,23 +602,6 @@ export default function DashboardPage() {
                     <span className="stat-detail">Basé sur {myTrips.filter(t => t.status === 'completed').length || 0} trajets</span>
                   </div>
                 </div>
-
-                <div className="stat-card stat-savings">
-                  <div className="stat-icon-wrapper">
-                    <span>💰</span>
-                  </div>
-                  <div className="stat-content">
-                    <div className="stat-header-row">
-                      <span className="stat-label">Économies</span>
-                      <span className="stat-badge eco">🌿 Éco-responsable</span>
-                    </div>
-                    <h3>{myBookings.reduce((acc, b) => acc + (b.total_price || 0), 0).toFixed(0)}€</h3>
-                    <div className="savings-detail">
-                      <span className="co2-saved">~{(myBookings.length * 2.3).toFixed(1)} kg CO₂ économisés</span>
-                    </div>
-                    <span className="stat-detail">Ce mois-ci</span>
-                  </div>
-                </div>
               </div>
 
               {/* Section Prochains trajets */}
