@@ -23,7 +23,7 @@ exports.getStatistics = async (req, res) => {
 
     // Obtenir les derniers utilisateurs
     const recentUsers = await db.all(
-      "SELECT id, email, first_name, last_name, created_at FROM users ORDER BY created_at DESC LIMIT 5"
+      "SELECT id, email, first_name, last_name, profile_picture, created_at FROM users ORDER BY created_at DESC LIMIT 5"
     )
 
     // Obtenir les derniers trajets
@@ -78,7 +78,7 @@ exports.getAllUsers = async (req, res) => {
     const limitNum = Math.max(1, Math.min(100, parseInt(limit) || 20))
     const offset = (pageNum - 1) * limitNum
 
-    let query = "SELECT id, email, first_name, last_name, phone, student_id, university, is_verified, is_active, is_admin, created_at FROM users WHERE 1=1"
+    let query = "SELECT id, email, first_name, last_name, phone, student_id, university, profile_picture, is_verified, is_active, is_admin, created_at FROM users WHERE 1=1"
     const params = []
 
     if (search) {

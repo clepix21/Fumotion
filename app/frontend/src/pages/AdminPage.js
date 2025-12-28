@@ -4,6 +4,8 @@ import { useAuth } from "../context/AuthContext"
 import { adminAPI } from "../services/adminApi"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
+import statsIcon from "../assets/icons/stats.svg"
+import profileIcon from "../assets/icons/profile.svg"
 import "../styles/Admin.css"
 import "../styles/HomePage.css"
 
@@ -496,13 +498,16 @@ export default function AdminPage() {
           {activeTab === "dashboard" && (
             <div className="admin-section">
               <div className="admin-header">
-                <h1 className="admin-title">Tableau de bord</h1>
+                <div className="admin-header-content">
+                  <h1 className="admin-title">Tableau de bord</h1>
+                  <p className="admin-subtitle">Vue d'ensemble de votre plateforme</p>
+                </div>
                 <button 
                   className="admin-btn admin-btn-secondary"
                   onClick={loadStatistics}
                   disabled={loading}
                 >
-                  Actualiser
+                  🔄 Actualiser
                 </button>
               </div>
               
@@ -515,9 +520,24 @@ export default function AdminPage() {
                 <>
                   <div className="stats-grid">
                     <div className="stat-card users">
+                      <div className="stat-icon-wrapper">
+                        <span className="stat-icon">👥</span>
+                      </div>
                       <div className="stat-content">
+                        <div className="stat-header">
+                          <div className="stat-label">Utilisateurs</div>
+                          <div className="stat-trend positive">
+                            <span>↗</span>
+                            <span>{statistics.users.active > 0 ? Math.round((statistics.users.active / statistics.users.total) * 100) : 0}%</span>
+                          </div>
+                        </div>
                         <div className="stat-value">{statistics.users.total}</div>
-                        <div className="stat-label">Utilisateurs</div>
+                        <div className="stat-progress-bar">
+                          <div 
+                            className="stat-progress-fill active" 
+                            style={{ width: `${statistics.users.total > 0 ? (statistics.users.active / statistics.users.total) * 100 : 0}%` }}
+                          ></div>
+                        </div>
                         <div className="stat-details">
                           <span className="stat-detail-item">
                             <span className="stat-dot active"></span>
@@ -532,13 +552,28 @@ export default function AdminPage() {
                     </div>
 
                     <div className="stat-card trips">
+                      <div className="stat-icon-wrapper">
+                        <span className="stat-icon">🚗</span>
+                      </div>
                       <div className="stat-content">
+                        <div className="stat-header">
+                          <div className="stat-label">Trajets</div>
+                          <div className="stat-trend neutral">
+                            <span>→</span>
+                            <span>{statistics.trips.active} actifs</span>
+                          </div>
+                        </div>
                         <div className="stat-value">{statistics.trips.total}</div>
-                        <div className="stat-label">Trajets</div>
+                        <div className="stat-progress-bar">
+                          <div 
+                            className="stat-progress-fill trips" 
+                            style={{ width: `${statistics.trips.total > 0 ? (statistics.trips.completed / statistics.trips.total) * 100 : 0}%` }}
+                          ></div>
+                        </div>
                         <div className="stat-details">
                           <span className="stat-detail-item">
                             <span className="stat-dot active"></span>
-                            {statistics.trips.active} actifs
+                            {statistics.trips.active} en cours
                           </span>
                           <span className="stat-detail-item">
                             <span className="stat-dot completed"></span>
@@ -549,9 +584,26 @@ export default function AdminPage() {
                     </div>
 
                     <div className="stat-card bookings">
+                      <div className="stat-icon-wrapper">
+                        <span className="stat-icon">📋</span>
+                      </div>
                       <div className="stat-content">
+                        <div className="stat-header">
+                          <div className="stat-label">Réservations</div>
+                          {statistics.bookings.pending > 0 && (
+                            <div className="stat-trend warning">
+                              <span>⚠</span>
+                              <span>{statistics.bookings.pending} en attente</span>
+                            </div>
+                          )}
+                        </div>
                         <div className="stat-value">{statistics.bookings.total}</div>
-                        <div className="stat-label">Réservations</div>
+                        <div className="stat-progress-bar">
+                          <div 
+                            className="stat-progress-fill bookings" 
+                            style={{ width: `${statistics.bookings.total > 0 ? (statistics.bookings.confirmed / statistics.bookings.total) * 100 : 0}%` }}
+                          ></div>
+                        </div>
                         <div className="stat-details">
                           <span className="stat-detail-item">
                             <span className="stat-dot confirmed"></span>
@@ -566,12 +618,62 @@ export default function AdminPage() {
                     </div>
 
                     <div className="stat-card revenue">
+                      <div className="stat-icon-wrapper">
+                        <span className="stat-icon">💰</span>
+                      </div>
                       <div className="stat-content">
-                        <div className="stat-value">{(statistics.revenue.total || 0).toFixed(2)}€</div>
-                        <div className="stat-label">Revenu total</div>
-                        <div className="stat-details">
-                          <span className="stat-detail-item">Transactions payées</span>
+                        <div className="stat-header">
+                          <div className="stat-label">Revenu total</div>
+                          <div className="stat-trend positive">
+                            <span>💵</span>
+                            <span>Transactions</span>
+                          </div>
                         </div>
+                        <div className="stat-value">{(statistics.revenue.total || 0).toFixed(2)}€</div>
+                        <div className="stat-details">
+                          <span className="stat-detail-item">
+                            <span className="stat-dot confirmed"></span>
+                            Paiements confirmés
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Quick Stats Summary */}
+                  <div className="quick-stats-summary">
+                    <div className="quick-stat-item">
+                      <span className="quick-stat-icon">✅</span>
+                      <div className="quick-stat-info">
+                        <span className="quick-stat-value">{statistics.users.verified}</span>
+                        <span className="quick-stat-label">Utilisateurs vérifiés</span>
+                      </div>
+                    </div>
+                    <div className="quick-stat-item">
+                      <span className="quick-stat-icon">🎯</span>
+                      <div className="quick-stat-info">
+                        <span className="quick-stat-value">{statistics.trips.active}</span>
+                        <span className="quick-stat-label">Trajets actifs</span>
+                      </div>
+                    </div>
+                    <div className="quick-stat-item">
+                      <span className="quick-stat-icon">⏳</span>
+                      <div className="quick-stat-info">
+                        <span className="quick-stat-value">{statistics.bookings.pending}</span>
+                        <span className="quick-stat-label">À traiter</span>
+                      </div>
+                    </div>
+                    <div className="quick-stat-item">
+                      <span className="quick-stat-icon">
+                        <img src={statsIcon} alt="stats" className="icon-svg-quick" />
+                      </span>
+                      <div className="quick-stat-info">
+                        <span className="quick-stat-value">
+                          {statistics.bookings.total > 0 
+                            ? Math.round((statistics.bookings.confirmed / statistics.bookings.total) * 100) 
+                            : 0}%
+                        </span>
+                        <span className="quick-stat-label">Taux de confirmation</span>
                       </div>
                     </div>
                   </div>
@@ -579,26 +681,37 @@ export default function AdminPage() {
                   <div className="admin-grid-2">
                     <div className="recent-section">
                       <div className="recent-header">
-                        <h2>Derniers utilisateurs</h2>
+                        <div className="recent-header-title">
+                          <img src={profileIcon} alt="" className="icon-svg-heading" />
+                          <h2>Derniers utilisateurs</h2>
+                        </div>
                         <button 
                           className="admin-btn-link"
                           onClick={() => setActiveTab("users")}
                         >
-                          Voir tout
+                          Voir tout →
                         </button>
                       </div>
                       <div className="recent-list">
                         {statistics.recent.users.length === 0 ? (
-                          <p className="empty-text">Aucun utilisateur récent</p>
+                          <div className="empty-state-small">
+                            <img src={profileIcon} alt="" className="icon-svg-empty" />
+                            <p>Aucun utilisateur récent</p>
+                          </div>
                         ) : (
-                          statistics.recent.users.map(u => (
-                            <div key={u.id} className="recent-item">
-                              <Avatar user={u} size="small" />
-                              <div className="recent-info">
-                                <div className="recent-name">{u.first_name} {u.last_name}</div>
-                                <div className="recent-detail">{u.email}</div>
+                          statistics.recent.users.map((u, index) => (
+                            <div key={u.id} className="recent-item" style={{ animationDelay: `${index * 0.1}s` }}>
+                              <div className="recent-item-left">
+                                <Avatar user={u} size="small" />
+                                <div className="recent-info">
+                                  <div className="recent-name">{u.first_name} {u.last_name}</div>
+                                  <div className="recent-detail">{u.email}</div>
+                                </div>
                               </div>
-                              <div className="recent-date">{formatDate(u.created_at)}</div>
+                              <div className="recent-item-right">
+                                <span className="recent-badge new">Nouveau</span>
+                                <div className="recent-date">{formatDate(u.created_at)}</div>
+                              </div>
                             </div>
                           ))
                         )}
@@ -607,26 +720,47 @@ export default function AdminPage() {
 
                     <div className="recent-section">
                       <div className="recent-header">
-                        <h2>Derniers trajets</h2>
+                        <div className="recent-header-title">
+                          <span className="recent-header-icon">🚗</span>
+                          <h2>Derniers trajets</h2>
+                        </div>
                         <button 
                           className="admin-btn-link"
                           onClick={() => setActiveTab("trips")}
                         >
-                          Voir tout
+                          Voir tout →
                         </button>
                       </div>
                       <div className="recent-list">
                         {statistics.recent.trips.length === 0 ? (
-                          <p className="empty-text">Aucun trajet récent</p>
+                          <div className="empty-state-small">
+                            <span>🚗</span>
+                            <p>Aucun trajet récent</p>
+                          </div>
                         ) : (
-                          statistics.recent.trips.map(trip => (
-                            <div key={trip.id} className="recent-item">
-                              <div className="recent-trip-icon">T</div>
-                              <div className="recent-info">
-                                <div className="recent-name">{formatAddress(trip.departure_location)} - {formatAddress(trip.arrival_location)}</div>
-                                <div className="recent-detail">Par {trip.first_name} {trip.last_name}</div>
+                          statistics.recent.trips.map((trip, index) => (
+                            <div key={trip.id} className="recent-item trip-item" style={{ animationDelay: `${index * 0.1}s` }}>
+                              <div className="recent-item-left">
+                                <div className="recent-trip-icon">
+                                  <span>📍</span>
+                                </div>
+                                <div className="recent-info">
+                                  <div className="recent-name trip-route">
+                                    <span className="route-from">{formatAddress(trip.departure_location)}</span>
+                                    <span className="route-arrow">→</span>
+                                    <span className="route-to">{formatAddress(trip.arrival_location)}</span>
+                                  </div>
+                                  <div className="recent-detail">
+                                    <span className="driver-info">🚘 {trip.first_name} {trip.last_name}</span>
+                                  </div>
+                                </div>
                               </div>
-                              <div className="recent-date">{formatDate(trip.created_at)}</div>
+                              <div className="recent-item-right">
+                                <span className={`recent-badge ${trip.status || 'active'}`}>
+                                  {trip.status === 'completed' ? '✓ Terminé' : trip.status === 'cancelled' ? '✗ Annulé' : '● Actif'}
+                                </span>
+                                <div className="recent-date">{formatDate(trip.created_at)}</div>
+                              </div>
                             </div>
                           ))
                         )}
@@ -636,9 +770,12 @@ export default function AdminPage() {
                 </>
               ) : (
                 <div className="empty-state">
+                  <span className="empty-state-icon">
+                    <img src={statsIcon} alt="stats" className="icon-svg-empty" />
+                  </span>
                   <p>Impossible de charger les statistiques</p>
                   <button className="admin-btn admin-btn-primary" onClick={loadStatistics}>
-                    Réessayer
+                    🔄 Réessayer
                   </button>
                 </div>
               )}
