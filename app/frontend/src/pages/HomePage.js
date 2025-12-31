@@ -68,6 +68,15 @@ export default function HomePage() {
           </button>
 
           <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
+            {/* Bouton de fermeture mobile */}
+            <button 
+              className="navbar-menu-close"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Fermer le menu"
+            >
+              ✕
+            </button>
+            
             <a href="#benefits" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
               Pourquoi Fumotion ?
             </a>
