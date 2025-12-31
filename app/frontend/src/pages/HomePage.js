@@ -9,7 +9,7 @@ import speed from "../assets/icons/speed.svg"
 import chatIcon from "../assets/icons/chat.svg"
 import searchIcon from "../assets/icons/search.svg"
 import checkIcon from "../assets/icons/check.svg"
-"../styles/HomePage.css"
+import "../styles/HomePage.css"
 import Footer from "../components/common/Footer"
 
 export default function HomePage() {
