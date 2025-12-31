@@ -6,6 +6,9 @@
 /* Import des variables CSS globales */
 @import './variables.css';
 
+/* Import des utilitaires d'accessibilité */
+@import './accessibility.css';
+
 /* ===== RESET ET BASE ===== */
 *,
 *::before,
