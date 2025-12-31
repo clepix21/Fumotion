@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="niceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#00C9FF"/>
+      <stop offset="100%" style="stop-color:#92FE9D"/>
+    </linearGradient>
+  </defs>
+  <rect fill="url(#niceGrad)" width="400" height="300"/>
+  <rect fill="#0077B6" x="0" y="180" width="400" height="120"/>
+  <ellipse fill="#F4A460" cx="200" cy="180" rx="180" ry="30"/>
+  <circle fill="#FFD700" cx="350" cy="50" r="35"/>
+  <rect fill="#E8D4B8" x="40" y="100" width="60" height="80"/>
+  <rect fill="#D4B896" x="120" y="80" width="80" height="100"/>
+  <rect fill="#C9A87C" x="220" y="90" width="70" height="90"/>
+  <ellipse fill="#228B22" cx="50" cy="150" rx="30" ry="50"/>
+  <text x="200" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#FFF">NICE</text>
+</svg>

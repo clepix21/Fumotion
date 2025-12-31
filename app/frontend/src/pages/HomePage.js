@@ -7,7 +7,14 @@ import voiture from "../assets/icons/voiture.svg"
 import bouclier from "../assets/icons/bouclier.svg"
 import speed from "../assets/icons/speed.svg"
 import chatIcon from "../assets/icons/chat.svg"
-import placeholder from "../assets/images/placeholder.png"
+import searchIcon from "../assets/icons/search.svg"
+import checkIcon from "../assets/icons/check.svg"
+import carIcon from "../assets/icons/car.svg"
+import amiensImg from "../assets/images/amiens.svg"
+import parisImg from "../assets/images/paris.svg"
+import marseilleImg from "../assets/images/marseille.svg"
+import bordeauxImg from "../assets/images/bordeaux.svg"
+import niceImg from "../assets/images/nice.svg"
 import "../styles/HomePage.css"
 import Footer from "../components/common/Footer"
 
@@ -214,7 +221,7 @@ export default function HomePage() {
 
           <div className="popular-trips-grid">
             <div className="trip-card">
-              <div className="trip-image" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover` }}></div>
+              <div className="trip-image" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${amiensImg}) center/cover` }}></div>
               <div className="trip-info">
                 <h3>Gare du Nord → IUT </h3>
                 <p>Dès 15€</p>
@@ -222,7 +229,7 @@ export default function HomePage() {
             </div>
 
             <div className="trip-card">
-              <div className="trip-image" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover` }}></div>
+              <div className="trip-image" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${marseilleImg}) center/cover` }}></div>
               <div className="trip-info">
                 <h3>Paris → Marseille</h3>
                 <p>Dès 20€</p>
@@ -230,7 +237,7 @@ export default function HomePage() {
             </div>
 
             <div className="trip-card">
-              <div className="trip-image" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover` }}></div>
+              <div className="trip-image" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${bordeauxImg}) center/cover` }}></div>
               <div className="trip-info">
                 <h3>Paris → Bordeaux</h3>
                 <p>Dès 18€</p>
@@ -238,7 +245,7 @@ export default function HomePage() {
             </div>
 
             <div className="trip-card">
-              <div className="trip-image" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${placeholder}) center/cover` }}></div>
+              <div className="trip-image" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${niceImg}) center/cover` }}></div>
               <div className="trip-info">
                 <h3>Lyon → Nice</h3>
                 <p>Dès 22€</p>
@@ -255,21 +262,27 @@ export default function HomePage() {
           <div className="steps-grid">
             <div className="step-card">
               <div className="step-number">1</div>
-              <div className="step-icon">🔍</div>
+              <div className="step-icon">
+                <img src={searchIcon} alt="Rechercher" className="step-icon-img" />
+              </div>
               <h3 className="step-title">Recherchez votre trajet</h3>
               <p className="step-description">Entrez votre point de départ, destination et date de voyage</p>
             </div>
 
             <div className="step-card">
               <div className="step-number">2</div>
-              <div className="step-icon">✅</div>
+              <div className="step-icon">
+                <img src={checkIcon} alt="Réserver" className="step-icon-img" />
+              </div>
               <h3 className="step-title">Réservez votre place</h3>
               <p className="step-description">Choisissez parmi les conducteurs vérifiés et réservez en ligne</p>
             </div>
 
             <div className="step-card">
               <div className="step-number">3</div>
-              <div className="step-icon">🚗</div>
+              <div className="step-icon">
+                <img src={carIcon} alt="Voyager" className="step-icon-img" />
+              </div>
               <h3 className="step-title">Voyagez sereinement</h3>
               <p className="step-description">Rencontrez votre conducteur et profitez de votre trajet</p>
             </div>

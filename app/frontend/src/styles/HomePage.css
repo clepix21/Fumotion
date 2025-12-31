@@ -739,6 +739,16 @@
 .step-icon {
   font-size: 3rem;
   margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.step-icon-img {
+  width: 48px;
+  height: 48px;
+  color: #0066ff;
+  stroke: #0066ff;
 }
 
 .step-title {
