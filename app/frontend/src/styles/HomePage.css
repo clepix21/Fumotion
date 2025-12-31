@@ -1255,13 +1255,16 @@
   }
 }
 
-/* Icône de chat fixe */
+/* Icône de chat fixe - Mobile-first */
 .fixed-chat-button {
   position: fixed;
-  bottom: 2rem;
-  left: 2rem;
-  width: 60px;
-  height: 60px;
+  /* Mobile: position en bas à droite plus accessible */
+  bottom: 1rem;
+  right: 1rem;
+  left: auto;
+  /* Taille réduite sur mobile */
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
   background: linear-gradient(135deg, #0066ff 0%, #00d4ff 100%);
   border: none;
@@ -1270,9 +1273,12 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 20px rgba(0, 102, 255, 0.4);
-  z-index: 999;
-  transition: all 0.3s ease;
+  z-index: var(--z-fixed, 999);
+  transition: all var(--transition-base, 0.3s ease);
   overflow: visible;
+  /* Zone de touch minimum */
+  min-width: 2.75rem;
+  min-height: 2.75rem;
 }
 
 .fixed-chat-button:hover {
@@ -1280,56 +1286,32 @@
   box-shadow: 0 6px 30px rgba(0, 102, 255, 0.5);
 }
 
+.fixed-chat-button:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
 .fixed-chat-button:active {
   transform: scale(0.95);
 }
 
 .chat-icon {
-  font-size: 1.75rem;
+  font-size: 1.25rem;
   line-height: 1;
 }
 
 .chat-icon-img {
-  width: 32px;
-  height: 32px;
+  width: 1.5rem;
+  height: 1.5rem;
   filter: brightness(0) invert(1);
 }
 
+/* Tooltip caché sur mobile */
 .chat-tooltip {
-  position: absolute;
-  left: 70px;
-  background: #1e293b;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateX(-10px);
-  transition: all 0.2s ease;
-  pointer-events: none;
+  display: none;
 }
 
-.chat-tooltip::before {
-  content: '';
-  position: absolute;
-  left: -6px;
-  top: 50%;
-  transform: translateY(-50%);
-  border-width: 6px;
-  border-style: solid;
-  border-color: transparent #1e293b transparent transparent;
-}
-
-.fixed-chat-button:hover .chat-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(0);
-}
-
-/* Animation pulse pour attirer l'attention */
+/* Animation pulse */
 .fixed-chat-button::after {
   content: '';
   position: absolute;
@@ -1356,20 +1338,72 @@
   }
 }
 
-/* Responsive pour mobile */
-@media (max-width: 768px) {
+/* Tablet+ (768px+): taille plus grande et tooltip */
+@media (min-width: 48em) {
   .fixed-chat-button {
     bottom: 1.5rem;
+    right: auto;
     left: 1.5rem;
-    width: 54px;
-    height: 54px;
+    width: 3.5rem;
+    height: 3.5rem;
   }
-  
+
   .chat-icon {
     font-size: 1.5rem;
   }
-  
+
+  .chat-icon-img {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
   .chat-tooltip {
-    display: none;
+    display: block;
+    position: absolute;
+    left: 4.5rem;
+    background: var(--color-gray-800, #1e293b);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-10px);
+    transition: all 0.2s ease;
+    pointer-events: none;
+  }
+
+  .chat-tooltip::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent var(--color-gray-800, #1e293b) transparent transparent;
+  }
+
+  .fixed-chat-button:hover .chat-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+  }
+}
+
+/* Desktop (1024px+): taille maximum */
+@media (min-width: 64em) {
+  .fixed-chat-button {
+    bottom: 2rem;
+    left: 2rem;
+    width: 3.75rem;
+    height: 3.75rem;
+  }
+
+  .chat-icon-img {
+    width: 2rem;
+    height: 2rem;
   }
 }
