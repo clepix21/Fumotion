@@ -9,8 +9,7 @@ import speed from "../assets/icons/speed.svg"
 import chatIcon from "../assets/icons/chat.svg"
 import searchIcon from "../assets/icons/search.svg"
 import checkIcon from "../assets/icons/check.svg"
-import carIcon from "../assets/icons/car.svg"
-import "../styles/HomePage.css"
+"../styles/HomePage.css"
 import Footer from "../components/common/Footer"
 
 export default function HomePage() {
@@ -237,7 +236,7 @@ export default function HomePage() {
             <div className="step-card">
               <div className="step-number">3</div>
               <div className="step-icon">
-                <img src={carIcon} alt="Voyager" className="step-icon-img" />
+                <img src={voiture} alt="Voyager" className="step-icon-img" />
               </div>
               <h3 className="step-title">Voyagez sereinement</h3>
               <p className="step-description">Rencontrez votre conducteur et profitez de votre trajet</p>
