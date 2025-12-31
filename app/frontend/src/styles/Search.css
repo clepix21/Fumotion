@@ -1,20 +1,53 @@
-/* Search Page Styles - Modern & Professional Design */
+/* Search Page Styles - Mobile-First Responsive Design */
 
-/* ===== BASE STYLES ===== */
+/* ===== BASE STYLES - Mobile First ===== */
 .search-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
-  padding-top: 5rem;
+  min-height: 100svh; /* Support mobile viewport */
+  background: linear-gradient(135deg, var(--color-gray-50, #f8fafc) 0%, #e0f2fe 100%);
+  /* Mobile: padding réduit */
+  padding-top: calc(var(--navbar-height, 4rem) + 0.5rem);
 }
 
 .search-main {
-  padding: 3rem 0;
+  padding: 1.5rem 0;
 }
 
 .search-container {
-  max-width: 1200px;
+  max-width: var(--container-xl, 80rem);
   margin: 0 auto;
-  padding: 0 2rem;
+  /* Mobile: padding minimal */
+  padding: 0 1rem;
+}
+
+/* Tablet+ (768px+): plus d'espace */
+@media (min-width: 48em) {
+  .search-page {
+    padding-top: calc(var(--navbar-height, 4.5rem) + 1rem);
+  }
+
+  .search-main {
+    padding: 2rem 0;
+  }
+
+  .search-container {
+    padding: 0 1.5rem;
+  }
+}
+
+/* Desktop (1024px+): espace maximum */
+@media (min-width: 64em) {
+  .search-page {
+    padding-top: 5rem;
+  }
+
+  .search-main {
+    padding: 3rem 0;
+  }
+
+  .search-container {
+    padding: 0 2rem;
+  }
 }
 
 /* ===== ANIMATIONS ===== */
@@ -76,37 +109,49 @@
   }
 }
 
-/* ===== HEADER ===== */
+/* ===== HEADER - Mobile-first ===== */
 .search-header {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
   animation: fadeInDown 0.6s ease-out;
 }
 
 .search-header h1 {
-  font-size: 2.75rem;
+  /* Typographie fluide */
+  font-size: clamp(1.5rem, 5vw, 2.75rem);
   font-weight: 800;
-  background: linear-gradient(135deg, #0066ff 0%, #00a3ff 100%);
+  background: linear-gradient(135deg, var(--color-primary, #0066ff) 0%, #00a3ff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .search-header p {
-  font-size: 1.25rem;
-  color: #64748b;
+  font-size: clamp(0.875rem, 2vw, 1.25rem);
+  color: var(--color-gray-500, #64748b);
   font-weight: 500;
 }
 
-/* ===== SEARCH FORM ===== */
+@media (min-width: 48em) {
+  .search-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .search-header h1 {
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* ===== SEARCH FORM - Mobile-first ===== */
 .search-card {
   background: #ffffff;
-  border-radius: 1.5rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-  padding: 1.5rem;
-  max-width: 1000px;
-  margin: 0 auto 3rem;
+  border-radius: var(--border-radius-xl, 1rem);
+  box-shadow: var(--shadow-xl, 0 10px 40px rgba(0, 0, 0, 0.15));
+  /* Mobile: padding réduit */
+  padding: 1rem;
+  max-width: 64rem;
+  margin: 0 auto 2rem;
   animation: fadeInUp 0.6s ease-out 0.2s backwards;
 }
 
@@ -116,10 +161,38 @@
   gap: 1rem;
 }
 
+/* Mobile-first: formulaire en colonne */
 .form-row {
   display: grid;
-  grid-template-columns: 2fr 2fr 1.5fr 1.2fr;
-  gap: 0;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+/* Tablet (768px+): grille 2x2 */
+@media (min-width: 48em) {
+  .search-card {
+    padding: 1.25rem;
+    border-radius: 1.25rem;
+  }
+
+  .form-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+/* Desktop (1024px+): grille 4 colonnes */
+@media (min-width: 64em) {
+  .search-card {
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .form-row {
+    grid-template-columns: 2fr 2fr 1.5fr 1.2fr;
+    gap: 0;
+  }
 }
 
 .form-group {
