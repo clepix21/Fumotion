@@ -76,7 +76,7 @@
 
 /* Overlay sombre derrière le menu mobile */
 .navbar-overlay {
-  display: none;
+  display: block;
   position: fixed;
   top: 0;
   left: 0;
@@ -85,9 +85,13 @@
   background: rgba(0, 0, 0, 0.5);
   z-index: var(--z-overlay, 1040);
   cursor: pointer;
+  animation: fadeIn 0.2s ease;
 }
 
-/* Afficher l'overlay quand le menu est ouvert - géré par React */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
 /* Menu navigation - Caché sur mobile par défaut */
 .navbar-menu {
@@ -463,6 +467,10 @@
 @media (min-width: 48em) {
   .navbar-mobile-toggle {
     display: none;
+  }
+
+  .navbar-overlay {
+    display: none !important;
   }
 
   .navbar-menu {
