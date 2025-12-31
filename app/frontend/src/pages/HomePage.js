@@ -73,6 +73,10 @@ export default function HomePage() {
               Pourquoi Fumotion ?
             </a>
 
+            <a href="#how-it-works" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
+              Comment ça marche ?
+            </a>
+
             {isAuthenticated() ? (
               <>
                 <div className="navbar-divider"></div>
