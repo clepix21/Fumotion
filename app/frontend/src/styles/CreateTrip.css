@@ -1,84 +1,157 @@
-/* Create Trip Page - Design Moderne et Professionnel */
+/* ============================================
+   CREATE TRIP - Design Responsive Mobile-First
+   ============================================ */
+
 .create-trip-page {
   min-height: 100vh;
-  background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);
+  min-height: 100svh;
+  background: linear-gradient(to bottom, var(--color-gray-50, #f8fafc) 0%, #ffffff 100%);
 }
 
 /* Header avec breadcrumb */
 .page-header {
   background: white;
-  border-bottom: 1px solid #e2e8f0;
-  padding: 1rem 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--color-gray-200, #e2e8f0);
+  padding: 0.75rem 0;
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.05));
 }
 
 .header-content {
-  max-width: 1200px;
+  max-width: var(--container-xl, 80rem);
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 1rem;
+}
+
+@media (min-width: 48em) {
+  .page-header {
+    padding: 1rem 0;
+  }
+
+  .header-content {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 64em) {
+  .header-content {
+    padding: 0 2rem;
+  }
 }
 
 .back-link {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: #64748b;
+  color: var(--color-gray-500, #64748b);
   text-decoration: none;
   font-weight: 500;
   font-size: 0.875rem;
-  transition: all 0.2s;
+  transition: all var(--transition-fast, 0.2s);
+  padding: 0.5rem 0;
+  min-height: 2.5rem;
 }
 
 .back-link:hover {
-  color: #3b82f6;
+  color: var(--color-secondary, #3b82f6);
   transform: translateX(-2px);
 }
 
-/* Main Container */
+.back-link:focus-visible {
+  outline: 2px solid var(--color-primary, #0066ff);
+  outline-offset: 2px;
+  border-radius: var(--border-radius-sm, 0.25rem);
+}
+
+/* Main Container - Mobile-first: 1 colonne */
 .create-trip-main {
-  padding: 2rem 0 4rem;
+  padding: 1.5rem 0 2rem;
 }
 
 .create-trip-container {
-  max-width: 1200px;
+  max-width: var(--container-xl, 80rem);
   margin: 0 auto;
-  padding: 0 2rem;
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 2rem;
-  align-items: start;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-/* Card principale */
+/* Tablet+ (768px+) */
+@media (min-width: 48em) {
+  .create-trip-main {
+    padding: 2rem 0 3rem;
+  }
+
+  .create-trip-container {
+    padding: 0 1.5rem;
+    gap: 2rem;
+  }
+}
+
+/* Desktop (1024px+): layout 2 colonnes */
+@media (min-width: 64em) {
+  .create-trip-main {
+    padding: 2rem 0 4rem;
+  }
+
+  .create-trip-container {
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 1fr 20rem;
+    align-items: start;
+  }
+}
+
+/* Card principale - Mobile-first */
 .create-trip-card {
   background: white;
-  border-radius: 1rem;
-  padding: 2.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e2e8f0;
+  border-radius: var(--border-radius-lg, 0.75rem);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
+  border: 1px solid var(--color-gray-200, #e2e8f0);
+}
+
+@media (min-width: 48em) {
+  .create-trip-card {
+    padding: 2rem;
+    border-radius: var(--border-radius-xl, 1rem);
+  }
+}
+
+@media (min-width: 64em) {
+  .create-trip-card {
+    padding: 2.5rem;
+  }
 }
 
 .trip-header {
   text-align: center;
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
-  border-bottom: 2px solid #f1f5f9;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--color-gray-100, #f1f5f9);
+}
+
+@media (min-width: 48em) {
+  .trip-header {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+  }
 }
 
 .trip-header h1 {
-  color: #1e293b;
-  font-size: 2rem;
+  color: var(--color-gray-800, #1e293b);
+  font-size: clamp(1.25rem, 4vw, 2rem);
   font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  background: linear-gradient(135deg, var(--color-secondary, #3b82f6) 0%, #1e40af 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .trip-header p {
-  color: #64748b;
-  font-size: 1rem;
+  color: var(--color-gray-500, #64748b);
+  font-size: clamp(0.875rem, 2vw, 1rem);
 }
 
 /* Messages d'erreur */
@@ -538,17 +611,106 @@
   opacity: 0.9;
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .create-trip-container {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  
+/* ============================================
+   RESPONSIVE - Sidebar et compléments
+   ============================================ */
+
+/* Sidebar - Mobile: en haut */
+.tips-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  order: -1; /* Afficher en premier sur mobile */
+}
+
+/* Desktop (1024px+): sidebar sticky à droite */
+@media (min-width: 64em) {
   .tips-sidebar {
-    position: static;
-    order: -1;
+    position: sticky;
+    top: calc(var(--navbar-height, 5rem) + 1rem);
+    gap: 1.5rem;
+    order: 0;
   }
+}
+
+/* Form row responsive */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 40em) {
+  .form-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Form actions responsive */
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--color-gray-100, #f1f5f9);
+  margin-top: 1rem;
+}
+
+@media (min-width: 30em) {
+  .form-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+}
+
+.cancel-btn,
+.submit-btn {
+  /* Mobile: pleine largeur */
+  width: 100%;
+  justify-content: center;
+  min-height: 2.75rem;
+}
+
+@media (min-width: 30em) {
+  .cancel-btn,
+  .submit-btn {
+    width: auto;
+  }
+}
+
+/* Focus et accessibilité */
+.cancel-btn:focus-visible,
+.submit-btn:focus-visible {
+  outline: 2px solid var(--color-secondary, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* Input avec bouton responsive */
+.input-with-button,
+.address-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+@media (min-width: 30em) {
+  .input-with-button,
+  .address-input-group {
+    flex-direction: row;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+}
+
+.address-input-group .address-search-container {
+  flex: 1;
+}
+
+.address-input-group .map-select-btn {
+  flex-shrink: 0;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
 }
 
 /* Styles pour la recherche d'adresse dans la carte */
