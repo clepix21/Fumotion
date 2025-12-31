@@ -10,11 +10,6 @@ import chatIcon from "../assets/icons/chat.svg"
 import searchIcon from "../assets/icons/search.svg"
 import checkIcon from "../assets/icons/check.svg"
 import carIcon from "../assets/icons/car.svg"
-import amiensImg from "../assets/images/amiens.svg"
-import parisImg from "../assets/images/paris.svg"
-import marseilleImg from "../assets/images/marseille.svg"
-import bordeauxImg from "../assets/images/bordeaux.svg"
-import niceImg from "../assets/images/nice.svg"
 import "../styles/HomePage.css"
 import Footer from "../components/common/Footer"
 
@@ -76,9 +71,6 @@ export default function HomePage() {
           <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
             <a href="#benefits" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
               Pourquoi Fumotion ?
-            </a>
-            <a href="#popular-trips" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
-              Trajets populaires
             </a>
 
             {isAuthenticated() ? (
@@ -210,46 +202,6 @@ export default function HomePage() {
               </div>
               <h3 className="benefit-title">Recherchez, cliquez et réservez !</h3>
               <p className="benefit-description">Réserver un trajet devient encore plus simple ! Facile d'utilisation et dotée de technologies avancées, notre appli vous permet de réserver un trajet à proximité en un rien de temps.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="popular-trips" className="popular-trips-section">
-        <div className="popular-container">
-          <h2 className="section-title">Les trajets les plus populaires</h2>
-
-          <div className="popular-trips-grid">
-            <div className="trip-card">
-              <div className="trip-image" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${amiensImg}) center/cover` }}></div>
-              <div className="trip-info">
-                <h3>Gare du Nord → IUT </h3>
-                <p>Dès 15€</p>
-              </div>
-            </div>
-
-            <div className="trip-card">
-              <div className="trip-image" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${marseilleImg}) center/cover` }}></div>
-              <div className="trip-info">
-                <h3>Paris → Marseille</h3>
-                <p>Dès 20€</p>
-              </div>
-            </div>
-
-            <div className="trip-card">
-              <div className="trip-image" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${bordeauxImg}) center/cover` }}></div>
-              <div className="trip-info">
-                <h3>Paris → Bordeaux</h3>
-                <p>Dès 18€</p>
-              </div>
-            </div>
-
-            <div className="trip-card">
-              <div className="trip-image" style={{ background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${niceImg}) center/cover` }}></div>
-              <div className="trip-info">
-                <h3>Lyon → Nice</h3>
-                <p>Dès 22€</p>
-              </div>
             </div>
           </div>
         </div>
