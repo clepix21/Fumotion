@@ -1,31 +1,50 @@
-/* Layout global */
+/* ============================================
+   CHAT - Design Responsive Mobile-First
+   ============================================ */
+
+/* Layout global - Mobile-first */
 .chat-page {
     min-height: 100vh;
+    min-height: 100svh; /* Support mobile viewport */
     display: flex;
     flex-direction: column;
-    background-color: #f9fafb;
+    background-color: var(--color-gray-50, #f9fafb);
 }
 
+/* Mobile: container pleine hauteur moins navbar */
 .chat-page-container {
     display: flex;
     flex: 1;
-    height: calc(100vh - 64px);
+    /* Mobile: hauteur calculée avec svh pour mobile */
+    height: calc(100svh - var(--navbar-height, 4rem));
     overflow: hidden;
+    flex-direction: column;
+}
+
+/* Desktop (1024px+): layout horizontal */
+@media (min-width: 64em) {
+    .chat-page-container {
+        flex-direction: row;
+        height: calc(100vh - var(--navbar-height, 5rem));
+    }
 }
 
 .chat-main {
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-width: 0; /* Prevent flex overflow */
 }
 
 .chat-loading {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    font-size: 1.1rem;
-    color: #6b7280;
+    height: 100%;
+    font-size: 1rem;
+    color: var(--color-gray-500, #6b7280);
+    padding: 2rem;
+    text-align: center;
 }
 
 .chat-not-logged {
@@ -33,47 +52,93 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 100%;
     gap: 1rem;
+    padding: 2rem;
+    text-align: center;
 }
 
 .chat-login-btn {
-    padding: 0.75rem 2rem;
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    padding: 0.875rem 2rem;
+    background: linear-gradient(135deg, var(--color-secondary, #3b82f6) 0%, #2563eb 100%);
     color: white;
     text-decoration: none;
-    border-radius: 0.5rem;
+    border-radius: var(--border-radius-md, 0.5rem);
     font-weight: 600;
+    min-height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Sidebar - Liste des conversations */
+.chat-login-btn:focus-visible {
+    outline: 2px solid var(--color-secondary, #3b82f6);
+    outline-offset: 2px;
+}
+
+/* Sidebar - Liste des conversations - Mobile-first */
+/* Sur mobile: prend toute la largeur */
 .conversation-sidebar {
-    width: 350px;
-    min-width: 300px;
+    width: 100%;
+    min-width: 0;
     background-color: white;
-    border-right: 1px solid #e5e7eb;
+    border-right: none;
+    border-bottom: 1px solid var(--color-gray-200, #e5e7eb);
     display: flex;
     flex-direction: column;
+    /* Mobile: hauteur fixe avec scroll */
+    max-height: 100%;
+}
+
+/* Tablet (768px+): largeur fixe */
+@media (min-width: 48em) {
+    .conversation-sidebar {
+        width: 20rem;
+        min-width: 18rem;
+        border-right: 1px solid var(--color-gray-200, #e5e7eb);
+        border-bottom: none;
+    }
+}
+
+/* Desktop (1024px+): plus large */
+@media (min-width: 64em) {
+    .conversation-sidebar {
+        width: 22rem;
+        min-width: 20rem;
+    }
 }
 
 .conversation-header {
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid #e5e7eb;
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-gray-200, #e5e7eb);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-shrink: 0;
+}
+
+@media (min-width: 48em) {
+    .conversation-header {
+        padding: 1.25rem 1.5rem;
+    }
 }
 
 .conversation-header h2 {
     margin: 0;
-    font-size: 1.25rem;
-    color: #111827;
+    font-size: 1.125rem;
+    color: var(--color-gray-900, #111827);
     font-weight: 700;
+}
+
+@media (min-width: 48em) {
+    .conversation-header h2 {
+        font-size: 1.25rem;
+    }
 }
 
 .loading-indicator {
     animation: spin 1s linear infinite;
-    color: #3b82f6;
+    color: var(--color-secondary, #3b82f6);
 }
 
 @keyframes spin {
@@ -84,6 +149,7 @@
 .conversation-list {
     flex: 1;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .conversation-item {
@@ -498,52 +564,99 @@
     color: #60a5fa;
 }
 
-/* Responsive - Mobile */
-@media (max-width: 768px) {
-    .chat-page-container {
-        flex-direction: column;
-    }
+/* ============================================
+   RESPONSIVE - Gestion des états mobile
+   ============================================ */
 
+/* Mobile-first: gestion de l'affichage sidebar/chat */
+/* Sur mobile, on affiche soit la sidebar soit le chat */
+.conversation-sidebar.hidden-mobile {
+    display: none;
+}
+
+.chat-main {
+    display: none;
+}
+
+.chat-main.active {
+    display: flex;
+}
+
+/* Bouton retour visible sur mobile */
+.back-button {
+    display: flex;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: var(--color-secondary, #3b82f6);
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+    border-radius: var(--border-radius-md, 0.5rem);
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-button:focus-visible {
+    outline: 2px solid var(--color-secondary, #3b82f6);
+    outline-offset: 2px;
+}
+
+/* Messages: largeur adaptée mobile */
+.message-bubble {
+    max-width: 85%;
+}
+
+.chat-header {
+    padding: 0.75rem 1rem;
+}
+
+.messages-container {
+    padding: 1rem;
+}
+
+.chat-input-container {
+    padding: 0.75rem 1rem;
+}
+
+/* Tablet+ (768px+): les deux panneaux visibles */
+@media (min-width: 48em) {
     .conversation-sidebar {
-        width: 100%;
-        min-width: unset;
-        height: 100%;
+        display: flex !important;
     }
 
     .conversation-sidebar.hidden-mobile {
-        display: none;
+        display: flex;
     }
 
     .chat-main {
-        display: none;
-        height: 100%;
-    }
-
-    .chat-main.active {
         display: flex;
     }
 
     .back-button {
-        display: flex;
-    }
-
-    .hidden-mobile {
-        display: none !important;
+        display: none;
     }
 
     .message-bubble {
-        max-width: 85%;
+        max-width: 70%;
     }
 
     .chat-header {
-        padding: 0.75rem 1rem;
+        padding: 1rem 1.5rem;
     }
 
     .messages-container {
-        padding: 1rem;
+        padding: 1.5rem;
     }
 
     .chat-input-container {
-        padding: 0.75rem 1rem;
+        padding: 1rem 1.5rem;
     }
+}
+
+/* Utilitaire pour cacher sur mobile */
+.hidden-mobile {
+    /* Défini au niveau du composant */
 }
