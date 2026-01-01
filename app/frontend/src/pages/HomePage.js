@@ -81,8 +81,62 @@ export default function HomePage() {
             {mobileMenuOpen ? '✕' : '☰'}
           </button>
 
-          <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
-            {/* Bouton de fermeture mobile */}
+          {/* Menu desktop - visible seulement sur grand écran */}
+          <div className="navbar-menu navbar-menu-desktop">
+            <a href="#benefits" className="navbar-link">
+              Pourquoi Fumotion ?
+            </a>
+
+            <a href="#how-it-works" className="navbar-link">
+              Comment ça marche ?
+            </a>
+
+            {isAuthenticated() ? (
+              <>
+                <div className="navbar-divider"></div>
+                <button onClick={() => navigate("/search")} className="navbar-btn-secondary">
+                  Rechercher
+                </button>
+                <button onClick={() => navigate("/dashboard")} className="navbar-btn-secondary">
+                  Tableau de bord
+                </button>
+                <button onClick={() => navigate("/create-trip")} className="navbar-btn-primary">
+                  Créer un trajet
+                </button>
+                <div className="navbar-user-profile">
+                  <Avatar user={user} size="medium" />
+                  <div className="navbar-user-info">
+                    <span className="navbar-user-name">{user?.first_name || user?.email}</span>
+                  </div>
+                </div>
+                <button onClick={handleLogout} className="navbar-btn-logout">
+                  Déconnexion
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="navbar-divider"></div>
+                <button onClick={() => navigate("/login")} className="navbar-btn-secondary">
+                  Connexion
+                </button>
+                <button onClick={() => navigate("/register")} className="navbar-btn-primary">
+                  Inscription
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </nav>
+
+      {/* Menu mobile - en dehors de la navbar pour éviter les problèmes de overflow */}
+      {mobileMenuOpen && (
+        <>
+          <div 
+            className="navbar-overlay"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+          <div className="navbar-menu-mobile">
             <button 
               className="navbar-menu-close"
               onClick={() => setMobileMenuOpen(false)}
@@ -133,17 +187,8 @@ export default function HomePage() {
               </>
             )}
           </div>
-        </div>
-        
-        {/* Overlay pour fermer le menu mobile - en dehors du container */}
-        {mobileMenuOpen && (
-          <div 
-            className="navbar-overlay"
-            onClick={() => setMobileMenuOpen(false)}
-            aria-hidden="true"
-          />
-        )}
-      </nav>
+        </>
+      )}
 
       <section className="hero-section">
         <div className="hero-container">
