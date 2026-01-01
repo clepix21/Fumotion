@@ -11,6 +11,21 @@ import membre4 from '../assets/images/membres/membre1.png';
 import membre5 from '../assets/images/membres/membre1.png';
 import membre6 from '../assets/images/membres/membre1.png';
 
+// Logos des technologies
+import reactLogo from '../assets/images/logos/react.svg';
+import nodeLogo from '../assets/images/logos/nodejs.svg';
+import expressLogo from '../assets/images/logos/express.svg';
+import mysqlLogo from '../assets/images/logos/mysql.svg';
+import dockerLogo from '../assets/images/logos/docker.svg';
+import nginxLogo from '../assets/images/logos/nginx.svg';
+import leafletLogo from '../assets/images/logos/leaflet.svg';
+import jwtLogo from '../assets/images/logos/jwt.svg';
+
+// Logos des APIs
+import osmLogo from '../assets/images/logos/openstreetmap.svg';
+import nominatimLogo from '../assets/images/logos/nominatim.svg';
+import osrmLogo from '../assets/images/logos/osrm.svg';
+
 export default function CreditsPage() {
     const navigate = useNavigate();
 
@@ -24,14 +39,20 @@ export default function CreditsPage() {
     ];
 
     const technologies = [
-        { name: 'React.js', category: 'Frontend', icon: '⚛️', description: 'Bibliothèque JavaScript pour les interfaces utilisateur' },
-        { name: 'Node.js', category: 'Backend', icon: '🟢', description: 'Environnement d\'exécution JavaScript côté serveur' },
-        { name: 'Express.js', category: 'Backend', icon: '🚀', description: 'Framework web minimaliste et flexible' },
-        { name: 'MySQL', category: 'Base de données', icon: '🗄️', description: 'Système de gestion de base de données relationnelle' },
-        { name: 'Docker', category: 'Infrastructure', icon: '🐳', description: 'Plateforme de conteneurisation' },
-        { name: 'Nginx', category: 'Infrastructure', icon: '🌐', description: 'Serveur web haute performance' },
-        { name: 'Leaflet', category: 'Frontend', icon: '🗺️', description: 'Bibliothèque de cartes interactives' },
-        { name: 'JWT', category: 'Sécurité', icon: '🔐', description: 'Authentification sécurisée par tokens' }
+        { name: 'React.js', category: 'Frontend', logo: reactLogo, description: 'Bibliothèque JavaScript pour les interfaces utilisateur' },
+        { name: 'Node.js', category: 'Backend', logo: nodeLogo, description: 'Environnement d\'exécution JavaScript côté serveur' },
+        { name: 'Express.js', category: 'Backend', logo: expressLogo, description: 'Framework web minimaliste et flexible' },
+        { name: 'MySQL', category: 'Base de données', logo: mysqlLogo, description: 'Système de gestion de base de données relationnelle' },
+        { name: 'Docker', category: 'Infrastructure', logo: dockerLogo, description: 'Plateforme de conteneurisation' },
+        { name: 'Nginx', category: 'Infrastructure', logo: nginxLogo, description: 'Serveur web haute performance' },
+        { name: 'Leaflet', category: 'Frontend', logo: leafletLogo, description: 'Bibliothèque de cartes interactives' },
+        { name: 'JWT', category: 'Sécurité', logo: jwtLogo, description: 'Authentification sécurisée par tokens' }
+    ];
+
+    const apis = [
+        { name: 'OpenStreetMap', logo: osmLogo, description: 'Données cartographiques libres' },
+        { name: 'Nominatim', logo: nominatimLogo, description: 'Service de géocodage des adresses' },
+        { name: 'OSRM', logo: osrmLogo, description: 'Calcul d\'itinéraires et navigation' }
     ];
 
     return (
@@ -88,7 +109,9 @@ export default function CreditsPage() {
                     <div className="tech-grid">
                         {technologies.map((tech, index) => (
                             <div key={index} className="tech-card">
-                                <div className="tech-icon">{tech.icon}</div>
+                                <div className="tech-icon">
+                                    <img src={tech.logo} alt={tech.name} className="tech-logo" />
+                                </div>
                                 <div className="tech-info">
                                     <h4 className="tech-name">{tech.name}</h4>
                                     <span className="tech-category">{tech.category}</span>
@@ -102,31 +125,20 @@ export default function CreditsPage() {
                 {/* APIs Section */}
                 <section className="credits-section">
                     <div className="section-header">
-                        <span className="section-icon">🔗</span>
                         <h2>APIs & Services Externes</h2>
                     </div>
                     <div className="api-list">
-                        <div className="api-item">
-                            <span className="api-icon">🗺️</span>
-                            <div>
-                                <strong>OpenStreetMap</strong>
-                                <p>Données cartographiques libres</p>
+                        {apis.map((api, index) => (
+                            <div key={index} className="api-item">
+                                <div className="api-icon">
+                                    <img src={api.logo} alt={api.name} className="api-logo" />
+                                </div>
+                                <div>
+                                    <strong>{api.name}</strong>
+                                    <p>{api.description}</p>
+                                </div>
                             </div>
-                        </div>
-                        <div className="api-item">
-                            <span className="api-icon">📍</span>
-                            <div>
-                                <strong>Nominatim</strong>
-                                <p>Service de géocodage des adresses</p>
-                            </div>
-                        </div>
-                        <div className="api-item">
-                            <span className="api-icon">🛣️</span>
-                            <div>
-                                <strong>OSRM</strong>
-                                <p>Calcul d'itinéraires et navigation</p>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </section>
 
