@@ -119,16 +119,16 @@ export default function HomePage() {
               </>
             )}
           </div>
-          
-          {/* Overlay pour fermer le menu mobile */}
-          {mobileMenuOpen && (
-            <div 
-              className="navbar-overlay"
-              onClick={() => setMobileMenuOpen(false)}
-              aria-hidden="true"
-            />
-          )}
         </div>
+        
+        {/* Overlay pour fermer le menu mobile - en dehors du container */}
+        {mobileMenuOpen && (
+          <div 
+            className="navbar-overlay"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+        )}
       </nav>
 
       <section className="hero-section">
