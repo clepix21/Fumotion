@@ -1,0 +1,327 @@
+/* ============================================
+   FUMOTION - Utilitaires d'Accessibilité
+   États visuels focus/hover/active
+   ============================================ */
+
+/* ===== FOCUS VISIBLE GLOBAL ===== */
+/* Style de focus uniforme pour l'accessibilité clavier */
+:focus-visible {
+  outline: 2px solid var(--color-primary, #0066ff);
+  outline-offset: 2px;
+}
+
+/* Supprimer le focus ring pour les interactions souris/touch */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ===== BOUTONS - ÉTATS INTERACTIFS ===== */
+/* Base pour tous les boutons */
+button,
+[role="button"],
+.btn {
+  /* Curseur approprié */
+  cursor: pointer;
+  
+  /* Transition fluide */
+  transition: 
+    background-color var(--transition-fast, 150ms ease),
+    color var(--transition-fast, 150ms ease),
+    border-color var(--transition-fast, 150ms ease),
+    box-shadow var(--transition-fast, 150ms ease),
+    transform var(--transition-fast, 150ms ease);
+  
+  /* Empêcher la sélection de texte */
+  user-select: none;
+  
+  /* Zone de touch minimum pour accessibilité mobile */
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+}
+
+/* État désactivé */
+button:disabled,
+[role="button"][aria-disabled="true"],
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ===== BOUTON PRIMAIRE ===== */
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary, #0066ff) 0%, var(--color-primary-dark, #0052cc) 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius-md, 0.5rem);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 102, 255, 0.25);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 102, 255, 0.4);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 102, 255, 0.25);
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.4);
+}
+
+/* ===== BOUTON SECONDAIRE ===== */
+.btn-secondary {
+  background: transparent;
+  color: var(--color-primary, #0066ff);
+  border: 2px solid var(--color-primary-alpha-20, rgba(0, 102, 255, 0.2));
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius-md, 0.5rem);
+  font-weight: 600;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--color-primary, #0066ff);
+  background: var(--color-primary-alpha-10, rgba(0, 102, 255, 0.1));
+  transform: translateY(-1px);
+}
+
+.btn-secondary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-secondary:focus-visible {
+  outline: 2px solid var(--color-primary, #0066ff);
+  outline-offset: 2px;
+}
+
+/* ===== LIENS - ÉTATS INTERACTIFS ===== */
+a {
+  transition: color var(--transition-fast, 150ms ease);
+}
+
+a:hover {
+  color: var(--color-primary-dark, #0052cc);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-primary, #0066ff);
+  outline-offset: 2px;
+  border-radius: var(--border-radius-sm, 0.25rem);
+}
+
+/* Liens dans le texte */
+p a,
+.text-link {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+p a:hover,
+.text-link:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* ===== INPUTS - ÉTATS INTERACTIFS ===== */
+input,
+textarea,
+select {
+  transition: 
+    border-color var(--transition-fast, 150ms ease),
+    box-shadow var(--transition-fast, 150ms ease),
+    background-color var(--transition-fast, 150ms ease);
+}
+
+input:hover:not(:disabled):not(:focus),
+textarea:hover:not(:disabled):not(:focus),
+select:hover:not(:disabled):not(:focus) {
+  border-color: var(--color-gray-400, #94a3b8);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--color-primary, #0066ff);
+  box-shadow: 0 0 0 3px var(--color-primary-alpha-10, rgba(0, 102, 255, 0.1));
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  border-color: var(--color-primary, #0066ff);
+  box-shadow: 0 0 0 3px var(--color-primary-alpha-20, rgba(0, 102, 255, 0.2));
+}
+
+/* État d'erreur */
+input.error,
+input[aria-invalid="true"],
+textarea.error,
+textarea[aria-invalid="true"] {
+  border-color: var(--color-error, #ef4444);
+}
+
+input.error:focus,
+input[aria-invalid="true"]:focus,
+textarea.error:focus,
+textarea[aria-invalid="true"]:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* ===== CARTES - ÉTATS INTERACTIFS ===== */
+.card-interactive {
+  transition: 
+    transform var(--transition-base, 200ms ease),
+    box-shadow var(--transition-base, 200ms ease),
+    border-color var(--transition-base, 200ms ease);
+  cursor: pointer;
+}
+
+.card-interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
+}
+
+.card-interactive:focus-visible {
+  outline: 2px solid var(--color-primary, #0066ff);
+  outline-offset: 2px;
+}
+
+.card-interactive:active {
+  transform: translateY(-2px);
+}
+
+/* ===== GESTION TOUCH VS HOVER ===== */
+/* Sur les appareils tactiles, éviter les états hover persistants */
+@media (hover: none) {
+  .btn-primary:hover:not(:disabled),
+  .btn-secondary:hover:not(:disabled),
+  .card-interactive:hover {
+    transform: none;
+  }
+  
+  /* Les états active restent fonctionnels */
+  .btn-primary:active:not(:disabled),
+  .btn-secondary:active:not(:disabled),
+  .card-interactive:active {
+    transform: scale(0.98);
+  }
+}
+
+/* ===== INDICATEURS DE CHARGEMENT ===== */
+.loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: -0.625rem 0 0 -0.625rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner 0.75s linear infinite;
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== SKIP LINK POUR NAVIGATION CLAVIER ===== */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-primary, #0066ff);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: var(--border-radius-md, 0.5rem);
+  font-weight: 600;
+  z-index: var(--z-tooltip, 1200);
+  transition: top var(--transition-fast, 150ms ease);
+}
+
+.skip-to-content:focus {
+  top: 1rem;
+}
+
+/* ===== ÉTATS VISUELS POUR ÉLÉMENTS SÉLECTIONNÉS ===== */
+[aria-selected="true"],
+[aria-current="page"],
+.selected {
+  position: relative;
+}
+
+[aria-selected="true"]::before,
+[aria-current="page"]::before,
+.selected::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--color-primary, #0066ff);
+  border-radius: 0 2px 2px 0;
+}
+
+/* ===== ANIMATION POUR NOUVEAUX ÉLÉMENTS ===== */
+.animate-in {
+  animation: fadeSlideIn var(--transition-slow, 300ms ease) forwards;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== RÉDUCTION DE MOUVEMENT ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Garder les états visuels sans animation */
+  .btn-primary:hover:not(:disabled),
+  .btn-secondary:hover:not(:disabled),
+  .card-interactive:hover {
+    transform: none;
+  }
+}
+
+/* ===== CONTRAST ÉLEVÉ ===== */
+@media (prefers-contrast: high) {
+  :focus-visible {
+    outline-width: 3px;
+  }
+  
+  button,
+  a {
+    text-decoration-thickness: 2px;
+  }
+}

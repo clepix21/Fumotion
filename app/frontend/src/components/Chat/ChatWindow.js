@@ -1,3 +1,4 @@
+import chatIcon from "../../assets/icons/chat.svg"
 import React, { useState, useEffect, useRef } from 'react';
 
 const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, sending }) => {
@@ -78,7 +79,7 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, s
         return (
             <div className="chat-window">
                 <div className="chat-placeholder">
-                    <span className="chat-placeholder-icon">💬</span>
+                    <img src={chatIcon} alt="Chat" className="chat-chat-icon-img" />
                     <h3>Bienvenue dans vos messages</h3>
                     <p>Sélectionnez une conversation pour commencer à discuter</p>
                 </div>

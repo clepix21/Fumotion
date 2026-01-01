@@ -182,13 +182,64 @@ export default function SearchPage() {
             {mobileMenuOpen ? '✕' : '☰'}
           </button>
 
-          <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
-            <a href="/search" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
-              Rechercher
-            </a>
+          {/* Menu desktop */}
+          <div className="navbar-menu-desktop">
             {isAuthenticated() ? (
               <>
-                <div className="navbar-divider"></div>
+                <button onClick={() => navigate("/dashboard")} className="navbar-btn-secondary">
+                  Tableau de bord
+                </button>
+                <button onClick={() => navigate("/create-trip")} className="navbar-btn-primary">
+                  Créer un trajet
+                </button>
+                {user?.is_admin && (
+                  <button onClick={() => navigate("/admin")} className="navbar-btn-admin">
+                    👑 Admin
+                  </button>
+                )}
+                <div className="navbar-user-profile">
+                  <Avatar user={user} size="medium" />
+                  <div className="navbar-user-info">
+                    <span className="navbar-user-name">{user?.first_name || user?.email}</span>
+                  </div>
+                </div>
+                <button onClick={handleLogout} className="navbar-btn-logout">
+                  Déconnexion
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => navigate("/login")} className="navbar-btn-secondary">
+                  Connexion
+                </button>
+                <button onClick={() => navigate("/register")} className="navbar-btn-primary">
+                  Inscription
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </nav>
+
+      {/* Menu mobile - en dehors de la navbar */}
+      {mobileMenuOpen && (
+        <>
+          <div 
+            className="navbar-overlay"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+          <div className="navbar-menu-mobile">
+            <button 
+              className="navbar-menu-close"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Fermer le menu"
+            >
+              ✕
+            </button>
+
+            {isAuthenticated() ? (
+              <>
                 <button onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
                   Tableau de bord
                 </button>
@@ -207,12 +258,11 @@ export default function SearchPage() {
                   </div>
                 </div>
                 <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="navbar-btn-logout">
-                  <span>🚪</span> Déconnexion
+                  Déconnexion
                 </button>
               </>
             ) : (
               <>
-                <div className="navbar-divider"></div>
                 <button onClick={() => { navigate("/login"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
                   Connexion
                 </button>
@@ -222,8 +272,8 @@ export default function SearchPage() {
               </>
             )}
           </div>
-        </div>
-      </nav>
+        </>
+      )}
 
       <main className="search-main">
         <div className="search-container">
