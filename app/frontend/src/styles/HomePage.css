@@ -668,6 +668,11 @@
     margin-top: 0 !important;
   }
 
+  /* Annuler la règle nth-child(2n) pour le mode desktop */
+  .form-group:nth-child(2n) {
+    border-right: 1px solid var(--color-gray-200, #e2e8f0);
+  }
+
   .form-group:last-of-type {
     border-right: none;
   }
