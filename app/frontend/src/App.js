@@ -11,9 +11,7 @@ import SearchPage from './pages/SearchPage';
 import AdminPage from './pages/AdminPage';
 import ChatPage from './pages/ChatPage';
 import NotFoundPage from './pages/NotFoundPage';
-// Pages Support
 import HelpPage from './pages/HelpPage';
-// Pages Légal & Autres
 import TermsPage from './pages/TermsPage';
 import CreditsPage from './pages/CreditsPage';
 
@@ -58,9 +56,7 @@ function App() {
           </ProtectedRoute>
         }
       />
-      {/* Pages Support */}
       <Route path="/help" element={<HelpPage />} />
-      {/* Pages Légal & Autres */}
       <Route path="/terms" element={<TermsPage />} />
       <Route path="/credits" element={<CreditsPage />} />
       <Route path="*" element={<NotFoundPage />} />
