@@ -59,9 +59,7 @@ export default function CreditsPage() {
 
                 {/* Team Section */}
                 <section className="credits-section">
-                    <div className="section-header">
-                        <h2>Notre Équipe</h2>
-                    </div>
+
                     <div className="team-grid">
                         {teamMembers.map((member, index) => (
                             <div 
@@ -82,7 +80,6 @@ export default function CreditsPage() {
                 {/* Technologies Section */}
                 <section className="credits-section">
                     <div className="section-header">
-                        <span className="section-icon">🛠️</span>
                         <h2>Technologies Utilisées</h2>
                     </div>
                     <p className="section-description">
