@@ -44,7 +44,6 @@ const ConversationList = ({ conversations, selectedUserId, onSelectUser, loading
             <div className="conversation-list">
                 {conversations.length === 0 ? (
                     <div className="empty-conversations">
-                        <span className="empty-icon">📭</span>
                         <p>Aucune conversation</p>
                         <small>Commencez une discussion depuis le profil d'un conducteur</small>
                     </div>
