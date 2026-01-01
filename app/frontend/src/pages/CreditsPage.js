@@ -4,24 +4,23 @@ import Footer from '../components/common/Footer';
 import logo from '../assets/images/logo.png';
 import '../styles/StaticPages.css';
 
-// Import des images des membres
-import member1 from '../assets/images/team/member1.jpg';
-import member2 from '../assets/images/team/member2.jpg';
-import member3 from '../assets/images/team/member3.jpg';
-import member4 from '../assets/images/team/member4.jpg';
-import member5 from '../assets/images/team/member5.jpg';
-import member6 from '../assets/images/team/member6.jpg';
+import membre1 from '../assets/images/membres/membre1.png';
+import membre2 from '../assets/images/membres/membre1.png';
+import membre3 from '../assets/images/membres/membre1.png';
+import membre4 from '../assets/images/membres/membre1.png';
+import membre5 from '../assets/images/membres/membre1.png';
+import membre6 from '../assets/images/membres/membre1.png';
 
 export default function CreditsPage() {
     const navigate = useNavigate();
 
     const teamMembers = [
-        { name: 'Clément', role: 'Développeur Full Stack', image: member1, color: '#3498db' },
-        { name: 'Membre 2', role: 'Designer UI/UX', image: member2, color: '#9b59b6' },
-        { name: 'Membre 3', role: 'Développeur Backend', image: member3, color: '#e74c3c' },
-        { name: 'Membre 4', role: 'Développeur Frontend', image: member4, color: '#2ecc71' },
-        { name: 'Membre 5', role: 'Chef de projet', image: member5, color: '#f39c12' },
-        { name: 'Membre 6', role: 'Testeur QA', image: member6, color: '#1abc9c' }
+        { name: 'Clément', role: 'Développeur Full Stack', image: membre1, color: '#3498db' },
+        { name: 'Membre 2', role: 'Designer UI/UX', image: membre2, color: '#9b59b6' },
+        { name: 'Membre 3', role: 'Développeur Backend', image: membre3, color: '#e74c3c' },
+        { name: 'Membre 4', role: 'Développeur Frontend', image: membre4, color: '#2ecc71' },
+        { name: 'Membre 5', role: 'Chef de projet', image: membre5, color: '#f39c12' },
+        { name: 'Membre 6', role: 'Testeur QA', image: membre6, color: '#1abc9c' }
     ];
 
     const technologies = [
@@ -61,12 +60,8 @@ export default function CreditsPage() {
                 {/* Team Section */}
                 <section className="credits-section">
                     <div className="section-header">
-                        <span className="section-icon">👥</span>
                         <h2>Notre Équipe</h2>
                     </div>
-                    <p className="section-description">
-                        Les 6 membres passionnés qui ont donné vie à ce projet
-                    </p>
                     <div className="team-grid">
                         {teamMembers.map((member, index) => (
                             <div 
