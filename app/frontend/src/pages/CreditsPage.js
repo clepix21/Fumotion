@@ -12,18 +12,18 @@ import membre5 from '../assets/images/membres/membre1.png';
 import membre6 from '../assets/images/membres/membre1.png';
 
 // Logos des technologies
-import reactLogo from '../assets/images/logos/react.svg';
+import reactLogo from '../assets/images/logos/react.png';
 import nodeLogo from '../assets/images/logos/nodejs.svg';
 import expressLogo from '../assets/images/logos/express.svg';
-import mysqlLogo from '../assets/images/logos/mysql.svg';
-import dockerLogo from '../assets/images/logos/docker.svg';
-import nginxLogo from '../assets/images/logos/nginx.svg';
-import leafletLogo from '../assets/images/logos/leaflet.svg';
-import jwtLogo from '../assets/images/logos/jwt.svg';
+import mysqlLogo from '../assets/images/logos/mysql.png';
+import dockerLogo from '../assets/images/logos/docker.png';
+import nginxLogo from '../assets/images/logos/nginx.png';
+import leafletLogo from '../assets/images/logos/leaflet.png';
+import jwtLogo from '../assets/images/logos/jwt.png';
 
 // Logos des APIs
-import osmLogo from '../assets/images/logos/openstreetmap.svg';
-import nominatimLogo from '../assets/images/logos/nominatim.svg';
+import osmLogo from '../assets/images/logos/openstreetmap.png';
+import nominatimLogo from '../assets/images/logos/nominatim.png';
 import osrmLogo from '../assets/images/logos/osrm.svg';
 
 export default function CreditsPage() {
@@ -145,7 +145,6 @@ export default function CreditsPage() {
                 {/* Thanks Section */}
                 <section className="credits-section thanks-section">
                     <div className="thanks-card">
-                        <div className="thanks-icon">💖</div>
                         <h2>Remerciements</h2>
                         <div className="thanks-content">
                             <p>
@@ -177,14 +176,8 @@ export default function CreditsPage() {
 
                 {/* Footer Credits */}
                 <div className="credits-footer">
-                    <div className="credits-logo">
-                        <img src={logo} alt="Fumotion" />
-                    </div>
                     <p className="credits-copyright">
                         Fumotion © {new Date().getFullYear()} - Tous droits réservés
-                    </p>
-                    <p className="credits-tagline">
-                        Fait avec 💙 par l'équipe Fumotion
                     </p>
                 </div>
             </main>
