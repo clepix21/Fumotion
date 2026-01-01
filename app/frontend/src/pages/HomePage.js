@@ -265,24 +265,24 @@ export default function HomePage() {
               <div className="benefit-icon">
                 <img src={voiture} alt="voiture logo" style={{ width: '50px', height: 'auto' }} />
               </div>
-              <h3 className="benefit-title">Vos trajets préférés à petits prix</h3>
-              <p className="benefit-description">Où que vous alliez, en bus ou en covoiturage, trouvez le trajet idéal parmi notre large choix de destinations à petits prix.</p>
+              <h3 className="benefit-title">Économisez sur vos trajets étudiants</h3>
+              <p className="benefit-description">Partagez les frais de trajet entre votre domicile et votre lieu d'études. Le covoiturage entre étudiants, c'est malin et économique !</p>
             </div>
 
             <div className="benefit-card">
               <div className="benefit-icon">
                 <img src={bouclier} alt="bouclier logo" style={{ width: '50px', height: 'auto' }} />
               </div>
-              <h3 className="benefit-title">Voyagez en toute confiance</h3>
-              <p className="benefit-description">Nous prenons le temps qu'il faut pour connaître nos membres et nos compagnies de bus partenaires. Nous vérifions les avis, les profils et les pièces d'identité. Vous savez donc avec qui vous allez voyager pour réserver en toute confiance sur notre plateforme sécurisée.</p>
+              <h3 className="benefit-title">Une communauté étudiante vérifiée</h3>
+              <p className="benefit-description">Voyagez uniquement avec d'autres étudiants. Nous vérifions les profils et les avis pour vous garantir des trajets en toute confiance avec des personnes de votre campus.</p>
             </div>
 
             <div className="benefit-card">
               <div className="benefit-icon">
                 <img src={speed} alt="speed logo" style={{ width: '50px', height: 'auto' }} />
               </div>
-              <h3 className="benefit-title">Recherchez, cliquez et réservez !</h3>
-              <p className="benefit-description">Réserver un trajet devient encore plus simple ! Facile d'utilisation et dotée de technologies avancées, notre appli vous permet de réserver un trajet à proximité en un rien de temps.</p>
+              <h3 className="benefit-title">Simple et rapide</h3>
+              <p className="benefit-description">Trouvez un covoiturage vers votre fac, IUT ou école en quelques clics. Proposez vos trajets réguliers et remplissez votre voiture facilement.</p>
             </div>
           </div>
         </div>
