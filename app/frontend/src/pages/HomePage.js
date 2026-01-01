@@ -97,13 +97,10 @@ export default function HomePage() {
                 <button onClick={() => navigate("/search")} className="navbar-btn-secondary">
                   Rechercher
                 </button>
-                <button onClick={() => navigate("/dashboard")} className="navbar-btn-secondary">
-                  Tableau de bord
-                </button>
                 <button onClick={() => navigate("/create-trip")} className="navbar-btn-primary">
                   Créer un trajet
                 </button>
-                <div className="navbar-user-profile">
+                <div className="navbar-user-profile" onClick={() => navigate("/dashboard")} style={{ cursor: 'pointer' }}>
                   <Avatar user={user} size="medium" />
                   <div className="navbar-user-info">
                     <span className="navbar-user-name">{user?.first_name || user?.email}</span>
@@ -159,13 +156,10 @@ export default function HomePage() {
                 <button onClick={() => { navigate("/search"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
                   Rechercher
                 </button>
-                <button onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
-                  Tableau de bord
-                </button>
                 <button onClick={() => { navigate("/create-trip"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
                   Créer un trajet
                 </button>
-                <div className="navbar-user-profile">
+                <div className="navbar-user-profile" onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} style={{ cursor: 'pointer' }}>
                   <Avatar user={user} size="medium" />
                   <div className="navbar-user-info">
                     <span className="navbar-user-name">{user?.first_name || user?.email}</span>

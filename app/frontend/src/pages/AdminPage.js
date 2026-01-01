@@ -430,10 +430,7 @@ export default function AdminPage() {
           </button>
 
           <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
-            <button onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
-              Tableau de bord
-            </button>
-            <div className="navbar-user-profile">
+            <div className="navbar-user-profile" onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} style={{ cursor: 'pointer' }}>
               <Avatar user={user} size="medium" />
               <div className="navbar-user-info">
                 <span className="navbar-user-name">{user?.first_name} (Admin)</span>

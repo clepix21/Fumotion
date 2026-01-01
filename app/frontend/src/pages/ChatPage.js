@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ConversationList from '../components/Chat/ConversationList';
 import ChatWindow from '../components/Chat/ChatWindow';
+import Avatar from '../components/common/Avatar';
 import { messageService } from '../services/messageService';
 import logo from '../assets/images/logo.png';
 import '../styles/Chat.css';
@@ -175,12 +176,15 @@ const ChatPage = () => {
                             Rechercher
                         </Link>
                         <div className="navbar-divider"></div>
-                        <button onClick={() => navigate("/dashboard")} className="navbar-btn-secondary">
-                            Tableau de bord
-                        </button>
                         <button onClick={() => navigate("/chat")} className="navbar-btn-primary">
                             💬 Messages
                         </button>
+                        <div className="navbar-user-profile" onClick={() => navigate("/dashboard")} style={{ cursor: 'pointer' }}>
+                            <Avatar user={currentUser} size="medium" />
+                            <div className="navbar-user-info">
+                                <span className="navbar-user-name">{currentUser?.first_name || currentUser?.email}</span>
+                            </div>
+                        </div>
                         <button onClick={handleLogout} className="navbar-btn-logout">
                             <span>🚪</span> Déconnexion
                         </button>
@@ -209,12 +213,15 @@ const ChatPage = () => {
                             Rechercher
                         </Link>
                         <div className="navbar-divider"></div>
-                        <button onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
-                            Tableau de bord
-                        </button>
                         <button onClick={() => { navigate("/chat"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
                             💬 Messages
                         </button>
+                        <div className="navbar-user-profile" onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} style={{ cursor: 'pointer' }}>
+                            <Avatar user={currentUser} size="medium" />
+                            <div className="navbar-user-info">
+                                <span className="navbar-user-name">{currentUser?.first_name || currentUser?.email}</span>
+                            </div>
+                        </div>
                         <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="navbar-btn-logout">
                             <span>🚪</span> Déconnexion
                         </button>
