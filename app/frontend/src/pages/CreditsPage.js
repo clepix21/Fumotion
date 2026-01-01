@@ -4,16 +4,24 @@ import Footer from '../components/common/Footer';
 import logo from '../assets/images/logo.png';
 import '../styles/StaticPages.css';
 
+// Import des images des membres
+import member1 from '../assets/images/team/member1.jpg';
+import member2 from '../assets/images/team/member2.jpg';
+import member3 from '../assets/images/team/member3.jpg';
+import member4 from '../assets/images/team/member4.jpg';
+import member5 from '../assets/images/team/member5.jpg';
+import member6 from '../assets/images/team/member6.jpg';
+
 export default function CreditsPage() {
     const navigate = useNavigate();
 
     const teamMembers = [
-        { name: 'Clément', role: 'Développeur Full Stack', emoji: '💻', color: '#3498db' },
-        { name: 'Membre 2', role: 'Designer UI/UX', emoji: '🎨', color: '#9b59b6' },
-        { name: 'Membre 3', role: 'Développeur Backend', emoji: '⚙️', color: '#e74c3c' },
-        { name: 'Membre 4', role: 'Développeur Frontend', emoji: '🌐', color: '#2ecc71' },
-        { name: 'Membre 5', role: 'Chef de projet', emoji: '📋', color: '#f39c12' },
-        { name: 'Membre 6', role: 'Testeur QA', emoji: '🔍', color: '#1abc9c' }
+        { name: 'Clément', role: 'Développeur Full Stack', image: member1, color: '#3498db' },
+        { name: 'Membre 2', role: 'Designer UI/UX', image: member2, color: '#9b59b6' },
+        { name: 'Membre 3', role: 'Développeur Backend', image: member3, color: '#e74c3c' },
+        { name: 'Membre 4', role: 'Développeur Frontend', image: member4, color: '#2ecc71' },
+        { name: 'Membre 5', role: 'Chef de projet', image: member5, color: '#f39c12' },
+        { name: 'Membre 6', role: 'Testeur QA', image: member6, color: '#1abc9c' }
     ];
 
     const technologies = [
@@ -67,7 +75,7 @@ export default function CreditsPage() {
                                 style={{ '--accent-color': member.color }}
                             >
                                 <div className="team-avatar">
-                                    <span className="team-emoji">{member.emoji}</span>
+                                    <img src={member.image} alt={member.name} className="team-photo" />
                                 </div>
                                 <h3 className="team-name">{member.name}</h3>
                                 <p className="team-role">{member.role}</p>
