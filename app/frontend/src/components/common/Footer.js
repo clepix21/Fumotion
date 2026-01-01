@@ -14,7 +14,7 @@ export default function Footer() {
                             <span className="footer-name">Fumotion</span>
                         </div>
                         <p className="footer-tagline">
-                            La plateforme de covoiturage moderne, sécurisée et conviviale pour tous vos trajets quotidiens.
+                            La plateforme de covoiturage pour les étudiants, sécurisée et conviviale pour tous vos trajets quotidiens.
                         </p>
                     </div>
 
