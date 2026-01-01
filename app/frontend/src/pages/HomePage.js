@@ -228,6 +228,7 @@ export default function HomePage() {
                       type="date"
                       className="form-input"
                       value={searchData.date}
+                      min={new Date().toISOString().split('T')[0]}
                       onChange={(e) => setSearchData({ ...searchData, date: e.target.value })}
                     />
                   </div>

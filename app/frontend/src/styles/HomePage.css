@@ -712,6 +712,36 @@
 /* Style pour le champ date */
 .search-card input[type="date"].form-input {
   cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: relative;
+  background-color: #fff;
+  min-height: 44px;
+}
+
+/* Fix pour iOS/Safari - afficher le placeholder quand vide */
+.search-card input[type="date"].form-input:not(:valid)::-webkit-datetime-edit {
+  color: transparent;
+}
+
+.search-card input[type="date"].form-input::-webkit-datetime-edit-text,
+.search-card input[type="date"].form-input::-webkit-datetime-edit-month-field,
+.search-card input[type="date"].form-input::-webkit-datetime-edit-day-field,
+.search-card input[type="date"].form-input::-webkit-datetime-edit-year-field {
+  color: #1e293b;
+}
+
+/* Icône calendrier sur iOS */
+.search-card input[type="date"].form-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.6;
+  padding: 0;
+  margin: 0;
+}
+
+.search-card input[type="date"].form-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
 }
 
 .search-button {
