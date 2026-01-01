@@ -169,7 +169,42 @@ const ChatPage = () => {
                         {mobileMenuOpen ? '✕' : '☰'}
                     </button>
 
-                    <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
+                    {/* Menu desktop - visible seulement sur grand écran */}
+                    <div className="navbar-menu navbar-menu-desktop">
+                        <Link to="/search" className="navbar-link">
+                            Rechercher
+                        </Link>
+                        <div className="navbar-divider"></div>
+                        <button onClick={() => navigate("/dashboard")} className="navbar-btn-secondary">
+                            Tableau de bord
+                        </button>
+                        <button onClick={() => navigate("/chat")} className="navbar-btn-primary">
+                            💬 Messages
+                        </button>
+                        <button onClick={handleLogout} className="navbar-btn-logout">
+                            <span>🚪</span> Déconnexion
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            {/* Menu mobile - en dehors de la navbar */}
+            {mobileMenuOpen && (
+                <>
+                    <div 
+                        className="navbar-overlay"
+                        onClick={() => setMobileMenuOpen(false)}
+                        aria-hidden="true"
+                    />
+                    <div className="navbar-menu-mobile">
+                        <button 
+                            className="navbar-menu-close"
+                            onClick={() => setMobileMenuOpen(false)}
+                            aria-label="Fermer le menu"
+                        >
+                            ✕
+                        </button>
+                        
                         <Link to="/search" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
                             Rechercher
                         </Link>
@@ -184,8 +219,8 @@ const ChatPage = () => {
                             <span>🚪</span> Déconnexion
                         </button>
                     </div>
-                </div>
-            </nav>
+                </>
+            )}
 
             {/* Main content */}
             <div className="chat-page-container">
