@@ -651,6 +651,13 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    overflow: hidden;
+}
+
+.tech-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
 }
 
 .tech-info {
