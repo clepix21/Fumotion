@@ -23,17 +23,9 @@ export default function Footer() {
                         <ul className="footer-links">
                             <li><Link to="/search">Rechercher un trajet</Link></li>
                             <li><Link to="/create-trip">Proposer un trajet</Link></li>
-                            <li><Link to="#features">Fonctionnalités</Link></li>
                         </ul>
                     </div>
-
-                    <div className="footer-column">
-                        <h4 className="footer-heading">Support</h4>
-                        <ul className="footer-links">
-                            <li><Link to="/help">Centre d'aide</Link></li>
-                        </ul>
-                    </div>
-
+                    
                     <div className="footer-column">
                         <h4 className="footer-heading">Légal</h4>
                         <ul className="footer-links">
