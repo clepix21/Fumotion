@@ -152,37 +152,15 @@ export default function CreditsPage() {
                                 et outils qui rendent ce projet possible.
                             </p>
                             <p>
-                                <strong>À nos professeurs et encadrants</strong> pour leur accompagnement 
+                                <strong>À ma famille et mes amis</strong> pour leur soutien indéfectible 
+                                durant ce projet, pour leur accompagnement 
                                 et leurs précieux conseils tout au long du développement.
                             </p>
-                            <p>
-                                <strong>À tous les utilisateurs</strong> qui font confiance à Fumotion 
-                                et contribuent à améliorer l'application par leurs retours.
-                            </p>
-                            <p>
-                                <strong>À nos familles et amis</strong> pour leur soutien indéfectible 
-                                durant ce projet.
-                            </p>
-                        </div>
-                        <div className="thanks-emoji-row">
-                            <span>🙏</span>
-                            <span>❤️</span>
-                            <span>🎉</span>
-                            <span>🚀</span>
-                            <span>✨</span>
                         </div>
                     </div>
                 </section>
-
-                {/* Footer Credits */}
-                <div className="credits-footer">
-                    <p className="credits-copyright">
-                        Fumotion © {new Date().getFullYear()} - Tous droits réservés
-                    </p>
-                </div>
             </main>
-
-            <Footer />
+            <Footer/>
         </div>
     );
 }
