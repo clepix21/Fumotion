@@ -7,8 +7,28 @@ import '../styles/StaticPages.css';
 export default function CreditsPage() {
     const navigate = useNavigate();
 
+    const teamMembers = [
+        { name: 'Clément', role: 'Développeur Full Stack', emoji: '💻', color: '#3498db' },
+        { name: 'Membre 2', role: 'Designer UI/UX', emoji: '🎨', color: '#9b59b6' },
+        { name: 'Membre 3', role: 'Développeur Backend', emoji: '⚙️', color: '#e74c3c' },
+        { name: 'Membre 4', role: 'Développeur Frontend', emoji: '🌐', color: '#2ecc71' },
+        { name: 'Membre 5', role: 'Chef de projet', emoji: '📋', color: '#f39c12' },
+        { name: 'Membre 6', role: 'Testeur QA', emoji: '🔍', color: '#1abc9c' }
+    ];
+
+    const technologies = [
+        { name: 'React.js', category: 'Frontend', icon: '⚛️', description: 'Bibliothèque JavaScript pour les interfaces utilisateur' },
+        { name: 'Node.js', category: 'Backend', icon: '🟢', description: 'Environnement d\'exécution JavaScript côté serveur' },
+        { name: 'Express.js', category: 'Backend', icon: '🚀', description: 'Framework web minimaliste et flexible' },
+        { name: 'MySQL', category: 'Base de données', icon: '🗄️', description: 'Système de gestion de base de données relationnelle' },
+        { name: 'Docker', category: 'Infrastructure', icon: '🐳', description: 'Plateforme de conteneurisation' },
+        { name: 'Nginx', category: 'Infrastructure', icon: '🌐', description: 'Serveur web haute performance' },
+        { name: 'Leaflet', category: 'Frontend', icon: '🗺️', description: 'Bibliothèque de cartes interactives' },
+        { name: 'JWT', category: 'Sécurité', icon: '🔐', description: 'Authentification sécurisée par tokens' }
+    ];
+
     return (
-        <div className="static-page">
+        <div className="static-page credits-page">
             <nav className="navbar">
                 <div className="navbar-container">
                     <div className="navbar-brand" onClick={() => navigate('/')}>
@@ -21,75 +41,138 @@ export default function CreditsPage() {
                 </div>
             </nav>
 
-            <main className="static-content">
-                <h1>Crédits</h1>
-                <p className="page-subtitle">
-                    Fumotion est rendu possible grâce au travail et aux contributions de nombreuses personnes et projets.
-                </p>
-
-                <div className="static-section">
-                    <h2>Équipe de développement</h2>
-                    <ul>
-                        <li><strong>Conception & Développement :</strong> Équipe Fumotion</li>
-                        <li><strong>Design UI/UX :</strong> Équipe Fumotion</li>
-                    </ul>
-                </div>
-
-                <div className="static-section">
-                    <h2>Technologies utilisées</h2>
-                    <h3>Frontend</h3>
-                    <ul>
-                        <li><strong>React.js</strong> - Bibliothèque JavaScript pour les interfaces utilisateur</li>
-                        <li><strong>React Router</strong> - Navigation côté client</li>
-                        <li><strong>Leaflet</strong> - Cartes interactives</li>
-                    </ul>
-
-                    <h3>Backend</h3>
-                    <ul>
-                        <li><strong>Node.js</strong> - Environnement d'exécution JavaScript</li>
-                        <li><strong>Express.js</strong> - Framework web</li>
-                        <li><strong>MySQL</strong> - Base de données relationnelle</li>
-                        <li><strong>JWT</strong> - Authentification sécurisée</li>
-                    </ul>
-
-                    <h3>Infrastructure</h3>
-                    <ul>
-                        <li><strong>Docker</strong> - Conteneurisation</li>
-                        <li><strong>Nginx</strong> - Serveur web</li>
-                    </ul>
-                </div>
-
-                <div className="static-section">
-                    <h2>Ressources graphiques</h2>
-                    <ul>
-                        <li><strong>Icônes :</strong> SVG personnalisés et icônes libres de droits</li>
-                        <li><strong>Images :</strong> Ressources libres de droits</li>
-                        <li><strong>Polices :</strong> Google Fonts</li>
-                    </ul>
-                </div>
-
-                <div className="static-section">
-                    <h2>APIs externes</h2>
-                    <ul>
-                        <li><strong>OpenStreetMap</strong> - Données cartographiques</li>
-                        <li><strong>Nominatim</strong> - Géocodage des adresses</li>
-                        <li><strong>OSRM</strong> - Calcul d'itinéraires</li>
-                    </ul>
-                </div>
-
-                <div className="static-section">
-                    <h2>Remerciements</h2>
-                    <p>
-                        Nous remercions la communauté open source pour les nombreux outils et bibliothèques 
-                        qui rendent ce projet possible, ainsi que tous les utilisateurs qui contribuent 
-                        à améliorer Fumotion par leurs retours.
+            <main className="static-content credits-content">
+                {/* Hero Section */}
+                <div className="credits-hero">
+                    <h1>Crédits</h1>
+                    <p className="credits-subtitle">
+                        Découvrez les personnes talentueuses et les technologies qui font vivre Fumotion
                     </p>
                 </div>
 
-                <div className="static-section">
-                    <h2>Licence</h2>
-                    <p>
-                        Fumotion © {new Date().getFullYear()} - Tous droits réservés.
+                {/* Team Section */}
+                <section className="credits-section">
+                    <div className="section-header">
+                        <span className="section-icon">👥</span>
+                        <h2>Notre Équipe</h2>
+                    </div>
+                    <p className="section-description">
+                        Les 6 membres passionnés qui ont donné vie à ce projet
+                    </p>
+                    <div className="team-grid">
+                        {teamMembers.map((member, index) => (
+                            <div 
+                                key={index} 
+                                className="team-card"
+                                style={{ '--accent-color': member.color }}
+                            >
+                                <div className="team-avatar">
+                                    <span className="team-emoji">{member.emoji}</span>
+                                </div>
+                                <h3 className="team-name">{member.name}</h3>
+                                <p className="team-role">{member.role}</p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* Technologies Section */}
+                <section className="credits-section">
+                    <div className="section-header">
+                        <span className="section-icon">🛠️</span>
+                        <h2>Technologies Utilisées</h2>
+                    </div>
+                    <p className="section-description">
+                        Les outils modernes qui propulsent notre application
+                    </p>
+                    <div className="tech-grid">
+                        {technologies.map((tech, index) => (
+                            <div key={index} className="tech-card">
+                                <div className="tech-icon">{tech.icon}</div>
+                                <div className="tech-info">
+                                    <h4 className="tech-name">{tech.name}</h4>
+                                    <span className="tech-category">{tech.category}</span>
+                                    <p className="tech-description">{tech.description}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* APIs Section */}
+                <section className="credits-section">
+                    <div className="section-header">
+                        <span className="section-icon">🔗</span>
+                        <h2>APIs & Services Externes</h2>
+                    </div>
+                    <div className="api-list">
+                        <div className="api-item">
+                            <span className="api-icon">🗺️</span>
+                            <div>
+                                <strong>OpenStreetMap</strong>
+                                <p>Données cartographiques libres</p>
+                            </div>
+                        </div>
+                        <div className="api-item">
+                            <span className="api-icon">📍</span>
+                            <div>
+                                <strong>Nominatim</strong>
+                                <p>Service de géocodage des adresses</p>
+                            </div>
+                        </div>
+                        <div className="api-item">
+                            <span className="api-icon">🛣️</span>
+                            <div>
+                                <strong>OSRM</strong>
+                                <p>Calcul d'itinéraires et navigation</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Thanks Section */}
+                <section className="credits-section thanks-section">
+                    <div className="thanks-card">
+                        <div className="thanks-icon">💖</div>
+                        <h2>Remerciements</h2>
+                        <div className="thanks-content">
+                            <p>
+                                <strong>À la communauté Open Source</strong> pour les innombrables bibliothèques 
+                                et outils qui rendent ce projet possible.
+                            </p>
+                            <p>
+                                <strong>À nos professeurs et encadrants</strong> pour leur accompagnement 
+                                et leurs précieux conseils tout au long du développement.
+                            </p>
+                            <p>
+                                <strong>À tous les utilisateurs</strong> qui font confiance à Fumotion 
+                                et contribuent à améliorer l'application par leurs retours.
+                            </p>
+                            <p>
+                                <strong>À nos familles et amis</strong> pour leur soutien indéfectible 
+                                durant ce projet.
+                            </p>
+                        </div>
+                        <div className="thanks-emoji-row">
+                            <span>🙏</span>
+                            <span>❤️</span>
+                            <span>🎉</span>
+                            <span>🚀</span>
+                            <span>✨</span>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Footer Credits */}
+                <div className="credits-footer">
+                    <div className="credits-logo">
+                        <img src={logo} alt="Fumotion" />
+                    </div>
+                    <p className="credits-copyright">
+                        Fumotion © {new Date().getFullYear()} - Tous droits réservés
+                    </p>
+                    <p className="credits-tagline">
+                        Fait avec 💙 par l'équipe Fumotion
                     </p>
                 </div>
             </main>
