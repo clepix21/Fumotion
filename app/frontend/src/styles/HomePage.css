@@ -107,12 +107,14 @@
 /* Menu navigation - Caché sur mobile par défaut */
 .navbar-menu {
   /* Mobile: menu plein écran en overlay */
-  display: none;
+  display: none !important;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -129,7 +131,7 @@
 
 /* Menu mobile ouvert */
 .navbar-menu.active {
-  display: flex;
+  display: flex !important;
   animation: slideIn 0.25s ease-out;
 }
 
@@ -493,12 +495,14 @@
     /* Desktop: menu inline visible */
     display: flex !important;
     position: static;
+    width: auto;
+    height: auto;
     flex-direction: row;
     background: transparent;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     padding: 0;
-    gap: 0.25rem;
+    gap: 0.5rem;
     overflow: visible;
     flex: 1;
     justify-content: flex-end;
