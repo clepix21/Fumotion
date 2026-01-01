@@ -725,6 +725,13 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    overflow: hidden;
+}
+
+.api-logo {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
 }
 
 .api-item strong {
