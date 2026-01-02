@@ -246,33 +246,34 @@ export default function CreateTripPage() {
       }
 
       // Récupérer l'adresse via géocodage inverse
-      const geocodeResult = await reverseGeocode(lat, lng)
+      let geocodeResult = await reverseGeocode(lat, lng)
+      console.log('handleMapClick geocodeResult:', geocodeResult)
+
+      // Si le géocodage a échoué, réessayer une fois après un court délai
+      if (!geocodeResult) {
+        console.log('Geocode failed, retrying...')
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        geocodeResult = await reverseGeocode(lat, lng)
+        console.log('Retry geocodeResult:', geocodeResult)
+      }
 
       // Utiliser le formatage court de l'adresse
       let locationText = null
       
-      if (geocodeResult && geocodeResult.formatted) {
+      if (geocodeResult) {
         locationText = formatAddressShort(geocodeResult)
+        console.log('formatAddressShort result:', locationText)
       }
       
-      // Si pas d'adresse formatée, essayer l'adresse brute
-      if (!locationText && geocodeResult && geocodeResult.address) {
-        const parts = geocodeResult.address.split(',').map(p => p.trim())
+      // Fallback : utiliser display_name directement
+      if (!locationText && geocodeResult && geocodeResult.display_name) {
+        const parts = geocodeResult.display_name.split(',').map(p => p.trim())
         locationText = parts.slice(0, 2).join(', ')
       }
 
       // Fallback final avec les coordonnées
       if (!locationText) {
         locationText = `${lat.toFixed(4)}, ${lng.toFixed(4)}`
-      }
-
-      // Si le géocodage a échoué, réessayer une fois après un court délai
-      if (!geocodeResult || !geocodeResult.formatted) {
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        const retryResult = await reverseGeocode(lat, lng)
-        if (retryResult) {
-          locationText = formatAddressShort(retryResult) || locationText
-        }
       }
 
       // Mettre à jour avec l'adresse finale

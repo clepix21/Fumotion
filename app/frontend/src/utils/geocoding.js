@@ -79,18 +79,22 @@ export async function reverseGeocode(lat, lng) {
       lon: lng.toString(),
     })
 
+    console.log('Reverse geocode request:', `${API_URL}/geocode/reverse?${params.toString()}`)
     const response = await fetch(`${API_URL}/geocode/reverse?${params.toString()}`)
 
     if (!response.ok) {
+      console.error('Reverse geocode error: response not ok', response.status)
       throw new Error('Erreur de géocodage inverse')
     }
 
     const data = await response.json()
+    console.log('Reverse geocode response:', data)
 
     if (data && data.display_name) {
+      // Retourner un format cohérent
       return {
-        address: data.display_name,
-        formatted: data.address,
+        display_name: data.display_name,
+        address: data.address || {}, // L'objet détaillé avec house_number, road, city, etc.
       }
     }
 
@@ -107,10 +111,12 @@ export function formatAddressShort(geocodeResult) {
     return null
   }
 
-  // Si on a l'objet address détaillé (depuis le reverse geocode)
-  const addr = geocodeResult.formatted || geocodeResult.address || {}
+  console.log('formatAddressShort input:', geocodeResult)
+
+  // Récupérer l'objet address (depuis reverseGeocode ou geocodeAddress)
+  const addr = geocodeResult.address || geocodeResult.formatted || {}
   
-  // Si addr est une string, la parser
+  // Si addr est une string (display_name), la parser
   if (typeof addr === 'string') {
     const parts = addr.split(',').map(p => p.trim())
     if (parts.length >= 2) {
@@ -119,51 +125,53 @@ export function formatAddressShort(geocodeResult) {
     return parts[0] || null
   }
   
-  const parts = []
+  // Si addr est un objet avec les détails (house_number, road, city, etc.)
+  if (typeof addr === 'object' && Object.keys(addr).length > 0) {
+    const parts = []
 
-  // Ajouter le numéro de rue
-  if (addr.house_number) {
-    parts.push(addr.house_number)
-  }
-
-  // Ajouter le nom de la rue
-  if (addr.road) {
-    parts.push(addr.road)
-  } else if (addr.pedestrian) {
-    parts.push(addr.pedestrian)
-  } else if (addr.footway) {
-    parts.push(addr.footway)
-  } else if (addr.path) {
-    parts.push(addr.path)
-  } else if (addr.amenity) {
-    parts.push(addr.amenity)
-  } else if (addr.building) {
-    parts.push(addr.building)
-  }
-
-  // Créer la première partie (rue)
-  const street = parts.join(' ')
-
-  // Ajouter la ville
-  const city = addr.city || addr.town || addr.village || addr.municipality || addr.suburb || addr.county
-
-  // Formater le résultat final
-  if (street && city) {
-    return `${street}, ${city}`
-  } else if (city) {
-    return city
-  } else if (street) {
-    return street
-  }
-
-  // Fallback : essayer de parser l'adresse complète depuis display_name
-  if (geocodeResult.address && typeof geocodeResult.address === 'string') {
-    const fullAddress = geocodeResult.address
-    const addressParts = fullAddress.split(',').map(p => p.trim())
-    if (addressParts.length >= 2) {
-      return `${addressParts[0]}, ${addressParts[1]}`
+    // Ajouter le numéro de rue
+    if (addr.house_number) {
+      parts.push(addr.house_number)
     }
-    return addressParts[0] || null
+
+    // Ajouter le nom de la rue
+    if (addr.road) {
+      parts.push(addr.road)
+    } else if (addr.pedestrian) {
+      parts.push(addr.pedestrian)
+    } else if (addr.footway) {
+      parts.push(addr.footway)
+    } else if (addr.path) {
+      parts.push(addr.path)
+    } else if (addr.amenity) {
+      parts.push(addr.amenity)
+    } else if (addr.building) {
+      parts.push(addr.building)
+    }
+
+    // Créer la première partie (rue)
+    const street = parts.join(' ')
+
+    // Ajouter la ville
+    const city = addr.city || addr.town || addr.village || addr.municipality || addr.suburb || addr.county
+
+    // Formater le résultat final
+    if (street && city) {
+      return `${street}, ${city}`
+    } else if (city) {
+      return city
+    } else if (street) {
+      return street
+    }
+  }
+
+  // Fallback : essayer de parser display_name
+  if (geocodeResult.display_name) {
+    const parts = geocodeResult.display_name.split(',').map(p => p.trim())
+    if (parts.length >= 2) {
+      return `${parts[0]}, ${parts[1]}`
+    }
+    return parts[0] || null
   }
 
   return null
