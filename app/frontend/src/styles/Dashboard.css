@@ -317,10 +317,12 @@
     top: calc(var(--navbar-height, 5rem) + 1rem);
     padding: 1.5rem;
     overflow-x: visible;
+    flex-direction: column;
   }
 
   .sidebar-section {
     margin-bottom: 2rem;
+    flex-direction: column;
   }
 
   .sidebar-section:last-child {
@@ -330,6 +332,7 @@
   .sidebar-section h3 {
     font-size: 0.875rem;
     margin-bottom: 1rem;
+    display: block;
   }
 
   .sidebar-section:first-child {

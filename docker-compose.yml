@@ -2,8 +2,6 @@
 # Services: backend (Express), frontend (React+Nginx), mysql
 # Lancement: docker-compose up --build
 
-version: '3.8'
-
 services:
   # API Express.js avec authentification JWT
   backend:

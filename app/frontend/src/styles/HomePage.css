@@ -109,6 +109,30 @@
   display: none;
 }
 
+/* Menu mobile actif - plein écran overlay */
+.navbar-menu.active {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  gap: 1rem;
+  z-index: 1002;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  animation: slideIn 0.25s ease-out;
+}
+
 /* Menu desktop - caché sur mobile, visible sur desktop */
 .navbar-menu-desktop {
   display: none;
@@ -156,6 +180,26 @@
   .navbar-menu-mobile,
   .navbar-overlay {
     display: none !important;
+  }
+
+  /* Sur desktop, le menu navbar-menu devient horizontal */
+  .navbar-menu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  .navbar-menu.active {
+    position: static;
+    width: auto;
+    height: auto;
+    background: transparent;
+    backdrop-filter: none;
+    padding: 0;
+    animation: none;
   }
 }
 
