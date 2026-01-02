@@ -78,7 +78,7 @@ export default function DashboardPage() {
       }
 
       // Charger mes trajets
-      const tripsResponse = await fetch("http://localhost:5000/api/trips?type=driving", {
+      const tripsResponse = await fetch("/api/trips?type=driving", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -90,7 +90,7 @@ export default function DashboardPage() {
       }
 
       // Charger mes réservations
-      const bookingsResponse = await fetch("http://localhost:5000/api/bookings", {
+      const bookingsResponse = await fetch("/api/bookings", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -165,7 +165,7 @@ export default function DashboardPage() {
       const formData = new FormData()
       formData.append('banner', file)
 
-      const response = await fetch("http://localhost:5000/api/auth/profile/banner", {
+      const response = await fetch("/api/auth/profile/banner", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -201,7 +201,7 @@ export default function DashboardPage() {
       const formData = new FormData()
       formData.append('avatar', file)
 
-      const response = await fetch("http://localhost:5000/api/auth/profile/avatar", {
+      const response = await fetch("/api/auth/profile/avatar", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -279,7 +279,7 @@ export default function DashboardPage() {
     setModalLoading(true)
     
     try {
-      const response = await fetch(`http://localhost:5000/api/trips/${trip.id}`, {
+      const response = await fetch(`/api/trips/${trip.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -327,7 +327,7 @@ export default function DashboardPage() {
     
     setSaving(true)
     try {
-      const response = await fetch(`http://localhost:5000/api/trips/${selectedTrip.id}`, {
+      const response = await fetch(`/api/trips/${selectedTrip.id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -362,7 +362,7 @@ export default function DashboardPage() {
     }
     
     try {
-      const response = await fetch(`http://localhost:5000/api/trips/${tripId}`, {
+      const response = await fetch(`/api/trips/${tripId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -993,7 +993,7 @@ export default function DashboardPage() {
                     className="profile-banner"
                     style={{
                       backgroundImage: displayUser?.banner_picture
-                        ? `url(http://localhost:5000/uploads/${displayUser.banner_picture})`
+                        ? `url(/uploads/${displayUser.banner_picture})`
                         : 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center'

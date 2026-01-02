@@ -55,7 +55,7 @@ const ConversationList = ({ conversations, selectedUserId, onSelectUser, loading
                                 <div className="conversation-avatar-container">
                                     {conv.profile_picture ? (
                                         <img
-                                            src={`http://localhost:5000/uploads/${conv.profile_picture}`}
+                                            src={`/uploads/${conv.profile_picture}`}
                                             alt={`${conv.first_name} ${conv.last_name}`}
                                             className="conversation-avatar"
                                         />
