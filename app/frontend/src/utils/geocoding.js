@@ -107,8 +107,18 @@ export function formatAddressShort(geocodeResult) {
     return null
   }
 
-  // Si on a l'objet address détaillé
-  const addr = geocodeResult.formatted || {}
+  // Si on a l'objet address détaillé (depuis le reverse geocode)
+  const addr = geocodeResult.formatted || geocodeResult.address || {}
+  
+  // Si addr est une string, la parser
+  if (typeof addr === 'string') {
+    const parts = addr.split(',').map(p => p.trim())
+    if (parts.length >= 2) {
+      return `${parts[0]}, ${parts[1]}`
+    }
+    return parts[0] || null
+  }
+  
   const parts = []
 
   // Ajouter le numéro de rue
@@ -125,13 +135,17 @@ export function formatAddressShort(geocodeResult) {
     parts.push(addr.footway)
   } else if (addr.path) {
     parts.push(addr.path)
+  } else if (addr.amenity) {
+    parts.push(addr.amenity)
+  } else if (addr.building) {
+    parts.push(addr.building)
   }
 
   // Créer la première partie (rue)
   const street = parts.join(' ')
 
   // Ajouter la ville
-  const city = addr.city || addr.town || addr.village || addr.municipality || addr.suburb
+  const city = addr.city || addr.town || addr.village || addr.municipality || addr.suburb || addr.county
 
   // Formater le résultat final
   if (street && city) {
@@ -142,15 +156,14 @@ export function formatAddressShort(geocodeResult) {
     return street
   }
 
-  // Fallback : essayer de parser l'adresse complète
-  if (geocodeResult.address) {
+  // Fallback : essayer de parser l'adresse complète depuis display_name
+  if (geocodeResult.address && typeof geocodeResult.address === 'string') {
     const fullAddress = geocodeResult.address
-    // Extraire seulement la première partie avant la première virgule et la ville
-    const parts = fullAddress.split(',').map(p => p.trim())
-    if (parts.length >= 2) {
-      return `${parts[0]}, ${parts[1]}`
+    const addressParts = fullAddress.split(',').map(p => p.trim())
+    if (addressParts.length >= 2) {
+      return `${addressParts[0]}, ${addressParts[1]}`
     }
-    return parts[0] || fullAddress
+    return addressParts[0] || null
   }
 
   return null
