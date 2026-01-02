@@ -287,7 +287,7 @@ export default function SearchPage() {
                   <label className="form-label">Départ</label>
                   <input
                     type="text"
-                    placeholder="Paris, Gare de Lyon"
+                    placeholder="Rue de Midgard, Amiens"
                     className="form-input"
                     value={searchParams.departure}
                     onChange={(e) => setSearchParams({ ...searchParams, departure: e.target.value })}
@@ -298,7 +298,7 @@ export default function SearchPage() {
                   <label className="form-label">Destination</label>
                   <input
                     type="text"
-                    placeholder="Marseille"
+                    placeholder="TP11, Amiens"
                     className="form-input"
                     value={searchParams.arrival}
                     onChange={(e) => setSearchParams({ ...searchParams, arrival: e.target.value })}
