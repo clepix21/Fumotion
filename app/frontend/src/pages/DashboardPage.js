@@ -900,7 +900,7 @@ export default function DashboardPage() {
                   <p>Vous avez évalué tous vos trajets terminés !</p>
                 </div>
               )}
-              
+              <br/>
               {/* Mes notes */}
               <div className="my-ratings-section">
                 <h2><img src={statsIcon} alt="stats" className="icon-svg-heading" /> Mes notes</h2>
