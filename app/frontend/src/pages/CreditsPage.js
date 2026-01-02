@@ -148,14 +148,14 @@ export default function CreditsPage() {
                         <h2>Remerciements</h2>
                         <div className="thanks-content">
                             <p>
+                                <strong>À ma famille et mes amis</strong> pour leurs précieux retours tout au long du développement., pour leur soutien indéfectible 
+                                durant ce projet.
+                            </p>
+                            <p>
                                 <strong>À la communauté Open Source</strong> pour les innombrables bibliothèques 
                                 et outils qui rendent ce projet possible.
                             </p>
-                            <p>
-                                <strong>À ma famille et mes amis</strong> pour leur soutien indéfectible 
-                                durant ce projet, pour leur accompagnement 
-                                et leurs précieux conseils tout au long du développement.
-                            </p>
+
                         </div>
                     </div>
                 </section>
