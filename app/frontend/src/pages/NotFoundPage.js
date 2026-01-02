@@ -8,21 +8,21 @@ import '../styles/NotFoundPage.css';
 
 const NotFoundPage = () => {
     const logoRef = useRef(null);
-    const sectionRef = useRef(null);
+    const containerRef = useRef(null);
     const [clickEffect, setClickEffect] = useState(false);
     
     useEffect(() => {
         const logo = logoRef.current;
-        const section = sectionRef.current;
-        if (!logo || !section) return;
+        const container = containerRef.current;
+        if (!logo || !container) return;
 
         const FPS = 60;
-        const dogSize = 120;
+        const dogSize = 100;
         
         let xPosition = window.innerWidth / 2 - dogSize / 2;
         let yPosition = window.innerHeight / 2 - dogSize / 2;
-        let xSpeed = 3 * (Math.random() > 0.5 ? 1 : -1);
-        let ySpeed = 3 * (Math.random() > 0.5 ? 1 : -1);
+        let xSpeed = 2.5 * (Math.random() > 0.5 ? 1 : -1);
+        let ySpeed = 2.5 * (Math.random() > 0.5 ? 1 : -1);
 
         const updatePosition = () => {
             const maxX = window.innerWidth - dogSize;
@@ -61,23 +61,7 @@ const NotFoundPage = () => {
     };
 
     return (
-        <section ref={sectionRef} className="not-found-section">
-            {/* Étoiles animées en fond */}
-            <div className="stars-container">
-                {[...Array(80)].map((_, i) => (
-                    <div
-                        key={i}
-                        className="star"
-                        style={{
-                            left: `${Math.random() * 100}%`,
-                            top: `${Math.random() * 100}%`,
-                            animationDelay: `${Math.random() * 3}s`,
-                            animationDuration: `${1.5 + Math.random() * 2}s`
-                        }}
-                    />
-                ))}
-            </div>
-
+        <div ref={containerRef} className="not-found-container">
             {/* Chien rebondissant */}
             <div
                 ref={logoRef}
@@ -87,18 +71,16 @@ const NotFoundPage = () => {
                 🐕
             </div>
 
-            {/* Contenu 404 */}
-            <div className="not-found-content">
-                <h1 className="not-found-title glitch" data-text="404">404</h1>
-                <h2 className="not-found-subtitle">Oups ! Page introuvable</h2>
-                <p className="not-found-text">
-                    Ce chien cherche la page partout mais ne la trouve pas...
-                </p>
-                <Link to="/" className="not-found-button">
-                    🏠 Retour à l'accueil
-                </Link>
-            </div>
-        </section>
+            <h1 className="not-found-title">404</h1>
+            <h2 className="not-found-subtitle">Oups ! Page introuvable</h2>
+            <p className="not-found-text">
+                Il semble que la page que vous cherchez a pris une autre route.
+                Revenez sur le bon chemin avec nous !
+            </p>
+            <Link to="/" className="not-found-button">
+                Retour à l'accueil
+            </Link>
+        </div>
     );
 };
 
