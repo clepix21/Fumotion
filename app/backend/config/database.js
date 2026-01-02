@@ -31,12 +31,12 @@ class Database {
         this.pool = mysql.createPool(dbConfig)
         // Tester la connexion
         await this.pool.query("SELECT 1")
-        console.log("✅ Connecté à la base de données MySQL")
+        console.log(" Connecté à la base de données MySQL")
         console.log(`📍 Host: ${dbConfig.host}, Database: ${dbConfig.database}`)
         await this.initTables()
       } catch (err) {
         if (retries === 0) {
-          console.error("❌ Impossible de se connecter à la base de données après plusieurs tentatives:", err)
+          console.error(" Impossible de se connecter à la base de données après plusieurs tentatives:", err)
           throw err
         }
         console.log(`⚠️ Échec de connexion à MySQL. Nouvelle tentative dans ${delay / 1000}s... (${retries} restants)`)
@@ -175,15 +175,21 @@ class Database {
 
       const hasBannerPicture = columnNames.includes("banner_picture")
       const hasIsAdmin = columnNames.includes("is_admin")
+      const hasBio = columnNames.includes("bio")
 
       if (!hasBannerPicture) {
         await this.pool.query("ALTER TABLE users ADD COLUMN banner_picture VARCHAR(255)")
-        console.log("✅ Colonne banner_picture ajoutée")
+        console.log(" Colonne banner_picture ajoutée")
       }
 
       if (!hasIsAdmin) {
         await this.pool.query("ALTER TABLE users ADD COLUMN is_admin BOOLEAN DEFAULT 0")
-        console.log("✅ Colonne is_admin ajoutée")
+        console.log(" Colonne is_admin ajoutée")
+      }
+
+      if (!hasBio) {
+        await this.pool.query("ALTER TABLE users ADD COLUMN bio TEXT")
+        console.log(" Colonne bio ajoutée")
       }
 
       // Migration for messages table
@@ -193,7 +199,7 @@ class Database {
       if (!msgColumnNames.includes("receiver_id")) {
         await this.pool.query("ALTER TABLE messages ADD COLUMN receiver_id INTEGER")
         await this.pool.query("ALTER TABLE messages ADD CONSTRAINT fk_messages_receiver FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE")
-        console.log("✅ Colonne receiver_id ajoutée à la table messages")
+        console.log(" Colonne receiver_id ajoutée à la table messages")
       }
 
       // Make trip_id nullable if it's currently NOT NULL (MySQL specific roughly, usually easier to just modify column)
@@ -219,18 +225,18 @@ class Database {
            VALUES (?, ?, ?, ?, ?, ?, ?)`,
           [adminEmail, adminPassword, "Admin", "Fumotion", "0123456789", 1, 1],
         )
-        console.log("✅ Utilisateur admin créé avec succès")
-        console.log("📧 Email: admin@fumotion.com")
-        console.log("🔑 Mot de passe: admin123")
+        console.log(" Utilisateur admin créé avec succès")
+        console.log(" Email: admin@fumotion.com")
+        console.log(" Mot de passe: admin123")
       } else {
         await this.pool.execute(
           "UPDATE users SET is_admin = 1, is_verified = 1 WHERE email = ?",
           [adminEmail]
         )
-        console.log("ℹ️  Utilisateur admin déjà existant (droits vérifiés)")
+        console.log("  Utilisateur admin déjà existant (droits vérifiés)")
       }
     } catch (err) {
-      console.error("❌ Erreur lors de la gestion de l'admin:", err)
+      console.error(" Erreur lors de la gestion de l'admin:", err)
     }
   }
 
