@@ -1406,3 +1406,56 @@
     border-radius: 0.5rem;
   }
 }
+
+/* ========== ICÔNES SVG ========== */
+.btn-icon-svg {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.stat-icon-svg {
+  width: 32px;
+  height: 32px;
+}
+
+.trend-icon-svg {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+}
+
+.quick-stat-icon-svg {
+  width: 24px;
+  height: 24px;
+}
+
+.icon-svg-heading {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+.icon-svg-empty {
+  width: 48px;
+  height: 48px;
+  opacity: 0.5;
+}
+
+.icon-svg-small {
+  width: 18px;
+  height: 18px;
+}
+
+.icon-svg-inline {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.icon-svg-quick {
+  width: 24px;
+  height: 24px;
+}
