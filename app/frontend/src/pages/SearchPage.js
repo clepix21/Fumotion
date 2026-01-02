@@ -192,7 +192,7 @@ export default function SearchPage() {
                 <button onClick={() => navigate("/create-trip")} className="navbar-btn-primary">
                   Créer un trajet
                 </button>
-                <div className="navbar-user-profile">
+                <div className="navbar-user-profile" onClick={() => navigate("/dashboard")} style={{ cursor: 'pointer' }}>
                   <Avatar user={user} size="medium" />
                   <div className="navbar-user-info">
                     <span className="navbar-user-name">{user?.first_name || user?.email}</span>
