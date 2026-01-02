@@ -1,6 +1,12 @@
+/**
+ * Middleware de validation des requêtes
+ * Utilise express-validator pour valider les données entrantes
+ */
 const { body, validationResult } = require('express-validator');
 
-// Middleware pour gérer les erreurs de validation
+/**
+ * Gère les erreurs de validation et retourne une réponse 400
+ */
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -13,7 +19,7 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
-// Validation pour l'inscription
+// Règles de validation pour l'inscription
 const validateRegistration = [
   body('email')
     .isEmail()
@@ -37,7 +43,7 @@ const validateRegistration = [
   handleValidationErrors
 ];
 
-// Validation pour la connexion
+// Règles de validation pour la connexion
 const validateLogin = [
   body('email')
     .isEmail()
@@ -49,7 +55,7 @@ const validateLogin = [
   handleValidationErrors
 ];
 
-// Validation pour la création de trajet
+// Règles de validation pour la création de trajet
 const validateTripCreation = [
   body('departureLocation')
     .trim()
