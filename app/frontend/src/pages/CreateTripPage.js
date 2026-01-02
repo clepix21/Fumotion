@@ -249,14 +249,25 @@ export default function CreateTripPage() {
       const geocodeResult = await reverseGeocode(lat, lng)
 
       // Utiliser le formatage court de l'adresse
-      let locationText = formatAddressShort(geocodeResult)
+      let locationText = null
+      
+      if (geocodeResult && geocodeResult.formatted) {
+        locationText = formatAddressShort(geocodeResult)
+      }
+      
+      // Si pas d'adresse formatée, essayer l'adresse brute
+      if (!locationText && geocodeResult && geocodeResult.address) {
+        const parts = geocodeResult.address.split(',').map(p => p.trim())
+        locationText = parts.slice(0, 2).join(', ')
+      }
 
+      // Fallback final avec les coordonnées
       if (!locationText) {
-        locationText = `Localisation : ${lat.toFixed(6)}, ${lng.toFixed(6)}`
+        locationText = `${lat.toFixed(4)}, ${lng.toFixed(4)}`
       }
 
       // Si le géocodage a échoué, réessayer une fois après un court délai
-      if (!geocodeResult || !geocodeResult.address) {
+      if (!geocodeResult || !geocodeResult.formatted) {
         await new Promise(resolve => setTimeout(resolve, 1000))
         const retryResult = await reverseGeocode(lat, lng)
         if (retryResult) {
