@@ -247,7 +247,7 @@ class Database {
    * Crée les vues SQL et les index pour optimiser les performances
    */
   async createViewsAndIndexes() {
-    console.log("📊 Création des vues et index d'optimisation...")
+    console.log("Création des vues et index d'optimisation...")
 
     const views = [
       // VUE 1: v_trip_details - Trajet complet avec infos conducteur

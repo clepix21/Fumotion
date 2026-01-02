@@ -106,30 +106,22 @@ class BookingController {
       const userId = req.user.id;
       const { status, type } = req.query;
 
-      let query = `
-        SELECT b.*, t.departure_location, t.arrival_location, t.departure_datetime, t.driver_id,
-               u.first_name as driver_first_name, u.last_name as driver_last_name,
-               u.phone as driver_phone
-        FROM bookings b
-        JOIN trips t ON b.trip_id = t.id
-        JOIN users u ON t.driver_id = u.id
-        WHERE b.passenger_id = ?
-      `;
-
+      // Utilise la vue v_booking_details pour une requête optimisée
+      let query = `SELECT * FROM v_booking_details WHERE passenger_id = ?`;
       const params = [userId];
 
       if (status) {
-        query += ` AND b.status = ?`;
+        query += ` AND status = ?`;
         params.push(status);
       }
 
       if (type === 'upcoming') {
-        query += ` AND t.departure_datetime > NOW()`;
+        query += ` AND departure_datetime > NOW()`;
       } else if (type === 'past') {
-        query += ` AND t.departure_datetime <= NOW()`;
+        query += ` AND departure_datetime <= NOW()`;
       }
 
-      query += ` ORDER BY t.departure_datetime DESC`;
+      query += ` ORDER BY departure_datetime DESC`;
 
       const bookings = await db.all(query, params);
 
