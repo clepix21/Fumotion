@@ -176,18 +176,18 @@ class AuthController {
   // Mise à jour du profil
   async updateProfile(req, res) {
     try {
-      const { firstName, lastName, phone, studentId } = req.body
+      const { firstName, lastName, phone, studentId, bio } = req.body
       const userId = req.user.id
 
       await db.run(
         `UPDATE users 
-         SET first_name = ?, last_name = ?, phone = ?, student_id = ?, updated_at = CURRENT_TIMESTAMP
+         SET first_name = ?, last_name = ?, phone = ?, student_id = ?, bio = ?, updated_at = CURRENT_TIMESTAMP
          WHERE id = ?`,
-        [firstName, lastName, phone, studentId, userId],
+        [firstName, lastName, phone, studentId, bio, userId],
       )
 
       const updatedUser = await db.get(
-        "SELECT id, email, first_name, last_name, phone, student_id, profile_picture FROM users WHERE id = ?",
+        "SELECT id, email, first_name, last_name, phone, student_id, bio, profile_picture FROM users WHERE id = ?",
         [userId],
       )
 

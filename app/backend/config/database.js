@@ -60,6 +60,7 @@ class Database {
         phone VARCHAR(20),
         student_id VARCHAR(50),
         university VARCHAR(255) DEFAULT 'IUT Amiens',
+        bio TEXT,
         profile_picture VARCHAR(255),
         banner_picture VARCHAR(255),
         is_verified BOOLEAN DEFAULT 0,
