@@ -1,33 +1,36 @@
-// Utilisation du proxy backend pour le géocodage (évite les problèmes CORS)
-// Note: On utilise toujours /api comme préfixe car les routes backend sont /api/geocode/...
+/**
+ * Utilitaires de géocodage
+ * Utilise l'API Nominatim via proxy backend pour éviter les problèmes CORS
+ */
+
 const API_BASE = process.env.REACT_APP_API_URL || ''
 const API_URL = API_BASE ? `${API_BASE}/api` : '/api'
 
-// Délai entre les requêtes pour respecter la politique d'utilisation de Nominatim
+// Rate limiting : Nominatim limite à 1 req/seconde
 let lastRequestTime = 0
-const MIN_REQUEST_INTERVAL = 500 // 0.5 seconde minimum entre les requêtes
+const MIN_REQUEST_INTERVAL = 500
 
+/**
+ * Convertit une adresse textuelle en coordonnées GPS
+ * @param {string} address - Adresse à géocoder
+ * @returns {Object|null} { lat, lng, address, formatted }
+ */
 export async function geocodeAddress(address) {
   if (!address || address.trim() === '') {
     return null
   }
 
-  // Vérifier si l'adresse est une coordonnée (format "Localisation : lat, lng" ou "lat, lng")
+  // Détecter si l'entrée est déjà des coordonnées
   const coordMatch = address.match(/(?:Localisation\s?:\s?)?(-?\d+\.\d+),\s?(-?\d+\.\d+)/)
   if (coordMatch) {
     const lat = parseFloat(coordMatch[1])
     const lng = parseFloat(coordMatch[2])
     if (!isNaN(lat) && !isNaN(lng)) {
-      return {
-        lat,
-        lng,
-        address: address,
-        formatted: {},
-      }
+      return { lat, lng, address, formatted: {} }
     }
   }
 
-  // Respecter le délai entre les requêtes
+  // Respecter le rate limit de Nominatim
   const now = Date.now()
   const timeSinceLastRequest = now - lastRequestTime
   if (timeSinceLastRequest < MIN_REQUEST_INTERVAL) {
@@ -66,8 +69,14 @@ export async function geocodeAddress(address) {
   }
 }
 
+/**
+ * Convertit des coordonnées GPS en adresse lisible
+ * @param {number} lat - Latitude
+ * @param {number} lng - Longitude
+ * @returns {Object|null} { display_name, address }
+ */
 export async function reverseGeocode(lat, lng) {
-  // Respecter le délai entre les requêtes
+  // Respecter le rate limit
   const now = Date.now()
   const timeSinceLastRequest = now - lastRequestTime
   if (timeSinceLastRequest < MIN_REQUEST_INTERVAL) {
@@ -93,10 +102,9 @@ export async function reverseGeocode(lat, lng) {
     console.log('Reverse geocode response:', data)
 
     if (data && data.display_name) {
-      // Retourner un format cohérent
       return {
         display_name: data.display_name,
-        address: data.address || {}, // L'objet détaillé avec house_number, road, city, etc.
+        address: data.address || {}, // Objet détaillé (house_number, road, city...)
       }
     }
 
@@ -107,7 +115,11 @@ export async function reverseGeocode(lat, lng) {
   }
 }
 
-// Fonction pour formater l'adresse de manière concise
+/**
+ * Formate une adresse en version courte (rue, ville)
+ * @param {Object} geocodeResult - Résultat de geocode ou reverseGeocode
+ * @returns {string|null} Adresse formatée
+ */
 export function formatAddressShort(geocodeResult) {
   if (!geocodeResult) {
     return null

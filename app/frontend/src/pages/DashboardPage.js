@@ -1,3 +1,7 @@
+/**
+ * Page Tableau de bord utilisateur
+ * Affiche profil, trajets, réservations et statistiques
+ */
 import { useState, useEffect, useCallback, useRef } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
@@ -16,8 +20,10 @@ import "../styles/HomePage.css"
 export default function DashboardPage() {
   const navigate = useNavigate()
   const { user, token, logout, updateUser } = useAuth()
-  const [activeTab, setActiveTab] = useState("overview")
-  const [myTrips, setMyTrips] = useState([])
+  
+  // ========== ÉTATS PRINCIPAUX ==========
+  const [activeTab, setActiveTab] = useState("overview") // Onglet actif
+  const [myTrips, setMyTrips] = useState([])             // Trajets créés
   const [myBookings, setMyBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)

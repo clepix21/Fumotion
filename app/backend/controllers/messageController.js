@@ -1,7 +1,14 @@
+/**
+ * Contrôleur de messagerie
+ * Gère les conversations et messages entre utilisateurs
+ */
 const db = require('../config/database');
 const { validationResult } = require('express-validator');
 
-// Envoyer un message
+/**
+ * Envoyer un message à un autre utilisateur
+ * Peut être lié à un trajet (trip_id optionnel)
+ */
 exports.sendMessage = async (req, res) => {
     try {
         const errors = validationResult(req);
@@ -12,7 +19,7 @@ exports.sendMessage = async (req, res) => {
         const { receiver_id, message, trip_id } = req.body;
         const sender_id = req.user.id;
 
-        // Vérifier si le destinataire existe
+        // Vérifier que le destinataire existe
         if (receiver_id) {
             const receiver = await db.get('SELECT id FROM users WHERE id = ?', [receiver_id]);
             if (!receiver) {

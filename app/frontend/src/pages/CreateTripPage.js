@@ -1,3 +1,7 @@
+/**
+ * Page de création de trajet
+ * Permet au conducteur de publier un nouveau trajet avec carte interactive
+ */
 import { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
@@ -12,13 +16,19 @@ import "../styles/HomePage.css"
 export default function CreateTripPage() {
   const navigate = useNavigate()
   const { user, logout } = useAuth()
+  
+  // États du formulaire
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  
+  // États de la carte
   const [mapCenter, setMapCenter] = useState([49.8942, 2.2957]) // Amiens par défaut
-  const [markers, setMarkers] = useState([])
-  const [selectingPoint, setSelectingPoint] = useState(null) // 'departure' ou 'arrival'
-  const [routeInfo, setRouteInfo] = useState(null) // Infos sur la route (distance, durée)
+  const [markers, setMarkers] = useState([])                    // Marqueurs départ/arrivée
+  const [selectingPoint, setSelectingPoint] = useState(null)    // 'departure' ou 'arrival'
+  const [routeInfo, setRouteInfo] = useState(null)              // Distance et durée
+  
+  // Données du formulaire
   const [formData, setFormData] = useState({
     departure_location: "",
     arrival_location: "",
@@ -32,8 +42,8 @@ export default function CreateTripPage() {
     arrival_longitude: null,
   })
 
+  // Géolocalisation automatique au chargement
   useEffect(() => {
-    // Géolocalisation automatique au chargement
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {

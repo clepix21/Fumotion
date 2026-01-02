@@ -1,14 +1,21 @@
+/**
+ * Contrôleur des réservations
+ * Gère la création, confirmation, annulation des réservations
+ */
 const db = require('../config/database');
 
 class BookingController {
-  // Créer une nouvelle réservation
+  /**
+   * Créer une nouvelle réservation
+   * Vérifie : places dispo, pas son propre trajet, pas de doublon
+   */
   async createBooking(req, res) {
     try {
       const { tripId } = req.params;
       const { seatsBooked } = req.body;
       const passengerId = req.user.id;
 
-      // Vérifier que le trajet existe et est disponible
+      // Vérifier que le trajet existe et récupérer les places restantes
       const trip = await db.get(
         `SELECT t.*, 
                 (t.available_seats - COALESCE(SUM(b.seats_booked), 0)) as remaining_seats,

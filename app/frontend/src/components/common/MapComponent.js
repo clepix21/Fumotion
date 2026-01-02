@@ -1,9 +1,13 @@
+/**
+ * Composants de carte interactive
+ * Utilise Leaflet + OpenStreetMap pour l'affichage et OSRM pour les routes
+ */
 import { useEffect, useState, useRef, useCallback } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, Polyline } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
-// Fix pour les icônes Leaflet avec Create React App
+// Fix nécessaire pour les icônes Leaflet avec Create React App (Webpack)
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -11,7 +15,9 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 })
 
-// Composant pour centrer la carte sur une position
+/**
+ * Sous-composant : Centre la carte sur une position
+ */
 function MapCenter({ center, zoom, skipIfBounds }) {
   const map = useMap()
   const lastCenter = useRef(null)
@@ -28,7 +34,9 @@ function MapCenter({ center, zoom, skipIfBounds }) {
   return null
 }
 
-// Composant pour gérer les clics sur la carte
+/**
+ * Sous-composant : Gère les clics sur la carte
+ */
 function MapClickHandler({ onMapClick, interactive }) {
   useMapEvents({
     click: (e) => {
@@ -41,7 +49,9 @@ function MapClickHandler({ onMapClick, interactive }) {
   return null
 }
 
-// Composant pour ajuster la vue sur les bounds
+/**
+ * Sous-composant : Ajuste la vue pour inclure tous les marqueurs
+ */
 function FitBounds({ bounds }) {
   const map = useMap()
   const lastBounds = useRef(null)

@@ -1,24 +1,31 @@
+/**
+ * Contrôleur d'administration
+ * Accès réservé aux admins : stats, gestion users/trajets
+ */
 const db = require("../config/database")
 
-// Obtenir les statistiques générales
+/**
+ * Récupère les statistiques globales de la plateforme
+ * Utilisateurs, trajets, réservations, revenus
+ */
 exports.getStatistics = async (req, res) => {
   try {
-    // Compter les utilisateurs
+    // Statistiques utilisateurs
     const usersCount = await db.get("SELECT COUNT(*) as count FROM users")
     const activeUsers = await db.get("SELECT COUNT(*) as count FROM users WHERE is_active = 1")
     const verifiedUsers = await db.get("SELECT COUNT(*) as count FROM users WHERE is_verified = 1")
 
-    // Compter les trajets
+    // Statistiques trajets
     const tripsCount = await db.get("SELECT COUNT(*) as count FROM trips")
     const activeTrips = await db.get("SELECT COUNT(*) as count FROM trips WHERE status = 'active'")
     const completedTrips = await db.get("SELECT COUNT(*) as count FROM trips WHERE status = 'completed'")
 
-    // Compter les réservations
+    // Statistiques réservations
     const bookingsCount = await db.get("SELECT COUNT(*) as count FROM bookings")
     const confirmedBookings = await db.get("SELECT COUNT(*) as count FROM bookings WHERE status = 'confirmed'")
     const pendingBookings = await db.get("SELECT COUNT(*) as count FROM bookings WHERE status = 'pending'")
 
-    // Calculer le revenu total
+    // Revenu total
     const revenue = await db.get("SELECT SUM(total_price) as total FROM bookings WHERE payment_status = 'paid'")
 
     // Obtenir les derniers utilisateurs
