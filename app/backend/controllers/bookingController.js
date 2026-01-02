@@ -144,18 +144,10 @@ class BookingController {
       const { id } = req.params;
       const userId = req.user.id;
 
+      // Utilise la vue v_booking_details pour une requête simplifiée
       const booking = await db.get(
-        `SELECT b.*, t.departure_location, t.arrival_location, t.departure_datetime,
-                t.description, t.driver_id,
-                u_driver.first_name as driver_first_name, u_driver.last_name as driver_last_name,
-                u_driver.phone as driver_phone, u_driver.email as driver_email,
-                u_passenger.first_name as passenger_first_name, u_passenger.last_name as passenger_last_name,
-                u_passenger.phone as passenger_phone, u_passenger.email as passenger_email
-         FROM bookings b
-         JOIN trips t ON b.trip_id = t.id
-         JOIN users u_driver ON t.driver_id = u_driver.id
-         JOIN users u_passenger ON b.passenger_id = u_passenger.id
-         WHERE b.id = ? AND (b.passenger_id = ? OR t.driver_id = ?)`,
+        `SELECT * FROM v_booking_details
+         WHERE id = ? AND (passenger_id = ? OR driver_id = ?)`,
         [id, userId, userId]
       );
 

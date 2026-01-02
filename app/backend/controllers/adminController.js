@@ -6,61 +6,46 @@ const db = require("../config/database")
 
 /**
  * Récupère les statistiques globales de la plateforme
- * Utilisateurs, trajets, réservations, revenus
+ * Utilise la vue v_platform_stats pour des performances optimales
  */
 exports.getStatistics = async (req, res) => {
   try {
-    // Statistiques utilisateurs
-    const usersCount = await db.get("SELECT COUNT(*) as count FROM users")
-    const activeUsers = await db.get("SELECT COUNT(*) as count FROM users WHERE is_active = 1")
-    const verifiedUsers = await db.get("SELECT COUNT(*) as count FROM users WHERE is_verified = 1")
-
-    // Statistiques trajets
-    const tripsCount = await db.get("SELECT COUNT(*) as count FROM trips")
-    const activeTrips = await db.get("SELECT COUNT(*) as count FROM trips WHERE status = 'active'")
-    const completedTrips = await db.get("SELECT COUNT(*) as count FROM trips WHERE status = 'completed'")
-
-    // Statistiques réservations
-    const bookingsCount = await db.get("SELECT COUNT(*) as count FROM bookings")
-    const confirmedBookings = await db.get("SELECT COUNT(*) as count FROM bookings WHERE status = 'confirmed'")
-    const pendingBookings = await db.get("SELECT COUNT(*) as count FROM bookings WHERE status = 'pending'")
-
-    // Revenu total
-    const revenue = await db.get("SELECT SUM(total_price) as total FROM bookings WHERE payment_status = 'paid'")
+    // Utilise la vue v_platform_stats pour une requête optimisée
+    const stats = await db.get("SELECT * FROM v_platform_stats")
 
     // Obtenir les derniers utilisateurs
     const recentUsers = await db.all(
       "SELECT id, email, first_name, last_name, profile_picture, created_at FROM users ORDER BY created_at DESC LIMIT 5"
     )
 
-    // Obtenir les derniers trajets
+    // Obtenir les derniers trajets (utilise la vue v_trip_details)
     const recentTrips = await db.all(
-      `SELECT t.*, u.first_name, u.last_name 
-       FROM trips t 
-       JOIN users u ON t.driver_id = u.id 
-       ORDER BY t.created_at DESC LIMIT 5`
+      `SELECT id, departure_location, arrival_location, departure_datetime, 
+              driver_first_name, driver_last_name, status, created_at 
+       FROM v_trip_details 
+       ORDER BY created_at DESC LIMIT 5`
     )
 
     res.json({
       success: true,
       data: {
         users: {
-          total: usersCount.count,
-          active: activeUsers.count,
-          verified: verifiedUsers.count
+          total: stats.total_users,
+          active: stats.active_users,
+          verified: stats.verified_users
         },
         trips: {
-          total: tripsCount.count,
-          active: activeTrips.count,
-          completed: completedTrips.count
+          total: stats.total_trips,
+          active: stats.active_trips,
+          completed: stats.completed_trips
         },
         bookings: {
-          total: bookingsCount.count,
-          confirmed: confirmedBookings.count,
-          pending: pendingBookings.count
+          total: stats.total_bookings,
+          confirmed: stats.confirmed_bookings,
+          pending: stats.pending_bookings
         },
         revenue: {
-          total: revenue.total || 0
+          total: stats.total_revenue || 0
         },
         recent: {
           users: recentUsers,
