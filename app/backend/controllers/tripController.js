@@ -79,55 +79,37 @@ class TripController {
         limit = 10
       } = req.query;
 
+      // Utilise la vue v_active_trips pour une requête optimisée
       let query = `
-        SELECT t.*, 
-               u.first_name, u.last_name, u.email, u.profile_picture,
-               (SELECT COALESCE(AVG(r2.rating), 0) 
-                FROM reviews r2 
-                WHERE r2.reviewed_id = u.id AND r2.type = 'driver') as driver_rating,
-               (SELECT COUNT(r3.id) 
-                FROM reviews r3 
-                WHERE r3.reviewed_id = u.id AND r3.type = 'driver') as reviews_count,
-               (t.available_seats - COALESCE(
-                 (SELECT SUM(b2.seats_booked) 
-                  FROM bookings b2 
-                  WHERE b2.trip_id = t.id AND b2.status != 'cancelled'), 0)
-               ) as remaining_seats
-        FROM trips t
-        JOIN users u ON t.driver_id = u.id
-        WHERE t.status = 'active'
-        AND t.departure_datetime > NOW()
+        SELECT * FROM v_active_trips
+        WHERE 1=1
       `;
 
       const params = [];
 
       if (departure) {
-        query += ` AND t.departure_location LIKE ?`;
+        query += ` AND departure_location LIKE ?`;
         params.push(`%${departure}%`);
       }
 
       if (arrival) {
-        query += ` AND t.arrival_location LIKE ?`;
+        query += ` AND arrival_location LIKE ?`;
         params.push(`%${arrival}%`);
       }
 
       if (date) {
-        query += ` AND DATE(t.departure_datetime) = DATE(?)`;
+        query += ` AND DATE(departure_datetime) = DATE(?)`;
         params.push(date);
       }
 
       if (passengers) {
-        query += ` AND (t.available_seats - COALESCE(
-          (SELECT SUM(b2.seats_booked) 
-           FROM bookings b2 
-           WHERE b2.trip_id = t.id AND b2.status != 'cancelled'), 0)
-        ) >= ?`;
+        query += ` AND remaining_seats >= ?`;
         params.push(parseInt(passengers));
       }
 
-      query += ` ORDER BY t.departure_datetime ASC`;
+      query += ` ORDER BY departure_datetime ASC`;
 
-      // Pagination - MySQL a des problèmes avec LIMIT/OFFSET en tant que paramètres préparés
+      // Pagination
       const offset = (page - 1) * limit;
       const limitValue = parseInt(limit);
       const offsetValue = parseInt(offset);
@@ -135,28 +117,30 @@ class TripController {
 
       const trips = await db.all(query, params);
 
-      // Compter le total pour la pagination
+      // Compter le total pour la pagination (utilise la vue aussi)
       let countQuery = `
-        SELECT COUNT(DISTINCT t.id) as total
-        FROM trips t
-        WHERE t.status = 'active'
-        AND t.departure_datetime > NOW()
+        SELECT COUNT(*) as total FROM v_active_trips WHERE 1=1
       `;
       const countParams = [];
 
       if (departure) {
-        countQuery += ` AND t.departure_location LIKE ?`;
+        countQuery += ` AND departure_location LIKE ?`;
         countParams.push(`%${departure}%`);
       }
 
       if (arrival) {
-        countQuery += ` AND t.arrival_location LIKE ?`;
+        countQuery += ` AND arrival_location LIKE ?`;
         countParams.push(`%${arrival}%`);
       }
 
       if (date) {
-        countQuery += ` AND DATE(t.departure_datetime) = DATE(?)`;
+        countQuery += ` AND DATE(departure_datetime) = DATE(?)`;
         countParams.push(date);
+      }
+
+      if (passengers) {
+        countQuery += ` AND remaining_seats >= ?`;
+        countParams.push(parseInt(passengers));
       }
 
       const { total } = await db.get(countQuery, countParams);
@@ -187,19 +171,9 @@ class TripController {
     try {
       const { id } = req.params;
 
+      // Utilise la vue v_trip_details pour une requête simplifiée
       const trip = await db.get(
-        `SELECT t.*, 
-                u.first_name, u.last_name, u.email, u.phone,
-                (SELECT AVG(rating) FROM reviews WHERE reviewed_id = u.id AND type = 'driver') as driver_rating,
-                (SELECT COUNT(id) FROM reviews WHERE reviewed_id = u.id AND type = 'driver') as reviews_count,
-                v.brand, v.model, v.color,
-                (t.available_seats - COALESCE(SUM(b.seats_booked), 0)) as remaining_seats
-         FROM trips t
-         JOIN users u ON t.driver_id = u.id
-         LEFT JOIN vehicles v ON t.vehicle_id = v.id
-         LEFT JOIN bookings b ON t.id = b.trip_id AND b.status != 'cancelled'
-         WHERE t.id = ?
-         GROUP BY t.id`,
+        `SELECT * FROM v_trip_details WHERE id = ?`,
         [id]
       );
 
