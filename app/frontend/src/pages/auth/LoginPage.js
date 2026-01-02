@@ -63,7 +63,7 @@ export default function LoginPage() {
 
       if (err.name === "TypeError" && err.message.includes("fetch")) {
         setError(
-          "❌ Impossible de se connecter au serveur backend. Vérifiez que le serveur est démarré sur http://localhost:5000",
+          "❌ Impossible de se connecter au serveur backend. Vérifiez votre connexion.",
         )
       } else {
         setError(`Erreur de connexion: ${err.message}`)

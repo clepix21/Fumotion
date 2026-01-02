@@ -52,7 +52,7 @@ export default function RegisterPage() {
     try {
       console.log('Envoi des données:', formData);
 
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -97,7 +97,7 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, s
                 </button>
                 {otherUser.profile_picture ? (
                     <img
-                        src={`http://localhost:5000/uploads/${otherUser.profile_picture}`}
+                        src={`/uploads/${otherUser.profile_picture}`}
                         alt={`${otherUser.first_name} ${otherUser.last_name}`}
                         className="chat-avatar"
                     />
