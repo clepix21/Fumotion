@@ -47,6 +47,20 @@ export default function CreateTripPage() {
     }
   }, [])
 
+  // Bloquer le scroll du body quand le menu mobile est ouvert
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.classList.add('menu-open')
+    } else {
+      document.body.classList.remove('menu-open')
+    }
+    
+    // Cleanup au démontage du composant
+    return () => {
+      document.body.classList.remove('menu-open')
+    }
+  }, [mobileMenuOpen])
+
   // Mettre à jour les marqueurs quand les coordonnées changent
   useEffect(() => {
     const newMarkers = []
@@ -334,7 +348,50 @@ export default function CreateTripPage() {
             {mobileMenuOpen ? '✕' : '☰'}
           </button>
 
-          <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
+          {/* Menu desktop */}
+          <div className="navbar-menu navbar-menu-desktop">
+            <a href="/search" className="navbar-link">
+              Rechercher
+            </a>
+            <div className="navbar-divider"></div>
+            <button onClick={() => navigate("/create-trip")} className="navbar-btn-primary">
+              Créer un trajet
+            </button>
+            {user?.is_admin && (
+              <button onClick={() => navigate("/admin")} className="navbar-btn-admin">
+                👑 Admin
+              </button>
+            )}
+            <div className="navbar-user-profile" onClick={() => navigate("/dashboard")} style={{ cursor: 'pointer' }}>
+              <Avatar user={user} size="medium" />
+              <div className="navbar-user-info">
+                <span className="navbar-user-name">{user?.first_name || user?.email}</span>
+              </div>
+            </div>
+            <button onClick={handleLogout} className="navbar-btn-logout">
+              Déconnexion
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Menu mobile - en dehors de la navbar */}
+      {mobileMenuOpen && (
+        <>
+          <div 
+            className="navbar-overlay"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+          <div className="navbar-menu-mobile">
+            <button 
+              className="navbar-menu-close"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Fermer le menu"
+            >
+              ✕
+            </button>
+            
             <a href="/search" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
               Rechercher
             </a>
@@ -354,22 +411,13 @@ export default function CreateTripPage() {
               </div>
             </div>
             <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="navbar-btn-logout">
-              <span>🚪</span> Déconnexion
+              Déconnexion
             </button>
           </div>
-        </div>
-      </nav>
+        </>
+      )}
 
       <main className="create-trip-main">
-        {/* Header avec breadcrumb */}
-        <div className="page-header">
-          <div className="header-content">
-            <Link to="/dashboard" className="back-link">
-              ← Retour au tableau de bord
-            </Link>
-          </div>
-        </div>
-
         <div className="create-trip-container">
           {/* Formulaire principal */}
           <div className="create-trip-card">
