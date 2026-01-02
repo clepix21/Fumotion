@@ -1067,7 +1067,7 @@ export default function DashboardPage() {
                         />
                       ) : (
                         <p className="profile-bio">
-                          {displayUser?.bio || 'Étudiant passionné par le covoiturage et les rencontres'}
+                          {displayUser?.bio || 'sans biographie...'}
                         </p>
                       )}
                     </div>
