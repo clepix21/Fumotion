@@ -1,3 +1,7 @@
+/**
+ * Composant Footer
+ * Pied de page avec liens de navigation et Easter eggs FNAF
+ */
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/Footer.css';
@@ -11,12 +15,14 @@ import foxy from '../../assets/images/fnaf/foxy.jpg';
 export default function Footer() {
     const [currentImage, setCurrentImage] = useState(null);
 
+    // Affiche une image FNAF lors du clic sur un réseau social
     const handleSocialClick = (image) => {
         setCurrentImage(image);
     };
 
     return (
         <footer className="footer">
+            {/* Modal FNAF Easter egg */}
             {currentImage && (
                 <div className="freddy-overlay" onClick={() => setCurrentImage(null)}>
                     <div className="freddy-modal">

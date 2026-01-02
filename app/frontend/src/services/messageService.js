@@ -1,12 +1,11 @@
+/**
+ * Service de messagerie
+ * Appels API pour la gestion des conversations et messages
+ */
 import { get, post } from './api';
 
 export const messageService = {
-    // Récupérer la liste des conversations
-    getConversations: () => get('/api/messages/conversations'),
-
-    // Récupérer les messages avec un utilisateur spécifique
-    getMessages: (otherUserId) => get(`/api/messages/${otherUserId}`),
-
-    // Envoyer un message
-    sendMessage: (data) => post('/api/messages', data),
+    getConversations: () => get('/api/messages/conversations'),        // Liste des conversations
+    getMessages: (otherUserId) => get(`/api/messages/${otherUserId}`), // Messages avec un utilisateur
+    sendMessage: (data) => post('/api/messages', data),                // Envoyer un message
 };
