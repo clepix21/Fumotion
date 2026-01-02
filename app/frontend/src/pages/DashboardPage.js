@@ -531,7 +531,7 @@ export default function DashboardPage() {
             <div className="overview-section">
               <div className="overview-header">
                 <div className="overview-welcome">
-                  <h1>Bienvenue, {displayUser?.first_name || 'Utilisateur'} ! 👋</h1>
+                  <h1>Bienvenue, {displayUser?.first_name || 'Utilisateur'} !</h1>
                   <p className="overview-subtitle">Voici un résumé de votre activité sur Fumotion</p>
                 </div>
                 <div className="overview-date">
@@ -653,43 +653,6 @@ export default function DashboardPage() {
                       ))}
                   </div>
                 )}
-              </div>
-
-              {/* Actions rapides améliorées */}
-              <div className="quick-actions">
-                <h2><span className="section-icon">⚡</span> Actions rapides</h2>
-                <div className="action-cards">
-                  <Link to="/create-trip" className="action-card action-create">
-                    <div className="action-icon-wrapper">
-                      <span className="action-icon">➕</span>
-                    </div>
-                    <div className="action-content">
-                      <h3>Proposer un trajet</h3>
-                      <p>Créez un nouveau trajet et partagez vos frais</p>
-                    </div>
-                    <span className="action-arrow">→</span>
-                  </Link>
-                  <Link to="/search" className="action-card action-search">
-                    <div className="action-icon-wrapper">
-                      <span className="action-icon">🔍</span>
-                    </div>
-                    <div className="action-content">
-                      <h3>Trouver un trajet</h3>
-                      <p>Recherchez un trajet pour vos déplacements</p>
-                    </div>
-                    <span className="action-arrow">→</span>
-                  </Link>
-                  <Link to="/chat" className="action-card action-chat">
-                    <div className="action-icon-wrapper">
-                      <span className="action-icon">💬</span>
-                    </div>
-                    <div className="action-content">
-                      <h3>Messagerie</h3>
-                      <p>Contactez vos covoitureurs</p>
-                    </div>
-                    <span className="action-arrow">→</span>
-                  </Link>
-                </div>
               </div>
 
               {/* Évaluations en attente */}
@@ -937,7 +900,7 @@ export default function DashboardPage() {
                 <h2><img src={statsIcon} alt="stats" className="icon-svg-heading" /> Mes notes</h2>
                 <div className="ratings-grid">
                   <div className="rating-card">
-                    <div className="rating-icon">🚗</div>
+                    <div className="rating-icon"><img src={voiture} alt="" className="icon-svg-rating" /></div>
                     <div className="rating-info">
                       <span className="rating-value-large">
                         {displayUser?.driver_rating ? parseFloat(displayUser.driver_rating).toFixed(1) : '-'}
