@@ -1,11 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/Footer.css';
 import logo from '../../assets/images/logo.png';
+import freddy from '../../assets/images/fnaf/freddy.jpg';
 
 export default function Footer() {
+    const [showFreddy, setShowFreddy] = useState(false);
+
+    const handleSocialClick = (e) => {
+        e.preventDefault();
+        setShowFreddy(true);
+    };
+
     return (
         <footer className="footer">
+            {showFreddy && (
+                <div className="freddy-overlay" onClick={() => setShowFreddy(false)}>
+                    <div className="freddy-modal">
+                        <img src={freddy} alt="Freddy" className="freddy-image" />
+                        <button className="freddy-close" onClick={() => setShowFreddy(false)}>✕</button>
+                    </div>
+                </div>
+            )}
             <div className="footer-container">
                 <div className="footer-grid">
                     <div className="footer-column">
@@ -38,10 +54,10 @@ export default function Footer() {
                 <div className="footer-bottom">
                     <p>&copy; {new Date().getFullYear()} Fumotion. Tous droits réservés.</p>
                     <div className="footer-social">
-                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="social-link">Twitter</a>
-                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-link">Instagram</a>
-                        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-link">LinkedIn</a>
-                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-link">Facebook</a>
+                        <button onClick={handleSocialClick} className="social-link">Twitter</button>
+                        <button onClick={handleSocialClick} className="social-link">Instagram</button>
+                        <button onClick={handleSocialClick} className="social-link">LinkedIn</button>
+                        <button onClick={handleSocialClick} className="social-link">Facebook</button>
                     </div>
                 </div>
             </div>
