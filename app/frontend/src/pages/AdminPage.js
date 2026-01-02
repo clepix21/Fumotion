@@ -1,3 +1,7 @@
+/**
+ * Page d'administration
+ * Tableau de bord, gestion des utilisateurs, trajets et réservations
+ */
 import { useState, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
@@ -17,10 +21,10 @@ export default function AdminPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [notification, setNotification] = useState(null)
   
-  // États pour le dashboard
+  // États du dashboard (statistiques globales)
   const [statistics, setStatistics] = useState(null)
   
-  // États pour les utilisateurs
+  // États de la gestion des utilisateurs
   const [users, setUsers] = useState([])
   const [usersPage, setUsersPage] = useState(1)
   const [usersPagination, setUsersPagination] = useState(null)
@@ -29,7 +33,7 @@ export default function AdminPage() {
   const [selectedUsers, setSelectedUsers] = useState([])
   const [userDetailModal, setUserDetailModal] = useState(null)
   
-  // États pour les trajets
+  // États de la gestion des trajets
   const [trips, setTrips] = useState([])
   const [tripsPage, setTripsPage] = useState(1)
   const [tripsPagination, setTripsPagination] = useState(null)
@@ -37,42 +41,39 @@ export default function AdminPage() {
   const [tripsSearch, setTripsSearch] = useState("")
   const [selectedTrips, setSelectedTrips] = useState([])
   
-  // États pour les réservations
+  // États de la gestion des réservations
   const [bookings, setBookings] = useState([])
   const [bookingsPage, setBookingsPage] = useState(1)
   const [bookingsPagination, setBookingsPagination] = useState(null)
   const [bookingsFilter, setBookingsFilter] = useState("")
 
-  // Notification helper
+  /** Affiche une notification temporaire */
   const showNotification = (message, type = 'success') => {
     setNotification({ message, type })
     setTimeout(() => setNotification(null), 3000)
   }
 
-  // Format helpers
+  /** Formate une date en français */
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
     })
   }
 
+  /** Formate une adresse (garde les 2 premiers éléments) */
   const formatAddress = (address) => {
     if (!address) return "-"
     const parts = address.split(',')
     return parts.length > 1 ? `${parts[0]}, ${parts[1]}` : address
   }
 
-  // Export CSV
+  /** Exporte les données en CSV */
   const exportToCSV = (data, filename) => {
     if (!data || data.length === 0) {
       showNotification("Aucune donnée à exporter", "warning")
       return
     }
-
     const headers = Object.keys(data[0])
     const csvContent = [
       headers.join(','),

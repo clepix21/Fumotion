@@ -51,8 +51,6 @@ export default function HomePage() {
     if (searchData.arrival.trim()) params.append("arrival", searchData.arrival.trim())
     if (searchData.date) params.append("date", searchData.date)
     if (searchData.passengers) params.append("passengers", searchData.passengers)
-    }
-
     // Rediriger vers la page de recherche avec les paramètres
     navigate(`/search?${params.toString()}`)
   }
