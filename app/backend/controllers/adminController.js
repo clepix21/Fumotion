@@ -30,22 +30,22 @@ exports.getStatistics = async (req, res) => {
       success: true,
       data: {
         users: {
-          total: stats.total_users,
-          active: stats.active_users,
-          verified: stats.verified_users
+          total: parseInt(stats.total_users) || 0,
+          active: parseInt(stats.active_users) || 0,
+          verified: parseInt(stats.verified_users) || 0
         },
         trips: {
-          total: stats.total_trips,
-          active: stats.active_trips,
-          completed: stats.completed_trips
+          total: parseInt(stats.total_trips) || 0,
+          active: parseInt(stats.active_trips) || 0,
+          completed: parseInt(stats.completed_trips) || 0
         },
         bookings: {
-          total: stats.total_bookings,
-          confirmed: stats.confirmed_bookings,
-          pending: stats.pending_bookings
+          total: parseInt(stats.total_bookings) || 0,
+          confirmed: parseInt(stats.confirmed_bookings) || 0,
+          pending: parseInt(stats.pending_bookings) || 0
         },
         revenue: {
-          total: stats.total_revenue || 0
+          total: parseFloat(stats.total_revenue) || 0
         },
         recent: {
           users: recentUsers,
