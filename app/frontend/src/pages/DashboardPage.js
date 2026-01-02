@@ -1002,16 +1002,15 @@ export default function DashboardPage() {
                       <p className="profile-joined">
                         Membre depuis {displayUser?.created_at ? new Date(displayUser.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : '2024'}
                       </p>
-                      <p className="location-info">
-                        <span className="location-icon">📍</span>
-                        Étudiant à {displayUser?.university || 'IUT Amiens'}, Amiens
+                      <p className="profile-bio">
+                        {displayUser?.bio || 'Étudiant passionné par le covoiturage et les rencontres'}
                       </p>
                     </div>
                     <button
                       className="edit-profile-btn"
                       onClick={() => setEditMode(!editMode)}
                     >
-                      {editMode ? 'Annuler' : '✏️ Modifier le profil'}
+                      {editMode ? 'Terminer' : 'Modifier le profil'}
                     </button>
                   </div>
 
