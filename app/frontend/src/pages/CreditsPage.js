@@ -33,7 +33,7 @@ export default function CreditsPage() {
         { name: 'Clément', role: 'Développeur Full Stack', image: membre1, color: '#3498db' },
         { name: 'Membre 2', role: 'Développeur', image: membre2, color: '#9b59b6' },
         { name: 'Membre 3', role: 'Développeur', image: membre3, color: '#e74c3c' },
-        { name: 'Membre 4', role: 'Développeur ', image: membre4, color: '#2ecc71' },
+        { name: 'Membre 4', role: 'Développeur', image: membre4, color: '#2ecc71' },
         { name: 'Membre 5', role: 'Développeur', image: membre5, color: '#f39c12' },
         { name: 'Membre 6', role: 'Développeur', image: membre6, color: '#1abc9c' }
     ];
