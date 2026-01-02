@@ -1,10 +1,19 @@
+/**
+ * Middleware d'authentification JWT
+ * Vérifie et valide les tokens d'accès pour les routes protégées
+ */
 const jwt = require('jsonwebtoken');
 const db = require('../config/database');
 
+/**
+ * Middleware obligatoire : bloque l'accès si non authentifié
+ * Extrait l'utilisateur du token et l'ajoute à req.user
+ */
 const authMiddleware = async (req, res, next) => {
   try {
     const authHeader = req.header('Authorization');
     
+    // Vérifier la présence du header Authorization
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ 
         success: false, 
@@ -12,12 +21,13 @@ const authMiddleware = async (req, res, next) => {
       });
     }
 
-    const token = authHeader.substring(7); // Remove "Bearer " prefix
+    const token = authHeader.substring(7); // Retirer le préfixe "Bearer "
     
     try {
+      // Décoder et vérifier le token JWT
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       
-      // Vérifier que l'utilisateur existe toujours
+      // Vérifier que l'utilisateur existe et est actif en BDD
       const user = await db.get(
         'SELECT id, email, first_name, last_name, is_active, is_admin FROM users WHERE id = ? AND is_active = 1',
         [decoded.userId]

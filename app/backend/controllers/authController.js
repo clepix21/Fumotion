@@ -1,3 +1,7 @@
+/**
+ * Contrôleur d'authentification
+ * Gère inscription, connexion, profil et mot de passe
+ */
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const db = require("../config/database")
@@ -5,14 +9,17 @@ const fs = require("fs")
 const path = require("path")
 
 class AuthController {
-  // Inscription
+  /**
+   * Inscription d'un nouvel utilisateur
+   * Hash le mot de passe et génère un token JWT
+   */
   async register(req, res) {
     try {
       const { email, password, firstName, lastName, phone, studentId } = req.body
 
       console.log("[v0] Tentative d'inscription pour:", email)
 
-      // Vérifier si l'email existe déjà
+      // Vérifier l'unicité de l'email
       const existingUser = await db.get("SELECT id FROM users WHERE email = ?", [email])
       if (existingUser) {
         console.log("[v0] Email déjà existant:", email)
@@ -22,7 +29,7 @@ class AuthController {
         })
       }
 
-      // Hasher le mot de passe
+      // Sécuriser le mot de passe avec bcrypt (10 rounds)
       const hashedPassword = await bcrypt.hash(password, 10)
 
       // Créer l'utilisateur

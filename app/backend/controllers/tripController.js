@@ -1,7 +1,14 @@
+/**
+ * Contrôleur des trajets
+ * CRUD complet + recherche avec filtres géographiques
+ */
 const db = require('../config/database');
 
 class TripController {
-  // Créer un nouveau trajet
+  /**
+   * Créer un nouveau trajet
+   * Stocke les coordonnées GPS pour la carte
+   */
   async createTrip(req, res) {
     try {
       const {
@@ -17,9 +24,9 @@ class TripController {
         arrivalLongitude
       } = req.body;
 
-      const driverId = req.user.id;
+      const driverId = req.user.id; // ID du conducteur depuis le token JWT
 
-      // Convertir la date ISO en format MySQL DATETIME (YYYY-MM-DD HH:MM:SS)
+      // Convertir ISO 8601 vers format MySQL (YYYY-MM-DD HH:MM:SS)
       const mysqlDateTime = new Date(departureDateTime)
         .toISOString()
         .slice(0, 19)

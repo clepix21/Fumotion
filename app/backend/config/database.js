@@ -1,11 +1,19 @@
+/**
+ * Configuration et gestion de la base de données MySQL
+ * Utilise mysql2/promise pour les opérations asynchrones
+ */
 const mysql = require("mysql2/promise")
 const bcrypt = require("bcryptjs")
 
 class Database {
   constructor() {
-    this.pool = null
+    this.pool = null // Pool de connexions MySQL
   }
 
+  /**
+   * Établit la connexion à la base de données avec retry automatique
+   * Attend que MySQL soit prêt (utile avec Docker)
+   */
   async connect() {
     const dbConfig = {
       host: process.env.DB_HOST || "localhost",
@@ -13,11 +21,11 @@ class Database {
       password: process.env.DB_PASSWORD || "",
       database: process.env.DB_NAME || "fumotion",
       waitForConnections: true,
-      connectionLimit: 10,
+      connectionLimit: 10, // Nombre max de connexions simultanées
       queueLimit: 0,
     }
 
-    // Fonction de réessai pour attendre que MySQL soit prêt
+    // Retry automatique si MySQL n'est pas encore prêt
     const connectWithRetry = async (retries = 5, delay = 5000) => {
       try {
         this.pool = mysql.createPool(dbConfig)
