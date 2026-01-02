@@ -225,6 +225,53 @@ export default function DashboardPage() {
     }
   }
 
+  // Activer le mode édition et initialiser le formulaire
+  const toggleEditMode = async () => {
+    if (!editMode) {
+      // Entrer en mode édition : initialiser le formulaire avec les données actuelles
+      setProfileFormData({
+        firstName: displayUser?.first_name || '',
+        lastName: displayUser?.last_name || '',
+        phone: displayUser?.phone || '',
+        studentId: displayUser?.student_id || '',
+        bio: displayUser?.bio || ''
+      })
+      setEditMode(true)
+    } else {
+      // Quitter le mode édition : sauvegarder les modifications
+      setSavingProfile(true)
+      try {
+        const response = await authAPI.updateProfile(profileFormData)
+        if (response.success) {
+          // Mettre à jour les données locales
+          setProfileUser(prev => ({
+            ...prev,
+            first_name: profileFormData.firstName,
+            last_name: profileFormData.lastName,
+            phone: profileFormData.phone,
+            student_id: profileFormData.studentId,
+            bio: profileFormData.bio
+          }))
+          updateUser({
+            first_name: profileFormData.firstName,
+            last_name: profileFormData.lastName,
+            phone: profileFormData.phone,
+            student_id: profileFormData.studentId,
+            bio: profileFormData.bio
+          })
+        } else {
+          alert(response.message || "Erreur lors de la mise à jour du profil")
+        }
+      } catch (error) {
+        console.error("Erreur:", error)
+        alert("Erreur lors de la mise à jour du profil")
+      } finally {
+        setSavingProfile(false)
+        setEditMode(false)
+      }
+    }
+  }
+
   // Ouvrir la modale de détails
   const openDetailsModal = async (trip) => {
     setSelectedTrip(trip)
@@ -1026,9 +1073,10 @@ export default function DashboardPage() {
                     </div>
                     <button
                       className="edit-profile-btn"
-                      onClick={() => setEditMode(!editMode)}
+                      onClick={toggleEditMode}
+                      disabled={savingProfile}
                     >
-                      {editMode ? 'Terminer' : 'Modifier le profil'}
+                      {savingProfile ? 'Enregistrement...' : (editMode ? 'Terminer' : 'Modifier le profil')}
                     </button>
                   </div>
 
