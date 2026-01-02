@@ -1,10 +1,11 @@
 /**
  * Page 404 - Page non trouvée
- * Animation style "DVD bouncing logo" avec un chien nerveux
+ * Animation style "DVD bouncing logo" avec un Chocobo
  */
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/NotFoundPage.css';
+import chocoboImg from '../assets/images/chocobo.png';
 
 const NotFoundPage = () => {
     const logoRef = useRef(null);
@@ -62,14 +63,15 @@ const NotFoundPage = () => {
 
     return (
         <div ref={containerRef} className="not-found-container">
-            {/* Chien rebondissant */}
-            <div
+            {/* Chocobo rebondissant */}
+            <img
                 ref={logoRef}
+                src={chocoboImg}
+                alt="Chocobo perdu"
                 className={`bouncing-doge ${clickEffect ? 'clicked' : ''}`}
                 onClick={handleDogeClick}
-            >
-                🐕
-            </div>
+                draggable="false"
+            />
 
             <h1 className="not-found-title">404</h1>
             <h2 className="not-found-subtitle">Oups ! Page introuvable</h2>
