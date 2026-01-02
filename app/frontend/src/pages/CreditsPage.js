@@ -31,11 +31,11 @@ export default function CreditsPage() {
 
     const teamMembers = [
         { name: 'Clément', role: 'Développeur Full Stack', image: membre1, color: '#3498db' },
-        { name: 'Membre 2', role: 'Designer UI/UX', image: membre2, color: '#9b59b6' },
-        { name: 'Membre 3', role: 'Développeur Backend', image: membre3, color: '#e74c3c' },
-        { name: 'Membre 4', role: 'Développeur Frontend', image: membre4, color: '#2ecc71' },
-        { name: 'Membre 5', role: 'Chef de projet', image: membre5, color: '#f39c12' },
-        { name: 'Membre 6', role: 'Testeur QA', image: membre6, color: '#1abc9c' }
+        { name: 'Membre 2', role: 'Développeur', image: membre2, color: '#9b59b6' },
+        { name: 'Membre 3', role: 'Développeur', image: membre3, color: '#e74c3c' },
+        { name: 'Membre 4', role: 'Développeur ', image: membre4, color: '#2ecc71' },
+        { name: 'Membre 5', role: 'Développeur', image: membre5, color: '#f39c12' },
+        { name: 'Membre 6', role: 'Développeur', image: membre6, color: '#1abc9c' }
     ];
 
     const technologies = [
@@ -148,7 +148,7 @@ export default function CreditsPage() {
                         <h2>Remerciements</h2>
                         <div className="thanks-content">
                             <p>
-                                <strong>À ma famille et mes amis</strong> pour leurs précieux retours tout au long du développement., pour leur soutien indéfectible 
+                                <strong>À ma famille et à mes amis</strong> pour leurs précieux retours tout au long du développement et pour leur soutien indéfectible 
                                 durant ce projet.
                             </p>
                             <p>
