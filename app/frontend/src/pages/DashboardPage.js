@@ -14,6 +14,7 @@ import ticketIcon from "../assets/icons/ticket.svg"
 import starIcon from "../assets/icons/star.svg"
 import statsIcon from "../assets/icons/stats.svg"
 import profileIcon from "../assets/icons/profile.svg"
+import lumenIcon from "../assets/icons/lumen.webp"
 import "../styles/Dashboard.css"
 import "../styles/HomePage.css"
 
@@ -524,7 +525,7 @@ export default function DashboardPage() {
                 className="sidebar-btn admin-btn"
                 onClick={() => navigate("/admin")}
               >
-                <span className="btn-icon">👑</span>
+                <span className="btn-icon"><img src={lumenIcon} alt="Admin" style={{ width: '20px', height: '20px' }} /></span>
                 Administration
               </button>
             )}
