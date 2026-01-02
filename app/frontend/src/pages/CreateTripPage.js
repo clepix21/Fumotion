@@ -357,11 +357,6 @@ export default function CreateTripPage() {
             <button onClick={() => navigate("/create-trip")} className="navbar-btn-primary">
               Créer un trajet
             </button>
-            {user?.is_admin && (
-              <button onClick={() => navigate("/admin")} className="navbar-btn-admin">
-                👑 Admin
-              </button>
-            )}
             <div className="navbar-user-profile" onClick={() => navigate("/dashboard")} style={{ cursor: 'pointer' }}>
               <Avatar user={user} size="medium" />
               <div className="navbar-user-info">
