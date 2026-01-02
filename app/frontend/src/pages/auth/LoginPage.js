@@ -1,3 +1,7 @@
+/**
+ * Page de connexion
+ * Formulaire email/password avec validation
+ */
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
@@ -6,20 +10,15 @@ import "../../styles/auth.css"
 export default function LoginPage() {
   const navigate = useNavigate()
   const { login } = useAuth()
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  })
+  const [formData, setFormData] = useState({ email: "", password: "" })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    })
+    setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
+  /** Soumission du formulaire de connexion */
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError("")
@@ -31,21 +30,17 @@ export default function LoginPage() {
 
       const response = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       })
 
       console.log("[v0] Status de la réponse:", response.status)
-      console.log("[v0] Headers de la réponse:", Object.fromEntries(response.headers.entries()))
-
       const data = await response.json()
       console.log("[v0] Réponse du serveur:", data)
 
       if (response.ok && data.success) {
         if (data.data && data.data.token && data.data.user) {
-          // Utiliser le contexte d'authentification
+          // Stocke le token et redirige vers le dashboard
           login(data.data.user, data.data.token)
 
           console.log("[v0] Token stocké:", data.data.token.substring(0, 20) + "...")

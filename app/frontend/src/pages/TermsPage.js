@@ -1,3 +1,7 @@
+/**
+ * Page des Conditions Générales d'Utilisation
+ * Document légal obligatoire pour l'utilisation de la plateforme
+ */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../components/common/Footer';
