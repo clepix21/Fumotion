@@ -31,6 +31,14 @@ export default function DashboardPage() {
   const [profileUser, setProfileUser] = useState(null)
   const [uploading, setUploading] = useState({ banner: false, avatar: false })
   const [editMode, setEditMode] = useState(false)
+  const [profileFormData, setProfileFormData] = useState({
+    firstName: '',
+    lastName: '',
+    phone: '',
+    studentId: '',
+    bio: ''
+  })
+  const [savingProfile, setSavingProfile] = useState(false)
   const bannerInputRef = useRef(null)
   const avatarInputRef = useRef(null)
   
@@ -1002,9 +1010,19 @@ export default function DashboardPage() {
                       <p className="profile-joined">
                         Membre depuis {displayUser?.created_at ? new Date(displayUser.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : '2024'}
                       </p>
-                      <p className="profile-bio">
-                        {displayUser?.bio || 'Étudiant passionné par le covoiturage et les rencontres'}
-                      </p>
+                      {editMode ? (
+                        <textarea
+                          className="profile-bio-edit"
+                          value={profileFormData.bio}
+                          onChange={(e) => setProfileFormData({...profileFormData, bio: e.target.value})}
+                          placeholder="Écrivez votre biographie..."
+                          maxLength={200}
+                        />
+                      ) : (
+                        <p className="profile-bio">
+                          {displayUser?.bio || 'Étudiant passionné par le covoiturage et les rencontres'}
+                        </p>
+                      )}
                     </div>
                     <button
                       className="edit-profile-btn"
