@@ -11,6 +11,7 @@ import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
 import voiture from "../assets/icons/voiture.svg"
 import starIcon from "../assets/icons/star.svg"
+import warningCircle from "../assets/icons/warning-circle.svg"
 import "../styles/Search.css"
 import "../styles/HomePage.css"
 
@@ -346,7 +347,9 @@ export default function SearchPage() {
 
             {error && (
               <div className="error-state">
-                <div className="error-icon">⚠️</div>
+                <div className="error-icon">
+                  <img src={warningCircle} alt="Attention" style={{ width: '48px', height: '48px' }} />
+                </div>
                 <h3>Erreur</h3>
                 <p>{error}</p>
               </div>
