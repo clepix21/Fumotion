@@ -1,3 +1,7 @@
+/**
+ * Fenêtre de conversation
+ * Affiche les messages et permet d'en envoyer de nouveaux
+ */
 import chatIcon from "../../assets/icons/chat.svg"
 import React, { useState, useEffect, useRef } from 'react';
 
@@ -6,29 +10,27 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, s
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
 
+    // Scroll automatique vers le bas à chaque nouveau message
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    useEffect(() => {
-        scrollToBottom();
-    }, [messages]);
+    useEffect(() => scrollToBottom(), [messages]);
 
-    // Focus l'input quand on sélectionne une conversation
+    // Focus sur l'input quand on sélectionne une conversation
     useEffect(() => {
-        if (otherUser && inputRef.current) {
-            inputRef.current.focus();
-        }
+        if (otherUser && inputRef.current) inputRef.current.focus();
     }, [otherUser]);
 
+    /** Envoi du message */
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!newMessage.trim() || sending) return;
-
         onSendMessage(newMessage.trim());
         setNewMessage('');
     };
 
+    /** Envoi avec Entrée (sans Shift) */
     const handleKeyDown = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -36,24 +38,21 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, s
         }
     };
 
+    /** Formate l'heure d'un message */
     const formatMessageTime = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        return new Date(dateString).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
     };
 
+    /** Formate la date d'un message (Aujourd'hui, Hier, ou date complète) */
     const formatMessageDate = (dateString) => {
         const date = new Date(dateString);
         const today = new Date();
         
-        if (date.toDateString() === today.toDateString()) {
-            return "Aujourd'hui";
-        }
+        if (date.toDateString() === today.toDateString()) return "Aujourd'hui";
         
         const yesterday = new Date(today);
         yesterday.setDate(yesterday.getDate() - 1);
-        if (date.toDateString() === yesterday.toDateString()) {
-            return "Hier";
-        }
+        if (date.toDateString() === yesterday.toDateString()) return "Hier";
         
         return date.toLocaleDateString('fr-FR', { 
             weekday: 'long', 

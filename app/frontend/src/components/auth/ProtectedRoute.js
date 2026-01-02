@@ -1,3 +1,7 @@
+/**
+ * Composant de protection des routes
+ * Redirige vers /login si l'utilisateur n'est pas authentifié
+ */
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -5,6 +9,7 @@ import { useAuth } from '../../context/AuthContext';
 const ProtectedRoute = ({ children }) => {
     const { isAuthenticated, loading } = useAuth();
 
+    // Affiche un spinner pendant la vérification de l'authentification
     if (loading) {
         return (
             <div style={{

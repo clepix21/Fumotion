@@ -1,3 +1,7 @@
+/**
+ * Page des Conditions Générales d'Utilisation
+ * Document légal obligatoire pour l'utilisation de la plateforme
+ */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../components/common/Footer';
@@ -55,7 +59,7 @@ export default function TermsPage() {
                     <h3>3.1 Conditions d'inscription</h3>
                     <p>Pour créer un compte sur Fumotion, l'utilisateur doit :</p>
                     <ul>
-                        <li>Être âgé d'au moins 18 ans</li>
+                        <li>Être âgé d'au moins 16 ans</li>
                         <li>Disposer d'une adresse email valide (de préférence universitaire)</li>
                         <li>Fournir des informations exactes et à jour</li>
                         <li>Accepter les présentes CGU et la Politique de confidentialité</li>
@@ -182,17 +186,9 @@ export default function TermsPage() {
                         interprétation ou exécution sera soumis aux tribunaux français compétents.
                     </p>
                 </div>
-
-                <div className="static-section">
-                    <h2>12. Contact</h2>
-                    <p>
-                        Pour toute question concernant les présentes CGU, vous pouvez nous contacter à l'adresse : 
-                        <a href="mailto:legal@fumotion.com"> legal@fumotion.com</a>
-                    </p>
-                </div>
             </main>
 
-            <Footer />
+            <Footer/>
         </div>
     );
 }

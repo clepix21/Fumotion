@@ -1,16 +1,18 @@
+/**
+ * Service d'évaluation
+ * Appels API pour noter les conducteurs/passagers
+ */
 const API_URL = 'http://localhost:5000/api';
 
-// Récupérer le token depuis le localStorage
 const getToken = () => localStorage.getItem('token');
 
-// Headers avec authentification
 const authHeaders = () => ({
   'Content-Type': 'application/json',
   'Authorization': `Bearer ${getToken()}`
 });
 
 export const reviewAPI = {
-  // Créer une évaluation
+  /** Créer une évaluation après un trajet */
   async createReview(bookingId, reviewData) {
     const response = await fetch(`${API_URL}/reviews/bookings/${bookingId}`, {
       method: 'POST',
@@ -20,7 +22,7 @@ export const reviewAPI = {
     return response.json();
   },
 
-  // Récupérer les évaluations en attente
+  /** Récupérer les évaluations non effectuées */
   async getPendingReviews() {
     const response = await fetch(`${API_URL}/reviews/pending`, {
       headers: authHeaders()
@@ -28,7 +30,7 @@ export const reviewAPI = {
     return response.json();
   },
 
-  // Récupérer les évaluations d'un utilisateur
+  /** Récupérer les notes d'un utilisateur */
   async getUserReviews(userId, type = null) {
     const url = type 
       ? `${API_URL}/reviews/user/${userId}?type=${type}`
@@ -37,7 +39,7 @@ export const reviewAPI = {
     return response.json();
   },
 
-  // Vérifier si une évaluation existe
+  /** Vérifier si déjà noté */
   async checkReviewExists(bookingId, type) {
     const response = await fetch(`${API_URL}/reviews/check/${bookingId}?type=${type}`, {
       headers: authHeaders()
@@ -45,7 +47,7 @@ export const reviewAPI = {
     return response.json();
   },
 
-  // Marquer un trajet comme terminé
+  /** Marquer un trajet comme terminé */
   async completeTrip(tripId) {
     const response = await fetch(`${API_URL}/trips/${tripId}/complete`, {
       method: 'PUT',

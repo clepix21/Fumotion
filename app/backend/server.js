@@ -1,10 +1,14 @@
+/**
+ * Serveur principal Fumotion API
+ * Point d'entrée de l'application backend Express
+ */
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const db = require('./config/database');
 
-// Importation des routes
+// ========== IMPORT DES ROUTES ==========
 const authRoutes = require('./routes/auth');
 const tripRoutes = require('./routes/trips');
 const bookingRoutes = require('./routes/bookings');
@@ -15,7 +19,8 @@ const reviewRoutes = require('./routes/reviews');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// ========== CONFIGURATION CORS ==========
+// Liste des origines autorisées selon l'environnement
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
     ? ['https://fumotion.com', 'http://localhost', 'http://localhost:80', 'http://127.0.0.1', 'http://127.0.0.1:80', 'http://localhost:3000', 'http://127.0.0.1:3000']
@@ -23,25 +28,26 @@ app.use(cors({
   credentials: true
 }));
 
-app.use(express.json({ limit: '10mb' }));
+// ========== MIDDLEWARE GLOBAUX ==========
+app.use(express.json({ limit: '10mb' })); // Parse JSON avec limite de taille
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Servir les fichiers statiques
+// Servir les fichiers statiques (photos de profil, etc.)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Middleware de logging
+// Logger les requêtes entrantes (débug)
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
   next();
 });
 
-// Routes API
-app.use('/api/auth', authRoutes);
-app.use('/api/trips', tripRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/messages', messageRoutes);
-app.use('/api/reviews', reviewRoutes);
+// ========== ROUTES API ==========
+app.use('/api/auth', authRoutes);       // Authentification
+app.use('/api/trips', tripRoutes);       // Gestion des trajets
+app.use('/api/bookings', bookingRoutes); // Réservations
+app.use('/api/admin', adminRoutes);      // Administration
+app.use('/api/messages', messageRoutes); // Messagerie
+app.use('/api/reviews', reviewRoutes);   // Avis et notes
 
 // Route de base
 app.get('/', (req, res) => {

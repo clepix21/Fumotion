@@ -1,34 +1,30 @@
+/**
+ * Liste des conversations
+ * Affiche toutes les discussions avec d'autres utilisateurs
+ */
 import React from 'react';
 
 const ConversationList = ({ conversations, selectedUserId, onSelectUser, loading }) => {
+    /** Formate la date du dernier message (relatif) */
     const formatDate = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
         const now = new Date();
         const diff = now - date;
         
-        // Moins d'une minute
-        if (diff < 60000) return 'À l\'instant';
-        // Moins d'une heure
-        if (diff < 3600000) return `${Math.floor(diff / 60000)} min`;
-        // Aujourd'hui
-        if (date.toDateString() === now.toDateString()) {
+        if (diff < 60000) return 'À l\'instant';           // < 1 min
+        if (diff < 3600000) return `${Math.floor(diff / 60000)} min`; // < 1h
+        if (date.toDateString() === now.toDateString()) {  // Aujourd'hui
             return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
         }
-        // Hier
         const yesterday = new Date(now);
         yesterday.setDate(yesterday.getDate() - 1);
-        if (date.toDateString() === yesterday.toDateString()) {
-            return 'Hier';
-        }
-        // Cette semaine
-        if (diff < 604800000) {
-            return date.toLocaleDateString('fr-FR', { weekday: 'short' });
-        }
-        // Plus vieux
+        if (date.toDateString() === yesterday.toDateString()) return 'Hier';
+        if (diff < 604800000) return date.toLocaleDateString('fr-FR', { weekday: 'short' }); // Cette semaine
         return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
     };
 
+    /** Tronque le message si trop long */
     const truncateMessage = (msg, maxLength = 35) => {
         if (!msg) return '';
         return msg.length > maxLength ? msg.substring(0, maxLength) + '...' : msg;

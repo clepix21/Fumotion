@@ -1,3 +1,7 @@
+/**
+ * Routes d'authentification
+ * /api/auth/...
+ */
 const express = require('express');
 const router = express.Router();
 const AuthController = require('../controllers/authController');
@@ -5,12 +9,12 @@ const { authMiddleware } = require('../middleware/auth');
 const { validateRegistration, validateLogin } = require('../middleware/validation');
 const upload = require('../middleware/upload');
 
-// Routes publiques
+// ========== ROUTES PUBLIQUES ==========
 router.post('/register', validateRegistration, AuthController.register);
 router.post('/login', validateLogin, AuthController.login);
 router.post('/forgot-password', AuthController.forgotPassword);
 
-// Routes protégées
+// ========== ROUTES PROTÉGÉES (token requis) ==========
 router.get('/profile', authMiddleware, AuthController.getProfile);
 router.put('/profile', authMiddleware, AuthController.updateProfile);
 router.get('/verify-token', authMiddleware, AuthController.verifyToken);

@@ -1,15 +1,24 @@
+/**
+ * Service API principal
+ * Centralise toutes les requêtes HTTP vers le backend
+ */
+
 const BASE_URL = process.env.REACT_APP_API_URL || '';
 
-// Fonction utilitaire pour récupérer le token
+// Récupère le token JWT depuis le localStorage
 const getAuthToken = () => {
   return localStorage.getItem('token');
 };
 
-// Fonction principale pour les requêtes API
+/**
+ * Fonction générique pour les appels API
+ * Gère automatiquement : headers, auth, erreurs 401
+ */
 export async function apiRequest(path, options = {}) {
   const url = `${BASE_URL}${path}`;
   const token = getAuthToken();
 
+  // Headers par défaut avec token si disponible
   const headers = {
     'Content-Type': 'application/json',
     ...(token && { 'Authorization': `Bearer ${token}` }),
@@ -22,7 +31,7 @@ export async function apiRequest(path, options = {}) {
     const data = isJson ? await res.json() : await res.text();
 
     if (!res.ok) {
-      // Si le token est invalide, rediriger vers la page de connexion
+      // Token expiré/invalide : déconnecter et rediriger
       if (res.status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -30,16 +39,10 @@ export async function apiRequest(path, options = {}) {
         return;
       }
 
-      // Créer une erreur avec les détails complets
+      // Construire une erreur détaillée pour le debugging
       const error = new Error((data && data.message) || res.statusText || 'Erreur requête API');
-      // Ajouter les détails de validation si disponibles
-      if (data && data.errors) {
-        error.errors = data.errors;
-      }
-      if (data && data.success !== undefined) {
-        error.success = data.success;
-      }
-      // Ajouter la réponse complète pour le debugging
+      if (data && data.errors) error.errors = data.errors;
+      if (data && data.success !== undefined) error.success = data.success;
       error.response = res;
       error.data = data;
       throw error;
@@ -52,7 +55,7 @@ export async function apiRequest(path, options = {}) {
   }
 }
 
-// Méthodes HTTP
+// ========== MÉTHODES HTTP ==========
 export function post(path, body) {
   return apiRequest(path, { method: 'POST', body: JSON.stringify(body) });
 }
@@ -69,7 +72,7 @@ export function del(path) {
   return apiRequest(path, { method: 'DELETE' });
 }
 
-// Fonctions spécifiques pour l'authentification
+// ========== API AUTHENTIFICATION ==========
 export const authAPI = {
   login: (credentials) => post('/api/auth/login', credentials),
   register: (userData) => post('/api/auth/register', userData),

@@ -1,3 +1,7 @@
+/**
+ * Page d'inscription
+ * Formulaire complet avec validation côté client
+ */
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -6,15 +10,10 @@ import '../../styles/auth.css';
 export default function RegisterPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
+  // Données du formulaire d'inscription
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    phone: '',
-    studentId: '',
-    university: 'IUT Amiens'
+    firstName: '', lastName: '', email: '', password: '',
+    confirmPassword: '', phone: '', studentId: '', university: 'IUT Amiens'
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -22,19 +21,12 @@ export default function RegisterPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-    // Effacer l'erreur du champ lors de la modification
-    if (fieldErrors[name]) {
-      setFieldErrors({
-        ...fieldErrors,
-        [name]: ''
-      });
-    }
+    setFormData({ ...formData, [name]: value });
+    // Efface l'erreur du champ modifié
+    if (fieldErrors[name]) setFieldErrors({ ...fieldErrors, [name]: '' });
   };
 
+  /** Soumission avec validation */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -43,7 +35,6 @@ export default function RegisterPage() {
 
     // Validation côté client
     const errors = {};
-    
     if (formData.password !== formData.confirmPassword) {
       errors.confirmPassword = 'Les mots de passe ne correspondent pas';
     }

@@ -6,6 +6,19 @@
   min-height: 100vh;
   min-height: 100svh;
   background: linear-gradient(to bottom, var(--color-gray-50, #f8fafc) 0%, #ffffff 100%);
+  padding-top: 4rem; /* Compenser la navbar fixe */
+}
+
+@media (min-width: 48em) {
+  .create-trip-page {
+    padding-top: 4.5rem;
+  }
+}
+
+@media (min-width: 64em) {
+  .create-trip-page {
+    padding-top: 5rem;
+  }
 }
 
 /* Header avec breadcrumb */

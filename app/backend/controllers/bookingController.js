@@ -1,14 +1,21 @@
+/**
+ * Contrôleur des réservations
+ * Gère la création, confirmation, annulation des réservations
+ */
 const db = require('../config/database');
 
 class BookingController {
-  // Créer une nouvelle réservation
+  /**
+   * Créer une nouvelle réservation
+   * Vérifie : places dispo, pas son propre trajet, pas de doublon
+   */
   async createBooking(req, res) {
     try {
       const { tripId } = req.params;
       const { seatsBooked } = req.body;
       const passengerId = req.user.id;
 
-      // Vérifier que le trajet existe et est disponible
+      // Vérifier que le trajet existe et récupérer les places restantes
       const trip = await db.get(
         `SELECT t.*, 
                 (t.available_seats - COALESCE(SUM(b.seats_booked), 0)) as remaining_seats,
@@ -99,30 +106,22 @@ class BookingController {
       const userId = req.user.id;
       const { status, type } = req.query;
 
-      let query = `
-        SELECT b.*, t.departure_location, t.arrival_location, t.departure_datetime, t.driver_id,
-               u.first_name as driver_first_name, u.last_name as driver_last_name,
-               u.phone as driver_phone
-        FROM bookings b
-        JOIN trips t ON b.trip_id = t.id
-        JOIN users u ON t.driver_id = u.id
-        WHERE b.passenger_id = ?
-      `;
-
+      // Utilise la vue v_booking_details pour une requête optimisée
+      let query = `SELECT * FROM v_booking_details WHERE passenger_id = ?`;
       const params = [userId];
 
       if (status) {
-        query += ` AND b.status = ?`;
+        query += ` AND status = ?`;
         params.push(status);
       }
 
       if (type === 'upcoming') {
-        query += ` AND t.departure_datetime > NOW()`;
+        query += ` AND departure_datetime > NOW()`;
       } else if (type === 'past') {
-        query += ` AND t.departure_datetime <= NOW()`;
+        query += ` AND departure_datetime <= NOW()`;
       }
 
-      query += ` ORDER BY t.departure_datetime DESC`;
+      query += ` ORDER BY departure_datetime DESC`;
 
       const bookings = await db.all(query, params);
 
@@ -145,18 +144,10 @@ class BookingController {
       const { id } = req.params;
       const userId = req.user.id;
 
+      // Utilise la vue v_booking_details pour une requête simplifiée
       const booking = await db.get(
-        `SELECT b.*, t.departure_location, t.arrival_location, t.departure_datetime,
-                t.description, t.driver_id,
-                u_driver.first_name as driver_first_name, u_driver.last_name as driver_last_name,
-                u_driver.phone as driver_phone, u_driver.email as driver_email,
-                u_passenger.first_name as passenger_first_name, u_passenger.last_name as passenger_last_name,
-                u_passenger.phone as passenger_phone, u_passenger.email as passenger_email
-         FROM bookings b
-         JOIN trips t ON b.trip_id = t.id
-         JOIN users u_driver ON t.driver_id = u_driver.id
-         JOIN users u_passenger ON b.passenger_id = u_passenger.id
-         WHERE b.id = ? AND (b.passenger_id = ? OR t.driver_id = ?)`,
+        `SELECT * FROM v_booking_details
+         WHERE id = ? AND (passenger_id = ? OR driver_id = ?)`,
         [id, userId, userId]
       );
 

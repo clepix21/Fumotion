@@ -1,10 +1,78 @@
-import React from 'react';
+/**
+ * Page 404 - Page non trouvée
+ * Animation style "DVD bouncing logo" avec un Chocobo
+ */
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/NotFoundPage.css';
+import chocoboImg from '../assets/images/chocobo.png';
 
 const NotFoundPage = () => {
+    const logoRef = useRef(null);
+    const containerRef = useRef(null);
+    const [clickEffect, setClickEffect] = useState(false);
+    
+    useEffect(() => {
+        const logo = logoRef.current;
+        const container = containerRef.current;
+        if (!logo || !container) return;
+
+        const FPS = 60;
+        const dogSize = 100;
+        
+        let xPosition = window.innerWidth / 2 - dogSize / 2;
+        let yPosition = window.innerHeight / 2 - dogSize / 2;
+        let xSpeed = 2.5 * (Math.random() > 0.5 ? 1 : -1);
+        let ySpeed = 2.5 * (Math.random() > 0.5 ? 1 : -1);
+
+        const updatePosition = () => {
+            const maxX = window.innerWidth - dogSize;
+            const maxY = window.innerHeight - dogSize;
+
+            if (xPosition >= maxX || xPosition <= 0) xSpeed = -xSpeed;
+            if (yPosition >= maxY || yPosition <= 0) ySpeed = -ySpeed;
+
+            xPosition += xSpeed;
+            yPosition += ySpeed;
+
+            xPosition = Math.max(0, Math.min(xPosition, maxX));
+            yPosition = Math.max(0, Math.min(yPosition, maxY));
+
+            logo.style.left = xPosition + 'px';
+            logo.style.top = yPosition + 'px';
+        };
+
+        const interval = setInterval(updatePosition, 1000 / FPS);
+
+        const handleResize = () => {
+            xPosition = Math.min(xPosition, window.innerWidth - dogSize);
+            yPosition = Math.min(yPosition, window.innerHeight - dogSize);
+        };
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            clearInterval(interval);
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    const handleDogeClick = () => {
+        setClickEffect(true);
+        setTimeout(() => setClickEffect(false), 150);
+    };
+
     return (
-        <div className="not-found-container">
+        <div ref={containerRef} className="not-found-container">
+            {/* Chocobo rebondissant */}
+            <img
+                ref={logoRef}
+                src={chocoboImg}
+                alt="Chocobo perdu"
+                className={`bouncing-doge ${clickEffect ? 'clicked' : ''}`}
+                onClick={handleDogeClick}
+                draggable="false"
+            />
+
             <h1 className="not-found-title">404</h1>
             <h2 className="not-found-subtitle">Oups ! Page introuvable</h2>
             <p className="not-found-text">

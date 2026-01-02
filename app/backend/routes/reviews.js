@@ -1,18 +1,15 @@
+/**
+ * Routes des évaluations
+ * /api/reviews/... - Permet de noter les trajets effectués
+ */
 const express = require('express');
 const router = express.Router();
 const ReviewController = require('../controllers/reviewController');
 const { authMiddleware } = require('../middleware/auth');
 
-// Créer une évaluation pour une réservation
-router.post('/bookings/:bookingId', authMiddleware, ReviewController.createReview);
-
-// Récupérer les évaluations en attente de l'utilisateur connecté
-router.get('/pending', authMiddleware, ReviewController.getPendingReviews);
-
-// Vérifier si une évaluation existe
-router.get('/check/:bookingId', authMiddleware, ReviewController.checkReviewExists);
-
-// Récupérer les évaluations d'un utilisateur
-router.get('/user/:userId', ReviewController.getUserReviews);
+router.post('/bookings/:bookingId', authMiddleware, ReviewController.createReview);  // Créer une évaluation
+router.get('/pending', authMiddleware, ReviewController.getPendingReviews);          // Évaluations en attente
+router.get('/check/:bookingId', authMiddleware, ReviewController.checkReviewExists); // Vérifier si déjà noté
+router.get('/user/:userId', ReviewController.getUserReviews);                         // Notes d'un utilisateur
 
 module.exports = router;

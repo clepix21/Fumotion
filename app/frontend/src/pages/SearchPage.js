@@ -1,3 +1,7 @@
+/**
+ * Page de recherche de trajets
+ * Affiche les résultats filtrés avec carte et réservation
+ */
 import { useState, useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
@@ -7,6 +11,7 @@ import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
 import voiture from "../assets/icons/voiture.svg"
 import starIcon from "../assets/icons/star.svg"
+import warningCircle from "../assets/icons/warning-circle.svg"
 import "../styles/Search.css"
 import "../styles/HomePage.css"
 
@@ -14,19 +19,23 @@ export default function SearchPage() {
   const navigate = useNavigate()
   const [searchParamsURL] = useSearchParams()
   const { user, isAuthenticated, logout } = useAuth()
+  
+  // Critères de recherche
   const [searchParams, setSearchParams] = useState({
     departure: "",
     arrival: "",
     date: "",
     passengers: 1,
   })
-  const [trips, setTrips] = useState([])
+  
+  // Résultats et état
+  const [trips, setTrips] = useState([])        // Trajets trouvés
   const [loading, setLoading] = useState(false)
-  const [searched, setSearched] = useState(false)
+  const [searched, setSearched] = useState(false) // Recherche effectuée ?
   const [error, setError] = useState(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  // Charger les paramètres depuis l'URL si présents
+  // Charger les paramètres de recherche depuis l'URL
   useEffect(() => {
     const departure = searchParamsURL.get("departure") || ""
     const arrival = searchParamsURL.get("arrival") || ""
@@ -34,13 +43,8 @@ export default function SearchPage() {
     const passengers = parseInt(searchParamsURL.get("passengers") || "1", 10)
 
     if (departure || arrival || date) {
-      setSearchParams({
-        departure,
-        arrival,
-        date,
-        passengers,
-      })
-      // Lancer la recherche automatiquement si des paramètres sont présents
+      setSearchParams({ departure, arrival, date, passengers })
+      // Recherche automatique si paramètres présents
       handleSearchFromParams({ departure, arrival, date, passengers })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -192,12 +196,7 @@ export default function SearchPage() {
                 <button onClick={() => navigate("/create-trip")} className="navbar-btn-primary">
                   Créer un trajet
                 </button>
-                {user?.is_admin && (
-                  <button onClick={() => navigate("/admin")} className="navbar-btn-admin">
-                    👑 Admin
-                  </button>
-                )}
-                <div className="navbar-user-profile">
+                <div className="navbar-user-profile" onClick={() => navigate("/dashboard")} style={{ cursor: 'pointer' }}>
                   <Avatar user={user} size="medium" />
                   <div className="navbar-user-info">
                     <span className="navbar-user-name">{user?.first_name || user?.email}</span>
@@ -289,7 +288,7 @@ export default function SearchPage() {
                   <label className="form-label">Départ</label>
                   <input
                     type="text"
-                    placeholder="Paris, Gare de Lyon"
+                    placeholder="Rue de Midgard, Amiens"
                     className="form-input"
                     value={searchParams.departure}
                     onChange={(e) => setSearchParams({ ...searchParams, departure: e.target.value })}
@@ -300,7 +299,7 @@ export default function SearchPage() {
                   <label className="form-label">Destination</label>
                   <input
                     type="text"
-                    placeholder="Marseille"
+                    placeholder="TP11, Amiens"
                     className="form-input"
                     value={searchParams.arrival}
                     onChange={(e) => setSearchParams({ ...searchParams, arrival: e.target.value })}
@@ -348,7 +347,9 @@ export default function SearchPage() {
 
             {error && (
               <div className="error-state">
-                <div className="error-icon">⚠️</div>
+                <div className="error-icon">
+                  <img src={warningCircle} alt="Attention" style={{ width: '48px', height: '48px' }} />
+                </div>
                 <h3>Erreur</h3>
                 <p>{error}</p>
               </div>

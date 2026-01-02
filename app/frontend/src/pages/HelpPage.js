@@ -1,3 +1,7 @@
+/**
+ * Page d'aide
+ * Catégories d'aide avec liens vers la FAQ et le support
+ */
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Footer from '../components/common/Footer';
@@ -8,43 +12,14 @@ import '../styles/StaticPages.css';
 export default function HelpPage() {
     const navigate = useNavigate();
 
+    // Catégories d'aide disponibles
     const helpCategories = [
-        {
-            icon: '🚗',
-            title: 'Trajets & Réservations',
-            description: 'Comment rechercher, réserver ou proposer un trajet sur Fumotion.',
-            link: '/faq#trajets'
-        },
-        {
-            icon: <img src={profileIcon} alt="" className="help-icon-svg" />,
-            title: 'Mon Compte',
-            description: 'Gérer votre profil, vos préférences et vos informations personnelles.',
-            link: '/faq#compte'
-        },
-        {
-            icon: '💳',
-            title: 'Paiements',
-            description: 'Questions sur les paiements, remboursements et facturations.',
-            link: '/faq#paiements'
-        },
-        {
-            icon: '🔒',
-            title: 'Sécurité',
-            description: 'Protégez votre compte et voyagez en toute sérénité.',
-            link: '/security'
-        },
-        {
-            icon: '💬',
-            title: 'Messagerie',
-            description: 'Communiquer avec les autres membres de la communauté.',
-            link: '/faq#messagerie'
-        },
-        {
-            icon: '⚠️',
-            title: 'Signalements',
-            description: 'Signaler un problème ou un comportement inapproprié.',
-            link: '/contact'
-        }
+        { icon: '🚗', title: 'Trajets & Réservations', description: 'Comment rechercher, réserver ou proposer un trajet sur Fumotion.', link: '/faq#trajets' },
+        { icon: <img src={profileIcon} alt="" className="help-icon-svg" />, title: 'Mon Compte', description: 'Gérer votre profil, vos préférences et vos informations personnelles.', link: '/faq#compte' },
+        { icon: '💳', title: 'Paiements', description: 'Questions sur les paiements, remboursements et facturations.', link: '/faq#paiements' },
+        { icon: '🔒', title: 'Sécurité', description: 'Protégez votre compte et voyagez en toute sérénité.', link: '/security' },
+        { icon: '💬', title: 'Messagerie', description: 'Communiquer avec les autres membres de la communauté.', link: '/faq#messagerie' },
+        { icon: '⚠️', title: 'Signalements', description: 'Signaler un problème ou un comportement inapproprié.', link: '/contact' }
     ];
 
     return (

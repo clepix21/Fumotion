@@ -1,6 +1,9 @@
-version: '3.8'
+# Docker Compose pour Fumotion
+# Services: backend (Express), frontend (React+Nginx), mysql
+# Lancement: docker-compose up --build
 
 services:
+  # API Express.js avec authentification JWT
   backend:
     build:
       context: ./app/backend
@@ -18,7 +21,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD:-fumotion_password}
       - DB_NAME=${DB_NAME:-fumotion}
     volumes:
-      - backend-uploads:/app/uploads
+      - backend-uploads:/app/uploads  # Stockage persistant des avatars
     depends_on:
       mysql:
         condition: service_healthy
@@ -31,12 +34,13 @@ services:
       retries: 3
       start_period: 40s
 
+  # Frontend React servi par Nginx (proxy vers /api)
   frontend:
     build:
       context: ./app/frontend
       dockerfile: Dockerfile
       args:
-        - REACT_APP_API_URL=${REACT_APP_API_URL:-http://localhost:5000}
+        - REACT_APP_API_URL=  # Vide = utilise le proxy nginx
     container_name: fumotion-frontend
     restart: unless-stopped
     ports:

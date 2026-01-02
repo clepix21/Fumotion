@@ -1,8 +1,13 @@
+/**
+ * Page de messagerie
+ * Affiche les conversations et permet d'échanger des messages
+ */
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ConversationList from '../components/Chat/ConversationList';
 import ChatWindow from '../components/Chat/ChatWindow';
+import Avatar from '../components/common/Avatar';
 import { messageService } from '../services/messageService';
 import logo from '../assets/images/logo.png';
 import '../styles/Chat.css';
@@ -13,6 +18,7 @@ const ChatPage = () => {
     const navigate = useNavigate();
     const { user: currentUser, logout } = useAuth();
 
+    // États de la messagerie
     const [conversations, setConversations] = useState([]);
     const [messages, setMessages] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
@@ -22,13 +28,11 @@ const ChatPage = () => {
     const [showConversations, setShowConversations] = useState(true);
     const messagesIntervalRef = useRef(null);
 
-    // Charger les conversations
+    /** Charge la liste des conversations */
     const loadConversations = useCallback(async () => {
         try {
             const response = await messageService.getConversations();
-            if (response.success) {
-                setConversations(response.data);
-            }
+            if (response.success) setConversations(response.data);
         } catch (error) {
             console.error("Erreur chargement conversations", error);
         } finally {
@@ -36,44 +40,36 @@ const ChatPage = () => {
         }
     }, []);
 
-    // Charger les messages
+    /** Charge les messages avec un utilisateur */
     const loadMessages = useCallback(async (otherId) => {
         if (!otherId) return;
         try {
             const response = await messageService.getMessages(otherId);
-            if (response.success) {
-                setMessages(response.data);
-            }
+            if (response.success) setMessages(response.data);
         } catch (error) {
             console.error("Erreur chargement messages", error);
         }
     }, []);
 
-    // Charger les infos de l'utilisateur sélectionné
+    /** Charge les infos de l'utilisateur sélectionné */
     const loadSelectedUser = useCallback(async (id) => {
-        // D'abord chercher dans les conversations
         const conv = conversations.find(c => c.id === parseInt(id));
         if (conv) {
             setSelectedUser(conv);
             return;
         }
-        
-        // Sinon charger depuis l'API
         try {
             const { authAPI } = await import('../services/api');
             const response = await authAPI.getPublicProfile(id);
-            if (response.success) {
-                setSelectedUser(response.data);
-            }
+            if (response.success) setSelectedUser(response.data);
         } catch (err) {
             console.error("Impossible de charger l'utilisateur", err);
         }
     }, [conversations]);
 
-    // Initialisation
+    // Initialisation et rafraîchissement périodique des conversations
     useEffect(() => {
         loadConversations();
-        // Rafraîchir les conversations toutes les 15 secondes
         const interval = setInterval(loadConversations, 15000);
         return () => clearInterval(interval);
     }, [loadConversations]);
@@ -175,12 +171,15 @@ const ChatPage = () => {
                             Rechercher
                         </Link>
                         <div className="navbar-divider"></div>
-                        <button onClick={() => navigate("/dashboard")} className="navbar-btn-secondary">
-                            Tableau de bord
-                        </button>
                         <button onClick={() => navigate("/chat")} className="navbar-btn-primary">
                             💬 Messages
                         </button>
+                        <div className="navbar-user-profile" onClick={() => navigate("/dashboard")} style={{ cursor: 'pointer' }}>
+                            <Avatar user={currentUser} size="medium" />
+                            <div className="navbar-user-info">
+                                <span className="navbar-user-name">{currentUser?.first_name || currentUser?.email}</span>
+                            </div>
+                        </div>
                         <button onClick={handleLogout} className="navbar-btn-logout">
                             <span>🚪</span> Déconnexion
                         </button>
@@ -209,12 +208,15 @@ const ChatPage = () => {
                             Rechercher
                         </Link>
                         <div className="navbar-divider"></div>
-                        <button onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
-                            Tableau de bord
-                        </button>
                         <button onClick={() => { navigate("/chat"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
                             💬 Messages
                         </button>
+                        <div className="navbar-user-profile" onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} style={{ cursor: 'pointer' }}>
+                            <Avatar user={currentUser} size="medium" />
+                            <div className="navbar-user-info">
+                                <span className="navbar-user-name">{currentUser?.first_name || currentUser?.email}</span>
+                            </div>
+                        </div>
                         <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="navbar-btn-logout">
                             <span>🚪</span> Déconnexion
                         </button>

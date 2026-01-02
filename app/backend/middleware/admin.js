@@ -1,8 +1,12 @@
+/**
+ * Middleware de vérification des droits administrateur
+ * Vérifie que l'utilisateur connecté a le rôle admin
+ */
 const db = require("../config/database")
 
-// Middleware pour vérifier si l'utilisateur est admin
 exports.isAdmin = async (req, res, next) => {
   try {
+    // Vérifie que l'utilisateur est authentifié
     if (!req.user || !req.user.id) {
       return res.status(401).json({
         success: false,
@@ -10,6 +14,7 @@ exports.isAdmin = async (req, res, next) => {
       })
     }
 
+    // Vérifie le flag is_admin en base
     const user = await db.get(
       "SELECT is_admin FROM users WHERE id = ?",
       [req.user.id]

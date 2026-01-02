@@ -1,5 +1,9 @@
+/**
+ * Page de création de trajet
+ * Permet au conducteur de publier un nouveau trajet avec carte interactive
+ */
 import { useState, useEffect } from "react"
-import { useNavigate, Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { tripsAPI } from "../services/api"
 import MapComponent, { AddressSearch } from "../components/common/MapComponent"
@@ -12,13 +16,19 @@ import "../styles/HomePage.css"
 export default function CreateTripPage() {
   const navigate = useNavigate()
   const { user, logout } = useAuth()
+  
+  // États du formulaire
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  
+  // États de la carte
   const [mapCenter, setMapCenter] = useState([49.8942, 2.2957]) // Amiens par défaut
-  const [markers, setMarkers] = useState([])
-  const [selectingPoint, setSelectingPoint] = useState(null) // 'departure' ou 'arrival'
-  const [routeInfo, setRouteInfo] = useState(null) // Infos sur la route (distance, durée)
+  const [markers, setMarkers] = useState([])                    // Marqueurs départ/arrivée
+  const [selectingPoint, setSelectingPoint] = useState(null)    // 'departure' ou 'arrival'
+  const [routeInfo, setRouteInfo] = useState(null)              // Distance et durée
+  
+  // Données du formulaire
   const [formData, setFormData] = useState({
     departure_location: "",
     arrival_location: "",
@@ -32,8 +42,8 @@ export default function CreateTripPage() {
     arrival_longitude: null,
   })
 
+  // Géolocalisation automatique au chargement
   useEffect(() => {
-    // Géolocalisation automatique au chargement
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -46,6 +56,20 @@ export default function CreateTripPage() {
       )
     }
   }, [])
+
+  // Bloquer le scroll du body quand le menu mobile est ouvert
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.classList.add('menu-open')
+    } else {
+      document.body.classList.remove('menu-open')
+    }
+    
+    // Cleanup au démontage du composant
+    return () => {
+      document.body.classList.remove('menu-open')
+    }
+  }, [mobileMenuOpen])
 
   // Mettre à jour les marqueurs quand les coordonnées changent
   useEffect(() => {
@@ -246,22 +270,34 @@ export default function CreateTripPage() {
       }
 
       // Récupérer l'adresse via géocodage inverse
-      const geocodeResult = await reverseGeocode(lat, lng)
-
-      // Utiliser le formatage court de l'adresse
-      let locationText = formatAddressShort(geocodeResult)
-
-      if (!locationText) {
-        locationText = `Localisation : ${lat.toFixed(6)}, ${lng.toFixed(6)}`
-      }
+      let geocodeResult = await reverseGeocode(lat, lng)
+      console.log('handleMapClick geocodeResult:', geocodeResult)
 
       // Si le géocodage a échoué, réessayer une fois après un court délai
-      if (!geocodeResult || !geocodeResult.address) {
+      if (!geocodeResult) {
+        console.log('Geocode failed, retrying...')
         await new Promise(resolve => setTimeout(resolve, 1000))
-        const retryResult = await reverseGeocode(lat, lng)
-        if (retryResult) {
-          locationText = formatAddressShort(retryResult) || locationText
-        }
+        geocodeResult = await reverseGeocode(lat, lng)
+        console.log('Retry geocodeResult:', geocodeResult)
+      }
+
+      // Utiliser le formatage court de l'adresse
+      let locationText = null
+      
+      if (geocodeResult) {
+        locationText = formatAddressShort(geocodeResult)
+        console.log('formatAddressShort result:', locationText)
+      }
+      
+      // Fallback : utiliser display_name directement
+      if (!locationText && geocodeResult && geocodeResult.display_name) {
+        const parts = geocodeResult.display_name.split(',').map(p => p.trim())
+        locationText = parts.slice(0, 2).join(', ')
+      }
+
+      // Fallback final avec les coordonnées
+      if (!locationText) {
+        locationText = `${lat.toFixed(4)}, ${lng.toFixed(4)}`
       }
 
       // Mettre à jour avec l'adresse finale
@@ -322,14 +358,49 @@ export default function CreateTripPage() {
             {mobileMenuOpen ? '✕' : '☰'}
           </button>
 
-          <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
+          {/* Menu desktop */}
+          <div className="navbar-menu navbar-menu-desktop">
+            <a href="/search" className="navbar-link">
+              Rechercher
+            </a>
+            <div className="navbar-divider"></div>
+            <button onClick={() => navigate("/create-trip")} className="navbar-btn-primary">
+              Créer un trajet
+            </button>
+            <div className="navbar-user-profile" onClick={() => navigate("/dashboard")} style={{ cursor: 'pointer' }}>
+              <Avatar user={user} size="medium" />
+              <div className="navbar-user-info">
+                <span className="navbar-user-name">{user?.first_name || user?.email}</span>
+              </div>
+            </div>
+            <button onClick={handleLogout} className="navbar-btn-logout">
+              Déconnexion
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Menu mobile - en dehors de la navbar */}
+      {mobileMenuOpen && (
+        <>
+          <div 
+            className="navbar-overlay"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+          <div className="navbar-menu-mobile">
+            <button 
+              className="navbar-menu-close"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Fermer le menu"
+            >
+              ✕
+            </button>
+            
             <a href="/search" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
               Rechercher
             </a>
             <div className="navbar-divider"></div>
-            <button onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
-              Tableau de bord
-            </button>
             <button onClick={() => { navigate("/create-trip"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
               Créer un trajet
             </button>
@@ -338,29 +409,20 @@ export default function CreateTripPage() {
                 👑 Admin
               </button>
             )}
-            <div className="navbar-user-profile">
+            <div className="navbar-user-profile" onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} style={{ cursor: 'pointer' }}>
               <Avatar user={user} size="medium" />
               <div className="navbar-user-info">
                 <span className="navbar-user-name">{user?.first_name || user?.email}</span>
               </div>
             </div>
             <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="navbar-btn-logout">
-              <span>🚪</span> Déconnexion
+              Déconnexion
             </button>
           </div>
-        </div>
-      </nav>
+        </>
+      )}
 
       <main className="create-trip-main">
-        {/* Header avec breadcrumb */}
-        <div className="page-header">
-          <div className="header-content">
-            <Link to="/dashboard" className="back-link">
-              ← Retour au tableau de bord
-            </Link>
-          </div>
-        </div>
-
         <div className="create-trip-container">
           {/* Formulaire principal */}
           <div className="create-trip-card">

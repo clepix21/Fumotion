@@ -1,3 +1,7 @@
+/**
+ * Page d'administration
+ * Tableau de bord, gestion des utilisateurs, trajets et réservations
+ */
 import { useState, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
@@ -6,6 +10,16 @@ import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
 import statsIcon from "../assets/icons/stats.svg"
 import profileIcon from "../assets/icons/profile.svg"
+import refreshIcon from "../assets/icons/refresh.svg"
+import usersIcon from "../assets/icons/users.svg"
+import voitureIcon from "../assets/icons/voiture.svg"
+import clipboardIcon from "../assets/icons/clipboard.svg"
+import alertIcon from "../assets/icons/alert.svg"
+import moneyIcon from "../assets/icons/money.svg"
+import checkCircleIcon from "../assets/icons/check-circle.svg"
+import targetIcon from "../assets/icons/target.svg"
+import clockIcon from "../assets/icons/clock.svg"
+import locationIcon from "../assets/icons/location.svg"
 import "../styles/Admin.css"
 import "../styles/HomePage.css"
 
@@ -17,10 +31,10 @@ export default function AdminPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [notification, setNotification] = useState(null)
   
-  // États pour le dashboard
+  // États du dashboard (statistiques globales)
   const [statistics, setStatistics] = useState(null)
   
-  // États pour les utilisateurs
+  // États de la gestion des utilisateurs
   const [users, setUsers] = useState([])
   const [usersPage, setUsersPage] = useState(1)
   const [usersPagination, setUsersPagination] = useState(null)
@@ -29,7 +43,7 @@ export default function AdminPage() {
   const [selectedUsers, setSelectedUsers] = useState([])
   const [userDetailModal, setUserDetailModal] = useState(null)
   
-  // États pour les trajets
+  // États de la gestion des trajets
   const [trips, setTrips] = useState([])
   const [tripsPage, setTripsPage] = useState(1)
   const [tripsPagination, setTripsPagination] = useState(null)
@@ -37,42 +51,39 @@ export default function AdminPage() {
   const [tripsSearch, setTripsSearch] = useState("")
   const [selectedTrips, setSelectedTrips] = useState([])
   
-  // États pour les réservations
+  // États de la gestion des réservations
   const [bookings, setBookings] = useState([])
   const [bookingsPage, setBookingsPage] = useState(1)
   const [bookingsPagination, setBookingsPagination] = useState(null)
   const [bookingsFilter, setBookingsFilter] = useState("")
 
-  // Notification helper
+  /** Affiche une notification temporaire */
   const showNotification = (message, type = 'success') => {
     setNotification({ message, type })
     setTimeout(() => setNotification(null), 3000)
   }
 
-  // Format helpers
+  /** Formate une date en français */
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
     })
   }
 
+  /** Formate une adresse (garde les 2 premiers éléments) */
   const formatAddress = (address) => {
     if (!address) return "-"
     const parts = address.split(',')
     return parts.length > 1 ? `${parts[0]}, ${parts[1]}` : address
   }
 
-  // Export CSV
+  /** Exporte les données en CSV */
   const exportToCSV = (data, filename) => {
     if (!data || data.length === 0) {
       showNotification("Aucune donnée à exporter", "warning")
       return
     }
-
     const headers = Object.keys(data[0])
     const csvContent = [
       headers.join(','),
@@ -430,10 +441,7 @@ export default function AdminPage() {
           </button>
 
           <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
-            <button onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
-              Tableau de bord
-            </button>
-            <div className="navbar-user-profile">
+            <div className="navbar-user-profile" onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} style={{ cursor: 'pointer' }}>
               <Avatar user={user} size="medium" />
               <div className="navbar-user-info">
                 <span className="navbar-user-name">{user?.first_name} (Admin)</span>
@@ -507,7 +515,7 @@ export default function AdminPage() {
                   onClick={loadStatistics}
                   disabled={loading}
                 >
-                  🔄 Actualiser
+                  <img src={refreshIcon} alt="" className="btn-icon-svg" /> Actualiser
                 </button>
               </div>
               
@@ -521,7 +529,7 @@ export default function AdminPage() {
                   <div className="stats-grid">
                     <div className="stat-card users">
                       <div className="stat-icon-wrapper">
-                        <span className="stat-icon">👥</span>
+                        <span className="stat-icon"><img src={usersIcon} alt="" className="stat-icon-svg" /></span>
                       </div>
                       <div className="stat-content">
                         <div className="stat-header">
@@ -553,7 +561,7 @@ export default function AdminPage() {
 
                     <div className="stat-card trips">
                       <div className="stat-icon-wrapper">
-                        <span className="stat-icon">🚗</span>
+                        <span className="stat-icon"><img src={voitureIcon} alt="" className="stat-icon-svg" /></span>
                       </div>
                       <div className="stat-content">
                         <div className="stat-header">
@@ -585,14 +593,14 @@ export default function AdminPage() {
 
                     <div className="stat-card bookings">
                       <div className="stat-icon-wrapper">
-                        <span className="stat-icon">📋</span>
+                        <span className="stat-icon"><img src={clipboardIcon} alt="" className="stat-icon-svg" /></span>
                       </div>
                       <div className="stat-content">
                         <div className="stat-header">
                           <div className="stat-label">Réservations</div>
                           {statistics.bookings.pending > 0 && (
                             <div className="stat-trend warning">
-                              <span>⚠</span>
+                              <span><img src={alertIcon} alt="" className="trend-icon-svg" /></span>
                               <span>{statistics.bookings.pending} en attente</span>
                             </div>
                           )}
@@ -619,13 +627,13 @@ export default function AdminPage() {
 
                     <div className="stat-card revenue">
                       <div className="stat-icon-wrapper">
-                        <span className="stat-icon">💰</span>
+                        <span className="stat-icon"><img src={moneyIcon} alt="" className="stat-icon-svg" /></span>
                       </div>
                       <div className="stat-content">
                         <div className="stat-header">
                           <div className="stat-label">Revenu total</div>
                           <div className="stat-trend positive">
-                            <span>💵</span>
+                            <span><img src={moneyIcon} alt="" className="trend-icon-svg" /></span>
                             <span>Transactions</span>
                           </div>
                         </div>
@@ -643,21 +651,21 @@ export default function AdminPage() {
                   {/* Quick Stats Summary */}
                   <div className="quick-stats-summary">
                     <div className="quick-stat-item">
-                      <span className="quick-stat-icon">✅</span>
+                      <span className="quick-stat-icon"><img src={checkCircleIcon} alt="" className="quick-stat-icon-svg" /></span>
                       <div className="quick-stat-info">
                         <span className="quick-stat-value">{statistics.users.verified}</span>
                         <span className="quick-stat-label">Utilisateurs vérifiés</span>
                       </div>
                     </div>
                     <div className="quick-stat-item">
-                      <span className="quick-stat-icon">🎯</span>
+                      <span className="quick-stat-icon"><img src={targetIcon} alt="" className="quick-stat-icon-svg" /></span>
                       <div className="quick-stat-info">
                         <span className="quick-stat-value">{statistics.trips.active}</span>
                         <span className="quick-stat-label">Trajets actifs</span>
                       </div>
                     </div>
                     <div className="quick-stat-item">
-                      <span className="quick-stat-icon">⏳</span>
+                      <span className="quick-stat-icon"><img src={clockIcon} alt="" className="quick-stat-icon-svg" /></span>
                       <div className="quick-stat-info">
                         <span className="quick-stat-value">{statistics.bookings.pending}</span>
                         <span className="quick-stat-label">À traiter</span>
@@ -721,7 +729,7 @@ export default function AdminPage() {
                     <div className="recent-section">
                       <div className="recent-header">
                         <div className="recent-header-title">
-                          <span className="recent-header-icon">🚗</span>
+                          <span className="recent-header-icon"><img src={voitureIcon} alt="" className="icon-svg-heading" /></span>
                           <h2>Derniers trajets</h2>
                         </div>
                         <button 
@@ -734,7 +742,7 @@ export default function AdminPage() {
                       <div className="recent-list">
                         {statistics.recent.trips.length === 0 ? (
                           <div className="empty-state-small">
-                            <span>🚗</span>
+                            <span><img src={voitureIcon} alt="" className="icon-svg-empty" /></span>
                             <p>Aucun trajet récent</p>
                           </div>
                         ) : (
@@ -742,7 +750,7 @@ export default function AdminPage() {
                             <div key={trip.id} className="recent-item trip-item" style={{ animationDelay: `${index * 0.1}s` }}>
                               <div className="recent-item-left">
                                 <div className="recent-trip-icon">
-                                  <span>📍</span>
+                                  <span><img src={locationIcon} alt="" className="icon-svg-small" /></span>
                                 </div>
                                 <div className="recent-info">
                                   <div className="recent-name trip-route">
@@ -751,7 +759,7 @@ export default function AdminPage() {
                                     <span className="route-to">{formatAddress(trip.arrival_location)}</span>
                                   </div>
                                   <div className="recent-detail">
-                                    <span className="driver-info">🚘 {trip.first_name} {trip.last_name}</span>
+                                    <span className="driver-info"><img src={voitureIcon} alt="" className="icon-svg-inline" /> {trip.first_name} {trip.last_name}</span>
                                   </div>
                                 </div>
                               </div>
@@ -775,7 +783,7 @@ export default function AdminPage() {
                   </span>
                   <p>Impossible de charger les statistiques</p>
                   <button className="admin-btn admin-btn-primary" onClick={loadStatistics}>
-                    🔄 Réessayer
+                    <img src={refreshIcon} alt="" className="btn-icon-svg" /> Réessayer
                   </button>
                 </div>
               )}

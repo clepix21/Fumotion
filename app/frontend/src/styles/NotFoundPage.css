@@ -1,3 +1,7 @@
+/**
+ * Styles de la page 404
+ * Style simple avec chien rebondissant
+ */
 
 .not-found-container {
     display: flex;
@@ -9,6 +13,8 @@
     background-color: #f8f9fa;
     color: #333;
     padding: 20px;
+    position: relative;
+    overflow: hidden;
 }
 
 .not-found-title {
@@ -53,4 +59,27 @@
 
 .not-found-button:active {
     transform: translateY(0);
+}
+
+/* Chien rebondissant style DVD */
+.bouncing-doge {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    font-size: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.1s ease;
+    z-index: 10;
+}
+
+.bouncing-doge:hover {
+    transform: scale(1.15);
+}
+
+.bouncing-doge.clicked {
+    transform: scale(0.8);
 }

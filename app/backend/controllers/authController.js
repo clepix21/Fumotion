@@ -1,3 +1,7 @@
+/**
+ * Contrôleur d'authentification
+ * Gère inscription, connexion, profil et mot de passe
+ */
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const db = require("../config/database")
@@ -5,14 +9,17 @@ const fs = require("fs")
 const path = require("path")
 
 class AuthController {
-  // Inscription
+  /**
+   * Inscription d'un nouvel utilisateur
+   * Hash le mot de passe et génère un token JWT
+   */
   async register(req, res) {
     try {
       const { email, password, firstName, lastName, phone, studentId } = req.body
 
       console.log("[v0] Tentative d'inscription pour:", email)
 
-      // Vérifier si l'email existe déjà
+      // Vérifier l'unicité de l'email
       const existingUser = await db.get("SELECT id FROM users WHERE email = ?", [email])
       if (existingUser) {
         console.log("[v0] Email déjà existant:", email)
@@ -22,7 +29,7 @@ class AuthController {
         })
       }
 
-      // Hasher le mot de passe
+      // Sécuriser le mot de passe avec bcrypt (10 rounds)
       const hashedPassword = await bcrypt.hash(password, 10)
 
       // Créer l'utilisateur
@@ -169,18 +176,18 @@ class AuthController {
   // Mise à jour du profil
   async updateProfile(req, res) {
     try {
-      const { firstName, lastName, phone, studentId } = req.body
+      const { firstName, lastName, phone, studentId, bio } = req.body
       const userId = req.user.id
 
       await db.run(
         `UPDATE users 
-         SET first_name = ?, last_name = ?, phone = ?, student_id = ?, updated_at = CURRENT_TIMESTAMP
+         SET first_name = ?, last_name = ?, phone = ?, student_id = ?, bio = ?, updated_at = CURRENT_TIMESTAMP
          WHERE id = ?`,
-        [firstName, lastName, phone, studentId, userId],
+        [firstName, lastName, phone, studentId, bio, userId],
       )
 
       const updatedUser = await db.get(
-        "SELECT id, email, first_name, last_name, phone, student_id, profile_picture FROM users WHERE id = ?",
+        "SELECT id, email, first_name, last_name, phone, student_id, bio, profile_picture FROM users WHERE id = ?",
         [userId],
       )
 

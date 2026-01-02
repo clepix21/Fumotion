@@ -1,3 +1,7 @@
+/**
+ * Page d'accueil de Fumotion
+ * Barre de recherche rapide, présentation des fonctionnalités, témoignages
+ */
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
@@ -16,6 +20,7 @@ export default function HomePage() {
   const navigate = useNavigate()
   const { user, isAuthenticated, logout } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  // Données du formulaire de recherche rapide
   const [searchData, setSearchData] = useState({
     departure: "",
     arrival: "",
@@ -23,18 +28,14 @@ export default function HomePage() {
     passengers: 1,
   })
 
-  // Bloquer le scroll du body quand le menu mobile est ouvert
+  // Bloque le scroll quand le menu mobile est ouvert
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.classList.add('menu-open')
     } else {
       document.body.classList.remove('menu-open')
     }
-    
-    // Cleanup au démontage du composant
-    return () => {
-      document.body.classList.remove('menu-open')
-    }
+    return () => document.body.classList.remove('menu-open')
   }, [mobileMenuOpen])
 
   const handleLogout = () => {
@@ -42,24 +43,14 @@ export default function HomePage() {
     navigate("/")
   }
 
+  // Redirige vers la page de recherche avec les paramètres
   const handleSearch = (e) => {
     e.preventDefault()
-
-    // Construire les paramètres de recherche
     const params = new URLSearchParams()
-    if (searchData.departure.trim()) {
-      params.append("departure", searchData.departure.trim())
-    }
-    if (searchData.arrival.trim()) {
-      params.append("arrival", searchData.arrival.trim())
-    }
-    if (searchData.date) {
-      params.append("date", searchData.date)
-    }
-    if (searchData.passengers) {
-      params.append("passengers", searchData.passengers)
-    }
-
+    if (searchData.departure.trim()) params.append("departure", searchData.departure.trim())
+    if (searchData.arrival.trim()) params.append("arrival", searchData.arrival.trim())
+    if (searchData.date) params.append("date", searchData.date)
+    if (searchData.passengers) params.append("passengers", searchData.passengers)
     // Rediriger vers la page de recherche avec les paramètres
     navigate(`/search?${params.toString()}`)
   }
@@ -97,13 +88,10 @@ export default function HomePage() {
                 <button onClick={() => navigate("/search")} className="navbar-btn-secondary">
                   Rechercher
                 </button>
-                <button onClick={() => navigate("/dashboard")} className="navbar-btn-secondary">
-                  Tableau de bord
-                </button>
                 <button onClick={() => navigate("/create-trip")} className="navbar-btn-primary">
                   Créer un trajet
                 </button>
-                <div className="navbar-user-profile">
+                <div className="navbar-user-profile" onClick={() => navigate("/dashboard")} style={{ cursor: 'pointer' }}>
                   <Avatar user={user} size="medium" />
                   <div className="navbar-user-info">
                     <span className="navbar-user-name">{user?.first_name || user?.email}</span>
@@ -159,13 +147,10 @@ export default function HomePage() {
                 <button onClick={() => { navigate("/search"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
                   Rechercher
                 </button>
-                <button onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
-                  Tableau de bord
-                </button>
                 <button onClick={() => { navigate("/create-trip"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
                   Créer un trajet
                 </button>
-                <div className="navbar-user-profile">
+                <div className="navbar-user-profile" onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} style={{ cursor: 'pointer' }}>
                   <Avatar user={user} size="medium" />
                   <div className="navbar-user-info">
                     <span className="navbar-user-name">{user?.first_name || user?.email}</span>

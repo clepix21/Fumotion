@@ -1,3 +1,7 @@
+/**
+ * Page Tableau de bord utilisateur
+ * Affiche profil, trajets, réservations et statistiques
+ */
 import { useState, useEffect, useCallback, useRef } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
@@ -10,20 +14,31 @@ import ticketIcon from "../assets/icons/ticket.svg"
 import starIcon from "../assets/icons/star.svg"
 import statsIcon from "../assets/icons/stats.svg"
 import profileIcon from "../assets/icons/profile.svg"
+import lumenIcon from "../assets/icons/lumen.webp"
 import "../styles/Dashboard.css"
 import "../styles/HomePage.css"
 
 export default function DashboardPage() {
   const navigate = useNavigate()
   const { user, token, logout, updateUser } = useAuth()
-  const [activeTab, setActiveTab] = useState("overview")
-  const [myTrips, setMyTrips] = useState([])
+  
+  // ========== ÉTATS PRINCIPAUX ==========
+  const [activeTab, setActiveTab] = useState("overview") // Onglet actif
+  const [myTrips, setMyTrips] = useState([])             // Trajets créés
   const [myBookings, setMyBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [profileUser, setProfileUser] = useState(null)
   const [uploading, setUploading] = useState({ banner: false, avatar: false })
   const [editMode, setEditMode] = useState(false)
+  const [profileFormData, setProfileFormData] = useState({
+    firstName: '',
+    lastName: '',
+    phone: '',
+    studentId: '',
+    bio: ''
+  })
+  const [savingProfile, setSavingProfile] = useState(false)
   const bannerInputRef = useRef(null)
   const avatarInputRef = useRef(null)
   
@@ -207,6 +222,53 @@ export default function DashboardPage() {
       alert("Erreur lors de l'upload de la photo")
     } finally {
       setUploading({ ...uploading, avatar: false })
+    }
+  }
+
+  // Activer le mode édition et initialiser le formulaire
+  const toggleEditMode = async () => {
+    if (!editMode) {
+      // Entrer en mode édition : initialiser le formulaire avec les données actuelles
+      setProfileFormData({
+        firstName: displayUser?.first_name || '',
+        lastName: displayUser?.last_name || '',
+        phone: displayUser?.phone || '',
+        studentId: displayUser?.student_id || '',
+        bio: displayUser?.bio || ''
+      })
+      setEditMode(true)
+    } else {
+      // Quitter le mode édition : sauvegarder les modifications
+      setSavingProfile(true)
+      try {
+        const response = await authAPI.updateProfile(profileFormData)
+        if (response.success) {
+          // Mettre à jour les données locales
+          setProfileUser(prev => ({
+            ...prev,
+            first_name: profileFormData.firstName,
+            last_name: profileFormData.lastName,
+            phone: profileFormData.phone,
+            student_id: profileFormData.studentId,
+            bio: profileFormData.bio
+          }))
+          updateUser({
+            first_name: profileFormData.firstName,
+            last_name: profileFormData.lastName,
+            phone: profileFormData.phone,
+            student_id: profileFormData.studentId,
+            bio: profileFormData.bio
+          })
+        } else {
+          alert(response.message || "Erreur lors de la mise à jour du profil")
+        }
+      } catch (error) {
+        console.error("Erreur:", error)
+        alert("Erreur lors de la mise à jour du profil")
+      } finally {
+        setSavingProfile(false)
+        setEditMode(false)
+      }
     }
   }
 
@@ -436,13 +498,10 @@ export default function DashboardPage() {
               Rechercher
             </a>
             <div className="navbar-divider"></div>
-            <button onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} className="navbar-btn-secondary">
-              Tableau de bord
-            </button>
             <button onClick={() => { navigate("/create-trip"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
               Créer un trajet
             </button>
-            <div className="navbar-user-profile">
+            <div className="navbar-user-profile" onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} style={{ cursor: 'pointer' }}>
               <Avatar user={user} size="medium" />
               <div className="navbar-user-info">
                 <span className="navbar-user-name">{user?.first_name || user?.email}</span>
@@ -521,7 +580,7 @@ export default function DashboardPage() {
                 className="sidebar-btn admin-btn"
                 onClick={() => navigate("/admin")}
               >
-                <span className="btn-icon">👑</span>
+                <span className="btn-icon"><img src={lumenIcon} alt="Admin" style={{ width: '20px', height: '20px' }} /></span>
                 Administration
               </button>
             )}
@@ -534,7 +593,7 @@ export default function DashboardPage() {
             <div className="overview-section">
               <div className="overview-header">
                 <div className="overview-welcome">
-                  <h1>Bienvenue, {displayUser?.first_name || 'Utilisateur'} ! 👋</h1>
+                  <h1>Bienvenue, {displayUser?.first_name || 'Utilisateur'} !</h1>
                   <p className="overview-subtitle">Voici un résumé de votre activité sur Fumotion</p>
                 </div>
                 <div className="overview-date">
@@ -656,43 +715,6 @@ export default function DashboardPage() {
                       ))}
                   </div>
                 )}
-              </div>
-
-              {/* Actions rapides améliorées */}
-              <div className="quick-actions">
-                <h2><span className="section-icon">⚡</span> Actions rapides</h2>
-                <div className="action-cards">
-                  <Link to="/create-trip" className="action-card action-create">
-                    <div className="action-icon-wrapper">
-                      <span className="action-icon">➕</span>
-                    </div>
-                    <div className="action-content">
-                      <h3>Proposer un trajet</h3>
-                      <p>Créez un nouveau trajet et partagez vos frais</p>
-                    </div>
-                    <span className="action-arrow">→</span>
-                  </Link>
-                  <Link to="/search" className="action-card action-search">
-                    <div className="action-icon-wrapper">
-                      <span className="action-icon">🔍</span>
-                    </div>
-                    <div className="action-content">
-                      <h3>Trouver un trajet</h3>
-                      <p>Recherchez un trajet pour vos déplacements</p>
-                    </div>
-                    <span className="action-arrow">→</span>
-                  </Link>
-                  <Link to="/chat" className="action-card action-chat">
-                    <div className="action-icon-wrapper">
-                      <span className="action-icon">💬</span>
-                    </div>
-                    <div className="action-content">
-                      <h3>Messagerie</h3>
-                      <p>Contactez vos covoitureurs</p>
-                    </div>
-                    <span className="action-arrow">→</span>
-                  </Link>
-                </div>
               </div>
 
               {/* Évaluations en attente */}
@@ -934,13 +956,13 @@ export default function DashboardPage() {
                   <p>Vous avez évalué tous vos trajets terminés !</p>
                 </div>
               )}
-              
+              <br/>
               {/* Mes notes */}
               <div className="my-ratings-section">
                 <h2><img src={statsIcon} alt="stats" className="icon-svg-heading" /> Mes notes</h2>
                 <div className="ratings-grid">
                   <div className="rating-card">
-                    <div className="rating-icon">🚗</div>
+                    <div className="rating-icon"><img src={voiture} alt="" className="icon-svg-rating" /></div>
                     <div className="rating-info">
                       <span className="rating-value-large">
                         {displayUser?.driver_rating ? parseFloat(displayUser.driver_rating).toFixed(1) : '-'}
@@ -1035,16 +1057,26 @@ export default function DashboardPage() {
                       <p className="profile-joined">
                         Membre depuis {displayUser?.created_at ? new Date(displayUser.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : '2024'}
                       </p>
-                      <p className="location-info">
-                        <span className="location-icon">📍</span>
-                        Étudiant à {displayUser?.university || 'IUT Amiens'}, Amiens
-                      </p>
+                      {editMode ? (
+                        <textarea
+                          className="profile-bio-edit"
+                          value={profileFormData.bio}
+                          onChange={(e) => setProfileFormData({...profileFormData, bio: e.target.value})}
+                          placeholder="Écrivez votre biographie..."
+                          maxLength={200}
+                        />
+                      ) : (
+                        <p className="profile-bio">
+                          {displayUser?.bio || 'sans biographie...'}
+                        </p>
+                      )}
                     </div>
                     <button
                       className="edit-profile-btn"
-                      onClick={() => setEditMode(!editMode)}
+                      onClick={toggleEditMode}
+                      disabled={savingProfile}
                     >
-                      {editMode ? 'Annuler' : '✏️ Modifier le profil'}
+                      {savingProfile ? 'Enregistrement...' : (editMode ? 'Terminer' : 'Modifier le profil')}
                     </button>
                   </div>
 
