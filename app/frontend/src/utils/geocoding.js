@@ -1,5 +1,7 @@
 // Utilisation du proxy backend pour le géocodage (évite les problèmes CORS)
-const API_URL = process.env.REACT_APP_API_URL || '/api'
+// Note: On utilise toujours /api comme préfixe car les routes backend sont /api/geocode/...
+const API_BASE = process.env.REACT_APP_API_URL || ''
+const API_URL = API_BASE ? `${API_BASE}/api` : '/api'
 
 // Délai entre les requêtes pour respecter la politique d'utilisation de Nominatim
 let lastRequestTime = 0

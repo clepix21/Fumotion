@@ -96,7 +96,8 @@ function AddressSearch({ onSelect, placeholder, value, onChange }) {
       })
 
       // Utiliser le proxy backend pour éviter les problèmes CORS
-      const apiUrl = process.env.REACT_APP_API_URL || '/api'
+      const apiBase = process.env.REACT_APP_API_URL || ''
+      const apiUrl = apiBase ? `${apiBase}/api` : '/api'
       const response = await fetch(`${apiUrl}/geocode/search?${params.toString()}`)
 
       if (response.ok) {
