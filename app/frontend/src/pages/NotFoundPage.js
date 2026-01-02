@@ -1,3 +1,7 @@
+/**
+ * Page 404 - Page non trouvée
+ * Affichée quand l'URL demandée n'existe pas
+ */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/NotFoundPage.css';

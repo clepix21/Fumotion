@@ -1,62 +1,49 @@
+/**
+ * Contrôleur des évaluations
+ * Gère les notes et commentaires entre conducteurs/passagers
+ */
 const db = require('../config/database');
 
 class ReviewController {
-  // Créer une évaluation
+  /** Crée une évaluation après un trajet terminé */
   async createReview(req, res) {
     try {
       const { bookingId } = req.params;
       const { rating, comment, type } = req.body;
       const reviewerId = req.user.id;
 
-      // Valider la note
+      // Validation de la note (1-5)
       if (!rating || rating < 1 || rating > 5) {
-        return res.status(400).json({
-          success: false,
-          message: 'La note doit être comprise entre 1 et 5'
-        });
+        return res.status(400).json({ success: false, message: 'La note doit être comprise entre 1 et 5' });
       }
 
-      // Valider le type
+      // Type: driver (passager note conducteur) ou passenger (conducteur note passager)
       if (!type || !['driver', 'passenger'].includes(type)) {
-        return res.status(400).json({
-          success: false,
-          message: 'Le type doit être "driver" ou "passenger"'
-        });
+        return res.status(400).json({ success: false, message: 'Le type doit être "driver" ou "passenger"' });
       }
 
-      // Récupérer la réservation avec les infos du trajet
+      // Récupère la réservation et vérifie le statut du trajet
       const booking = await db.get(
         `SELECT b.*, t.driver_id, t.status as trip_status
-         FROM bookings b
-         JOIN trips t ON b.trip_id = t.id
-         WHERE b.id = ?`,
+         FROM bookings b JOIN trips t ON b.trip_id = t.id WHERE b.id = ?`,
         [bookingId]
       );
 
       if (!booking) {
-        return res.status(404).json({
-          success: false,
-          message: 'Réservation non trouvée'
-        });
+        return res.status(404).json({ success: false, message: 'Réservation non trouvée' });
       }
 
-      // Vérifier que le trajet est terminé
+      // Le trajet doit être terminé pour pouvoir évaluer
       if (booking.trip_status !== 'completed') {
-        return res.status(400).json({
-          success: false,
-          message: 'Le trajet doit être terminé pour pouvoir évaluer'
-        });
+        return res.status(400).json({ success: false, message: 'Le trajet doit être terminé pour pouvoir évaluer' });
       }
 
-      // Déterminer qui est évalué
+      // Détermine qui est évalué selon le type
       let reviewedId;
       if (type === 'driver') {
         // Le passager évalue le conducteur
         if (reviewerId !== booking.passenger_id) {
-          return res.status(403).json({
-            success: false,
-            message: 'Seul le passager peut évaluer le conducteur'
-          });
+          return res.status(403).json({ success: false, message: 'Seul le passager peut évaluer le conducteur' });
         }
         reviewedId = booking.driver_id;
       } else {

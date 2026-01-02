@@ -1,3 +1,7 @@
+/**
+ * Page de réinitialisation de mot de passe (via token email)
+ * Utilisée après clic sur le lien envoyé par email
+ */
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import '../../styles/auth.css';
@@ -5,36 +9,30 @@ import '../../styles/auth.css';
 export default function ResetPasswordPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const token = searchParams.get('token');
+  const token = searchParams.get('token'); // Token de réinitialisation depuis l'URL
 
-  const [formData, setFormData] = useState({
-    password: '',
-    confirmPassword: '',
-  });
+  const [formData, setFormData] = useState({ password: '', confirmPassword: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  /** Soumet le nouveau mot de passe */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
+    // Validations
     if (formData.password !== formData.confirmPassword) {
       setError('Les mots de passe ne correspondent pas');
       return;
     }
-
     if (formData.password.length < 6) {
       setError('Le mot de passe doit contenir au moins 6 caractères');
       return;
     }
-
     if (!token) {
       setError('Token de réinitialisation manquant');
       return;
@@ -45,13 +43,8 @@ export default function ResetPasswordPage() {
     try {
       const response = await fetch('http://localhost:5000/api/auth/reset-password', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          token,
-          password: formData.password,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, password: formData.password }),
       });
 
       const data = await response.json();

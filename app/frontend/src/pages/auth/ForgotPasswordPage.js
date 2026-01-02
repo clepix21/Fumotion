@@ -1,3 +1,7 @@
+/**
+ * Page de récupération de mot de passe
+ * Vérifie email + n° étudiant avant de permettre le changement
+ */
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../../styles/auth.css';
@@ -5,30 +9,25 @@ import '../../styles/auth.css';
 export default function ForgotPasswordPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
-    studentId: '',
-    password: '',
-    confirmPassword: ''
+    email: '', studentId: '', password: '', confirmPassword: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  /** Soumet la demande de réinitialisation */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
+    // Validations
     if (formData.password !== formData.confirmPassword) {
       setError('Les mots de passe ne correspondent pas');
       return;
     }
-
     if (formData.password.length < 6) {
       setError('Le mot de passe doit contenir au moins 6 caractères');
       return;
@@ -39,9 +38,7 @@ export default function ForgotPasswordPage() {
     try {
       const response = await fetch('http://localhost:5000/api/auth/forgot-password', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: formData.email,
           studentId: formData.studentId,
