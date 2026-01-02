@@ -3,7 +3,7 @@
  * Permet au conducteur de publier un nouveau trajet avec carte interactive
  */
 import { useState, useEffect } from "react"
-import { useNavigate, Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { tripsAPI } from "../services/api"
 import MapComponent, { AddressSearch } from "../components/common/MapComponent"
