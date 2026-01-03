@@ -127,7 +127,6 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, s
             <div className="messages-container">
                 {messages.length === 0 ? (
                     <div className="no-messages">
-                        <span>👋</span>
                         <p>Commencez la conversation !</p>
                     </div>
                 ) : (
