@@ -1010,7 +1010,6 @@ export default function DashboardPage() {
                           </>
                         ) : (
                           <>
-                            <span>📷</span>
                             Modifier la bannière
                           </>
                         )}
