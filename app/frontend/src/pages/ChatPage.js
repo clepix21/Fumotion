@@ -245,7 +245,6 @@ const ChatPage = () => {
                         onSendMessage={handleSendMessage}
                         onBack={handleBackToList}
                         sending={sending}
-                        onAvatarClick={(id) => navigate(`/dashboard/${id}`)}
                     />
                 </div>
             </div>
