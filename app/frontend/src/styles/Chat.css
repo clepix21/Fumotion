@@ -830,3 +830,55 @@
     margin-left: 0.5rem;
     margin-top: 0;
 }
+
+/* ============================================
+   Profile Popup - Responsive Mobile
+   ============================================ */
+@media (max-width: 47.99em) {
+    .profile-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+        width: calc(100vw - 2rem);
+        max-width: 320px;
+        max-height: calc(100vh - 4rem);
+        overflow-y: auto;
+        animation: popupMobileFadeIn 0.25s ease-out;
+    }
+
+    .conversation-profile-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+        width: calc(100vw - 2rem);
+        max-width: 320px;
+    }
+
+    @keyframes popupMobileFadeIn {
+        from {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+    }
+
+    /* Overlay sombre derrière le popup */
+    .profile-popup::before,
+    .conversation-profile-popup::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+    }
+}
