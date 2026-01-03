@@ -652,7 +652,7 @@ export default function DashboardPage() {
                       <span className="stat-label">Note moyenne</span>
                       <span className="stat-badge rating">Top conducteur</span>
                     </div>
-                    <h3>{displayUser?.driver_rating ? parseFloat(displayUser.driver_rating).toFixed(1) : '4.8'}</h3>
+                    <h3>{displayUser?.driver_rating ? parseFloat(displayUser.driver_rating).toFixed(1) : '-'}</h3>
                     <div className="star-display">
                       {[1, 2, 3, 4, 5].map(star => (
                         <span key={star} className={`star ${star <= Math.round(displayUser?.driver_rating || 4.8) ? 'filled' : ''}`}>★</span>
