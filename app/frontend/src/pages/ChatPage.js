@@ -172,7 +172,7 @@ const ChatPage = () => {
                         </Link>
                         <div className="navbar-divider"></div>
                         <button onClick={() => navigate("/chat")} className="navbar-btn-primary">
-                            💬 Messages
+                            Messages
                         </button>
                         <div className="navbar-user-profile" onClick={() => navigate("/dashboard")} style={{ cursor: 'pointer' }}>
                             <Avatar user={currentUser} size="medium" />
@@ -209,7 +209,7 @@ const ChatPage = () => {
                         </Link>
                         <div className="navbar-divider"></div>
                         <button onClick={() => { navigate("/chat"); setMobileMenuOpen(false); }} className="navbar-btn-primary">
-                            💬 Messages
+                            Messages
                         </button>
                         <div className="navbar-user-profile" onClick={() => { navigate("/dashboard"); setMobileMenuOpen(false); }} style={{ cursor: 'pointer' }}>
                             <Avatar user={currentUser} size="medium" />
