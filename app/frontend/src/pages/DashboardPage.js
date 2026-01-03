@@ -671,7 +671,6 @@ export default function DashboardPage() {
                 
                 {myTrips.filter(t => t.status === 'active' && new Date(t.departure_datetime) > new Date()).length === 0 ? (
                   <div className="upcoming-empty">
-                    <span className="empty-icon">🚗</span>
                     <p>Aucun trajet à venir</p>
                     <Link to="/create-trip" className="create-trip-mini">+ Créer un trajet</Link>
                   </div>
@@ -1062,7 +1061,7 @@ export default function DashboardPage() {
                           value={profileFormData.bio}
                           onChange={(e) => setProfileFormData({...profileFormData, bio: e.target.value})}
                           placeholder="Écrivez votre biographie..."
-                          maxLength={200}
+                          maxLength={67}
                         />
                       ) : (
                         <p className="profile-bio">
