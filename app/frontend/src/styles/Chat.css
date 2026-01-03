@@ -589,16 +589,28 @@
 
 /* Mobile-first: gestion de l'affichage sidebar/chat */
 /* Sur mobile, on affiche soit la sidebar soit le chat */
+
+/* Mobile: sidebar visible par défaut */
+.conversation-sidebar {
+    display: flex;
+    flex: 1;
+    height: 100%;
+}
+
+/* Mobile: cacher la sidebar quand on a sélectionné un chat */
 .conversation-sidebar.hidden-mobile {
     display: none;
 }
 
+/* Mobile: chat caché par défaut, visible quand actif */
 .chat-main {
-    display: none;
+    display: flex;
+    flex: 1;
+    height: 100%;
 }
 
-.chat-main.active {
-    display: flex;
+.chat-main.hidden-mobile {
+    display: none;
 }
 
 /* Bouton retour visible sur mobile */
@@ -606,16 +618,21 @@
     display: flex;
     background: none;
     border: none;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     color: var(--color-secondary, #3b82f6);
     cursor: pointer;
     padding: 0.5rem;
-    margin-right: 0.5rem;
+    margin-right: 0.75rem;
     border-radius: var(--border-radius-md, 0.5rem);
     min-width: 2.75rem;
     min-height: 2.75rem;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
+}
+
+.back-button:hover {
+    background-color: #eff6ff;
 }
 
 .back-button:focus-visible {
@@ -633,25 +650,39 @@
 }
 
 .messages-container {
-    padding: 1rem;
+    padding: 0.75rem;
 }
 
 .chat-input-container {
-    padding: 0.75rem 1rem;
+    padding: 0.75rem;
+    padding-bottom: env(safe-area-inset-bottom, 0.75rem);
 }
 
-/* Tablet+ (768px+): les deux panneaux visibles */
+/* Input mobile optimisé */
+.chat-input {
+    font-size: 16px !important; /* Empêche le zoom sur iOS */
+}
+
+/* Tablet+ (768px+): les deux panneaux visibles côte à côte */
 @media (min-width: 48em) {
     .conversation-sidebar {
         display: flex !important;
+        flex: 0 0 auto;
+        width: 20rem;
+        height: auto;
     }
 
     .conversation-sidebar.hidden-mobile {
-        display: flex;
+        display: flex !important;
     }
 
     .chat-main {
-        display: flex;
+        display: flex !important;
+        flex: 1;
+    }
+
+    .chat-main.hidden-mobile {
+        display: flex !important;
     }
 
     .back-button {

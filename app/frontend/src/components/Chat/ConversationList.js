@@ -53,7 +53,7 @@ const ConversationList = ({ conversations, selectedUserId, onSelectUser, loading
     return (
         <>
             <div className="conversation-header">
-                <h2>💬 Messages</h2>
+                <h2>Messages</h2>
                 {loading && <span className="loading-indicator">⟳</span>}
             </div>
 
