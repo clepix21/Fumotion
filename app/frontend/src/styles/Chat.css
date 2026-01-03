@@ -315,6 +315,17 @@
     border: 2px solid #e5e7eb;
 }
 
+.clickable-avatar {
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.clickable-avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    border-color: #3b82f6;
+}
+
 .chat-avatar-initials {
     display: flex;
     align-items: center;

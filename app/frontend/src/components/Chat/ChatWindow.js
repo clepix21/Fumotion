@@ -118,14 +118,20 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, s
                     <img
                         src={`/uploads/${otherUser.profile_picture}`}
                         alt={`${otherUser.first_name} ${otherUser.last_name}`}
-                        className="chat-avatar"
-                        onClick={() => setShowProfilePopup(!showProfilePopup)}
+                        className="chat-avatar clickable-avatar"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setShowProfilePopup(!showProfilePopup);
+                        }}
                         style={{ cursor: 'pointer' }}
                     />
                 ) : (
                     <div 
-                        className="chat-avatar chat-avatar-initials"
-                        onClick={() => setShowProfilePopup(!showProfilePopup)}
+                        className="chat-avatar chat-avatar-initials clickable-avatar"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setShowProfilePopup(!showProfilePopup);
+                        }}
                         style={{ cursor: 'pointer' }}
                     >
                         {otherUser.first_name?.charAt(0).toUpperCase()}
