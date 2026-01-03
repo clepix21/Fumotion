@@ -597,7 +597,6 @@ export default function DashboardPage() {
                   <p className="overview-subtitle">Voici un résumé de votre activité sur Fumotion</p>
                 </div>
                 <div className="overview-date">
-                  <span className="date-icon">📅</span>
                   <span>{new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
                 </div>
               </div>
