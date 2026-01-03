@@ -45,6 +45,14 @@ function App() {
         }
       />
       <Route
+        path="/dashboard/:userId"
+        element={
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/create-trip"
         element={
           <ProtectedRoute>

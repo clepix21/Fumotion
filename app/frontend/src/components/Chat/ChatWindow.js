@@ -5,7 +5,7 @@
 import chatIcon from "../../assets/icons/chat.svg"
 import React, { useState, useEffect, useRef } from 'react';
 
-const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, sending }) => {
+const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, sending, onAvatarClick }) => {
     const [newMessage, setNewMessage] = useState('');
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
@@ -100,9 +100,15 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, s
                         src={`/uploads/${otherUser.profile_picture}`}
                         alt={`${otherUser.first_name} ${otherUser.last_name}`}
                         className="chat-avatar"
+                        onClick={() => onAvatarClick && onAvatarClick(otherUser.id)}
+                        style={{ cursor: 'pointer' }}
                     />
                 ) : (
-                    <div className="chat-avatar chat-avatar-initials">
+                    <div 
+                        className="chat-avatar chat-avatar-initials"
+                        onClick={() => onAvatarClick && onAvatarClick(otherUser.id)}
+                        style={{ cursor: 'pointer' }}
+                    >
                         {otherUser.first_name?.charAt(0).toUpperCase()}
                     </div>
                 )}

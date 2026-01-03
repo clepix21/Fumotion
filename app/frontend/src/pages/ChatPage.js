@@ -181,7 +181,7 @@ const ChatPage = () => {
                             </div>
                         </div>
                         <button onClick={handleLogout} className="navbar-btn-logout">
-                            <span>🚪</span> Déconnexion
+                            Déconnexion
                         </button>
                     </div>
                 </div>
@@ -218,7 +218,7 @@ const ChatPage = () => {
                             </div>
                         </div>
                         <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="navbar-btn-logout">
-                            <span>🚪</span> Déconnexion
+                            Déconnexion
                         </button>
                     </div>
                 </>
@@ -245,6 +245,7 @@ const ChatPage = () => {
                         onSendMessage={handleSendMessage}
                         onBack={handleBackToList}
                         sending={sending}
+                        onAvatarClick={(id) => navigate(`/dashboard/${id}`)}
                     />
                 </div>
             </div>
