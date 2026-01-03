@@ -3,7 +3,7 @@
  * Affiche profil, trajets, réservations et statistiques
  */
 import { useState, useEffect, useCallback, useRef } from "react"
-import { useNavigate, Link } from "react-router-dom"
+import { useNavigate, Link, useParams } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { authAPI } from "../services/api"
 import { reviewAPI } from "../services/reviewApi"
@@ -20,7 +20,11 @@ import "../styles/HomePage.css"
 
 export default function DashboardPage() {
   const navigate = useNavigate()
+  const { userId } = useParams()
   const { user, token, logout, updateUser } = useAuth()
+  
+  // Détermine si on affiche son propre profil ou celui d'un autre utilisateur
+  const isOwnProfile = !userId || (user && parseInt(userId) === user.id)
   
   // ========== ÉTATS PRINCIPAUX ==========
   const [activeTab, setActiveTab] = useState("overview") // Onglet actif
@@ -67,7 +71,21 @@ export default function DashboardPage() {
 
   const loadDashboardData = useCallback(async () => {
     try {
-      // Charger le profil utilisateur
+      // Si on consulte le profil d'un autre utilisateur
+      if (!isOwnProfile && userId) {
+        try {
+          const profileData = await authAPI.getPublicProfile(userId)
+          if (profileData.success) {
+            setProfileUser(profileData.data)
+          }
+        } catch (error) {
+          console.error("Erreur lors du chargement du profil:", error)
+        }
+        setLoading(false)
+        return
+      }
+
+      // Charger son propre profil utilisateur
       try {
         const profileData = await authAPI.getProfile()
         if (profileData.success) {
@@ -115,7 +133,7 @@ export default function DashboardPage() {
     } finally {
       setLoading(false)
     }
-  }, [token])
+  }, [token, isOwnProfile, userId])
 
   useEffect(() => {
     loadDashboardData()
