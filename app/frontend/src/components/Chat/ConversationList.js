@@ -2,9 +2,29 @@
  * Liste des conversations
  * Affiche toutes les discussions avec d'autres utilisateurs
  */
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 const ConversationList = ({ conversations, selectedUserId, onSelectUser, loading }) => {
+    const [profilePopup, setProfilePopup] = useState(null);
+    const popupRef = useRef(null);
+
+    // Fermer le popup quand on clique en dehors
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (popupRef.current && !popupRef.current.contains(event.target)) {
+                setProfilePopup(null);
+            }
+        };
+
+        if (profilePopup) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [profilePopup]);
+
     /** Formate la date du dernier message (relatif) */
     const formatDate = (dateString) => {
         if (!dateString) return '';
