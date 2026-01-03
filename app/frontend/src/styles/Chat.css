@@ -787,3 +787,15 @@
 .chat-header {
     position: relative;
 }
+
+/* Popup dans la liste des conversations */
+.conversation-avatar-container {
+    position: relative;
+}
+
+.conversation-profile-popup {
+    left: 100%;
+    top: 0;
+    margin-left: 0.5rem;
+    margin-top: 0;
+}
