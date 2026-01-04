@@ -3,7 +3,7 @@
  * Affiche profil, trajets, réservations et statistiques
  */
 import { useState, useEffect, useCallback, useRef } from "react"
-import { useNavigate, Link } from "react-router-dom"
+import { useNavigate, Link, useParams } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { authAPI } from "../services/api"
 import { reviewAPI } from "../services/reviewApi"
@@ -20,7 +20,11 @@ import "../styles/HomePage.css"
 
 export default function DashboardPage() {
   const navigate = useNavigate()
+  const { userId } = useParams()
   const { user, token, logout, updateUser } = useAuth()
+  
+  // Détermine si on affiche son propre profil ou celui d'un autre utilisateur
+  const isOwnProfile = !userId || (user && parseInt(userId) === user.id)
   
   // ========== ÉTATS PRINCIPAUX ==========
   const [activeTab, setActiveTab] = useState("overview") // Onglet actif
@@ -67,7 +71,21 @@ export default function DashboardPage() {
 
   const loadDashboardData = useCallback(async () => {
     try {
-      // Charger le profil utilisateur
+      // Si on consulte le profil d'un autre utilisateur
+      if (!isOwnProfile && userId) {
+        try {
+          const profileData = await authAPI.getPublicProfile(userId)
+          if (profileData.success) {
+            setProfileUser(profileData.data)
+          }
+        } catch (error) {
+          console.error("Erreur lors du chargement du profil:", error)
+        }
+        setLoading(false)
+        return
+      }
+
+      // Charger son propre profil utilisateur
       try {
         const profileData = await authAPI.getProfile()
         if (profileData.success) {
@@ -115,7 +133,7 @@ export default function DashboardPage() {
     } finally {
       setLoading(false)
     }
-  }, [token])
+  }, [token, isOwnProfile, userId])
 
   useEffect(() => {
     loadDashboardData()
@@ -470,7 +488,87 @@ export default function DashboardPage() {
     return (
       <div className="loading-container">
         <div className="loading-spinner"></div>
-        <p>Chargement de votre tableau de bord...</p>
+        <p>Chargement du profil...</p>
+      </div>
+    )
+  }
+
+  // Affichage du profil d'un autre utilisateur (vue simplifiée)
+  if (!isOwnProfile) {
+    return (
+      <div className="dashboard">
+        <nav className="navbar">
+          <div className="navbar-container">
+            <div className="navbar-brand" onClick={() => navigate("/")}>
+              <img src={logo} alt="Fumotion" className="brand-logo" />
+              <span className="brand-name">Fumotion</span>
+            </div>
+            <div className="navbar-menu">
+              <Link to="/search" className="navbar-link">Rechercher</Link>
+              <div className="navbar-divider"></div>
+              <button onClick={() => navigate("/dashboard")} className="navbar-btn-primary">
+                Mon profil
+              </button>
+            </div>
+          </div>
+        </nav>
+
+        <div className="dashboard-container" style={{ paddingTop: '2rem' }}>
+          <main className="dashboard-main" style={{ marginLeft: 0, maxWidth: '800px', margin: '0 auto' }}>
+            <div className="profile-section">
+              <div className="profile-card">
+                <div className="profile-banner-container">
+                  <div
+                    className="profile-banner"
+                    style={{
+                      backgroundImage: displayUser?.banner_picture
+                        ? `url(/uploads/${displayUser.banner_picture})`
+                        : 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center'
+                    }}
+                  />
+                  <div className="profile-avatar-container">
+                    <Avatar user={displayUser} size="xlarge" />
+                  </div>
+                </div>
+
+                <div className="profile-content">
+                  <div className="profile-header-info">
+                    <div className="profile-name-section">
+                      <h2>{displayUser?.first_name || ''} {displayUser?.last_name || ''}</h2>
+                      <p className="profile-joined">
+                        Membre depuis {displayUser?.created_at ? new Date(displayUser.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : '2024'}
+                      </p>
+                      <p className="profile-bio">{displayUser?.bio || 'Pas de biographie...'}</p>
+                    </div>
+                    <button
+                      className="navbar-btn-primary"
+                      onClick={() => navigate(`/chat/${userId}`)}
+                    >
+                      💬 Envoyer un message
+                    </button>
+                  </div>
+
+                  <div className="profile-stats">
+                    <div className="stat-item">
+                      <span className="stat-value">
+                        {displayUser?.driver_rating ? parseFloat(displayUser.driver_rating).toFixed(1) : '-'}
+                      </span>
+                      <span className="stat-label">Note conducteur</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-value">
+                        {displayUser?.passenger_rating ? parseFloat(displayUser.passenger_rating).toFixed(1) : '-'}
+                      </span>
+                      <span className="stat-label">Note passager</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
       </div>
     )
   }
@@ -597,7 +695,6 @@ export default function DashboardPage() {
                   <p className="overview-subtitle">Voici un résumé de votre activité sur Fumotion</p>
                 </div>
                 <div className="overview-date">
-                  <span className="date-icon">📅</span>
                   <span>{new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
                 </div>
               </div>
@@ -652,7 +749,7 @@ export default function DashboardPage() {
                       <span className="stat-label">Note moyenne</span>
                       <span className="stat-badge rating">Top conducteur</span>
                     </div>
-                    <h3>{displayUser?.driver_rating ? parseFloat(displayUser.driver_rating).toFixed(1) : '4.8'}</h3>
+                    <h3>{displayUser?.driver_rating ? parseFloat(displayUser.driver_rating).toFixed(1) : '-'}</h3>
                     <div className="star-display">
                       {[1, 2, 3, 4, 5].map(star => (
                         <span key={star} className={`star ${star <= Math.round(displayUser?.driver_rating || 4.8) ? 'filled' : ''}`}>★</span>
@@ -672,7 +769,6 @@ export default function DashboardPage() {
                 
                 {myTrips.filter(t => t.status === 'active' && new Date(t.departure_datetime) > new Date()).length === 0 ? (
                   <div className="upcoming-empty">
-                    <span className="empty-icon">🚗</span>
                     <p>Aucun trajet à venir</p>
                     <Link to="/create-trip" className="create-trip-mini">+ Créer un trajet</Link>
                   </div>
@@ -1012,7 +1108,6 @@ export default function DashboardPage() {
                           </>
                         ) : (
                           <>
-                            <span>📷</span>
                             Modifier la bannière
                           </>
                         )}
@@ -1063,7 +1158,7 @@ export default function DashboardPage() {
                           value={profileFormData.bio}
                           onChange={(e) => setProfileFormData({...profileFormData, bio: e.target.value})}
                           placeholder="Écrivez votre biographie..."
-                          maxLength={200}
+                          maxLength={67}
                         />
                       ) : (
                         <p className="profile-bio">

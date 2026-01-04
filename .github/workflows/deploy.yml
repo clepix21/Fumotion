@@ -98,11 +98,11 @@ jobs:
             elif docker compose version &> /dev/null; then
                 COMPOSE_CMD="docker compose"
             else
-                echo "❌ Docker Compose n'est pas installé!"
+                echo "Docker Compose n'est pas installé!"
                 exit 1
             fi
             
-            echo "📝 Utilisation de: $COMPOSE_CMD"
+            echo "Utilisation de: $COMPOSE_CMD"
             
             # Charger les variables d'environnement
             if [ -f .env.production ]; then
@@ -110,38 +110,38 @@ jobs:
             fi
             
             # Pull la dernière version du code
-            echo "📥 Récupération du code..."
-            git pull origin main || echo "⚠️ Impossible de pull le code"
+            echo "Récupération du code..."
+            git pull origin main || echo "Impossible de pull le code"
             
             # Pull les nouvelles images Docker
-            echo "📥 Récupération des nouvelles images..."
-            $COMPOSE_CMD pull || echo "⚠️ Images non disponibles, construction locale..."
+            echo "Récupération des nouvelles images..."
+            $COMPOSE_CMD pull || echo "Images non disponibles, construction locale..."
             
             # Arrêter les anciens conteneurs
-            echo "🛑 Arrêt des anciens conteneurs..."
+            echo "Arrêt des anciens conteneurs..."
             $COMPOSE_CMD down
             
             # Démarrer les nouveaux conteneurs
-            echo "▶️ Démarrage des nouveaux conteneurs..."
+            echo "Démarrage des nouveaux conteneurs..."
             $COMPOSE_CMD up -d --build
             
             # Attendre le démarrage
-            echo "⏳ Attente du démarrage des services..."
+            echo "Attente du démarrage des services..."
             sleep 15
             
             # Vérifier la santé des conteneurs
-            echo "🏥 Vérification de la santé des services..."
+            echo "Vérification de la santé des services..."
             $COMPOSE_CMD ps
             
             # Nettoyer les anciennes images
-            echo "🧹 Nettoyage des anciennes images..."
+            echo "Nettoyage des anciennes images..."
             docker image prune -af
             
             # Afficher les logs récents
-            echo "📋 Logs récents du backend:"
+            echo "Logs récents du backend:"
             $COMPOSE_CMD logs --tail=20 backend
-            echo "📋 Logs récents du frontend:"
+            echo "Logs récents du frontend:"
             $COMPOSE_CMD logs --tail=20 frontend
             
-            echo "✅ Déploiement terminé!"
+            echo "Déploiement terminé!"
           

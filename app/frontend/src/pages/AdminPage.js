@@ -637,7 +637,7 @@ export default function AdminPage() {
                             <span>Transactions</span>
                           </div>
                         </div>
-                        <div className="stat-value">{(statistics.revenue.total || 0).toFixed(2)}€</div>
+                        <div className="stat-value">{(parseFloat(statistics.revenue.total) || 0).toFixed(2)}€</div>
                         <div className="stat-details">
                           <span className="stat-detail-item">
                             <span className="stat-dot confirmed"></span>

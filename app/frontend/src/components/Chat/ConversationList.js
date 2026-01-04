@@ -2,9 +2,29 @@
  * Liste des conversations
  * Affiche toutes les discussions avec d'autres utilisateurs
  */
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 const ConversationList = ({ conversations, selectedUserId, onSelectUser, loading }) => {
+    const [profilePopup, setProfilePopup] = useState(null);
+    const popupRef = useRef(null);
+
+    // Fermer le popup quand on clique en dehors
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (popupRef.current && !popupRef.current.contains(event.target)) {
+                setProfilePopup(null);
+            }
+        };
+
+        if (profilePopup) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [profilePopup]);
+
     /** Formate la date du dernier message (relatif) */
     const formatDate = (dateString) => {
         if (!dateString) return '';
@@ -33,7 +53,7 @@ const ConversationList = ({ conversations, selectedUserId, onSelectUser, loading
     return (
         <>
             <div className="conversation-header">
-                <h2>💬 Messages</h2>
+                <h2>Messages</h2>
                 {loading && <span className="loading-indicator">⟳</span>}
             </div>
 
@@ -52,19 +72,64 @@ const ConversationList = ({ conversations, selectedUserId, onSelectUser, loading
                                 onClick={() => onSelectUser(conv.id)}
                                 className={`conversation-item ${selectedUserId === conv.id ? 'active' : ''} ${isUnread ? 'unread' : ''}`}
                             >
-                                <div className="conversation-avatar-container">
+                                <div 
+                                    className="conversation-avatar-container"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setProfilePopup(profilePopup === conv.id ? null : conv.id);
+                                    }}
+                                    style={{ cursor: 'pointer' }}
+                                >
                                     {conv.profile_picture ? (
                                         <img
                                             src={`/uploads/${conv.profile_picture}`}
                                             alt={`${conv.first_name} ${conv.last_name}`}
-                                            className="conversation-avatar"
+                                            className="conversation-avatar clickable-avatar"
                                         />
                                     ) : (
-                                        <div className="conversation-avatar conversation-avatar-initials">
+                                        <div className="conversation-avatar conversation-avatar-initials clickable-avatar">
                                             {conv.first_name?.charAt(0).toUpperCase()}
                                         </div>
                                     )}
                                     {isUnread && <span className="unread-dot"></span>}
+
+                                    {/* Popup de profil */}
+                                    {profilePopup === conv.id && (
+                                        <div className="profile-popup conversation-profile-popup" ref={popupRef}>
+                                            <div className="profile-popup-header">
+                                                {conv.profile_picture ? (
+                                                    <img
+                                                        src={`/uploads/${conv.profile_picture}`}
+                                                        alt={conv.first_name}
+                                                        className="profile-popup-avatar"
+                                                    />
+                                                ) : (
+                                                    <div className="profile-popup-avatar profile-popup-initials">
+                                                        {conv.first_name?.charAt(0).toUpperCase()}
+                                                    </div>
+                                                )}
+                                                <div className="profile-popup-info">
+                                                    <h3>{conv.first_name} {conv.last_name}</h3>
+                                                    <p className="profile-popup-joined">
+                                                        Membre depuis {conv.created_at ? new Date(conv.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : '2024'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            {conv.bio && (
+                                                <p className="profile-popup-bio">{conv.bio}</p>
+                                            )}
+                                            <div className="profile-popup-stats">
+                                                <div className="profile-popup-stat">
+                                                    <span className="stat-value">{conv.driver_rating ? parseFloat(conv.driver_rating).toFixed(1) : '-'}</span>
+                                                    <span className="stat-label">Conducteur</span>
+                                                </div>
+                                                <div className="profile-popup-stat">
+                                                    <span className="stat-value">{conv.passenger_rating ? parseFloat(conv.passenger_rating).toFixed(1) : '-'}</span>
+                                                    <span className="stat-label">Passager</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="conversation-info">

@@ -45,6 +45,14 @@ function App() {
         }
       />
       <Route
+        path="/dashboard/:userId"
+        element={
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/create-trip"
         element={
           <ProtectedRoute>
@@ -52,7 +60,14 @@ function App() {
           </ProtectedRoute>
         }
       />
-      <Route path="/admin" element={<AdminPage />} />
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <AdminPage />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/chat"
         element={

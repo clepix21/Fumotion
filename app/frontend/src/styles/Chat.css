@@ -315,6 +315,17 @@
     border: 2px solid #e5e7eb;
 }
 
+.clickable-avatar {
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.clickable-avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    border-color: #3b82f6;
+}
+
 .chat-avatar-initials {
     display: flex;
     align-items: center;
@@ -578,16 +589,28 @@
 
 /* Mobile-first: gestion de l'affichage sidebar/chat */
 /* Sur mobile, on affiche soit la sidebar soit le chat */
+
+/* Mobile: sidebar visible par défaut */
+.conversation-sidebar {
+    display: flex;
+    flex: 1;
+    height: 100%;
+}
+
+/* Mobile: cacher la sidebar quand on a sélectionné un chat */
 .conversation-sidebar.hidden-mobile {
     display: none;
 }
 
+/* Mobile: chat caché par défaut, visible quand actif */
 .chat-main {
-    display: none;
+    display: flex;
+    flex: 1;
+    height: 100%;
 }
 
-.chat-main.active {
-    display: flex;
+.chat-main.hidden-mobile {
+    display: none;
 }
 
 /* Bouton retour visible sur mobile */
@@ -595,16 +618,21 @@
     display: flex;
     background: none;
     border: none;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     color: var(--color-secondary, #3b82f6);
     cursor: pointer;
     padding: 0.5rem;
-    margin-right: 0.5rem;
+    margin-right: 0.75rem;
     border-radius: var(--border-radius-md, 0.5rem);
     min-width: 2.75rem;
     min-height: 2.75rem;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
+}
+
+.back-button:hover {
+    background-color: #eff6ff;
 }
 
 .back-button:focus-visible {
@@ -622,25 +650,39 @@
 }
 
 .messages-container {
-    padding: 1rem;
+    padding: 0.75rem;
 }
 
 .chat-input-container {
-    padding: 0.75rem 1rem;
+    padding: 0.75rem;
+    padding-bottom: env(safe-area-inset-bottom, 0.75rem);
 }
 
-/* Tablet+ (768px+): les deux panneaux visibles */
+/* Input mobile optimisé */
+.chat-input {
+    font-size: 16px !important; /* Empêche le zoom sur iOS */
+}
+
+/* Tablet+ (768px+): les deux panneaux visibles côte à côte */
 @media (min-width: 48em) {
     .conversation-sidebar {
         display: flex !important;
+        flex: 0 0 auto;
+        width: 20rem;
+        height: auto;
     }
 
     .conversation-sidebar.hidden-mobile {
-        display: flex;
+        display: flex !important;
     }
 
     .chat-main {
-        display: flex;
+        display: flex !important;
+        flex: 1;
+    }
+
+    .chat-main.hidden-mobile {
+        display: flex !important;
     }
 
     .back-button {
@@ -667,4 +709,176 @@
 /* Utilitaire pour cacher sur mobile */
 .hidden-mobile {
     /* Défini au niveau du composant */
+}
+
+/* ============================================
+   Profile Popup - Affiche le profil au clic
+   ============================================ */
+.profile-popup {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0.5rem;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    padding: 1.25rem;
+    min-width: 280px;
+    max-width: 320px;
+    z-index: 1000;
+    animation: popupFadeIn 0.2s ease-out;
+}
+
+@keyframes popupFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.profile-popup-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.profile-popup-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.profile-popup-initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.profile-popup-info h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.profile-popup-joined {
+    margin: 0.25rem 0 0;
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.profile-popup-bio {
+    margin: 0 0 1rem;
+    font-size: 0.9rem;
+    color: #4b5563;
+    line-height: 1.4;
+    padding: 0.75rem;
+    background: #f9fafb;
+    border-radius: 0.5rem;
+}
+
+.profile-popup-stats {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.profile-popup-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.profile-popup-stat .stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #3b82f6;
+}
+
+.profile-popup-stat .stat-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+
+/* Positionnement relatif pour le header */
+.chat-header {
+    position: relative;
+}
+
+/* Popup dans la liste des conversations */
+.conversation-avatar-container {
+    position: relative;
+}
+
+.conversation-profile-popup {
+    left: 100%;
+    top: 0;
+    margin-left: 0.5rem;
+    margin-top: 0;
+}
+
+/* ============================================
+   Profile Popup - Responsive Mobile
+   ============================================ */
+@media (max-width: 47.99em) {
+    .profile-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+        width: calc(100vw - 2rem);
+        max-width: 320px;
+        max-height: calc(100vh - 4rem);
+        overflow-y: auto;
+        animation: popupMobileFadeIn 0.25s ease-out;
+    }
+
+    .conversation-profile-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+        width: calc(100vw - 2rem);
+        max-width: 320px;
+    }
+
+    @keyframes popupMobileFadeIn {
+        from {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+    }
+
+    /* Overlay sombre derrière le popup */
+    .profile-popup::before,
+    .conversation-profile-popup::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+    }
 }

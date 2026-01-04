@@ -28,6 +28,19 @@ export default function HomePage() {
     passengers: 1,
   })
 
+  // Triple clic navbar-brand
+  const [brandClicks, setBrandClicks] = useState([])
+  useEffect(() => {
+    if (brandClicks.length >= 5) {
+      const now = Date.now()
+      if (now - brandClicks[0] < 700) {
+        const audio = new window.Audio('/chocobo.wav')
+        audio.play()
+      }
+      setBrandClicks([])
+    }
+  }, [brandClicks])
+
   // Bloque le scroll quand le menu mobile est ouvert
   useEffect(() => {
     if (mobileMenuOpen) {
@@ -59,10 +72,16 @@ export default function HomePage() {
     <div className="homepage">
       <nav className="navbar">
         <div className="navbar-container">
-          <div className="navbar-brand" onClick={() => navigate("/")}>
-            <img src={logo} alt="Fumotion" className="brand-logo" />
-            <span className="brand-name">Fumotion</span>
-          </div>
+            <div
+              className="navbar-brand"
+              onClick={() => {
+                setBrandClicks((prev) => [...prev.slice(-2), Date.now()])
+                navigate("/")
+              }}
+            >
+              <img src={logo} alt="Fumotion" className="brand-logo" />
+              <span className="brand-name">Fumotion</span>
+            </div>
 
           <button
             className="navbar-mobile-toggle"

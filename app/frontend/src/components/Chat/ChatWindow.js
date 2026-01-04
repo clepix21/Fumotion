@@ -7,8 +7,10 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, sending }) => {
     const [newMessage, setNewMessage] = useState('');
+    const [showProfilePopup, setShowProfilePopup] = useState(false);
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
+    const profilePopupRef = useRef(null);
 
     // Scroll automatique vers le bas à chaque nouveau message
     const scrollToBottom = () => {
@@ -21,6 +23,23 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, s
     useEffect(() => {
         if (otherUser && inputRef.current) inputRef.current.focus();
     }, [otherUser]);
+
+    // Fermer le popup quand on clique en dehors
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (profilePopupRef.current && !profilePopupRef.current.contains(event.target)) {
+                setShowProfilePopup(false);
+            }
+        };
+
+        if (showProfilePopup) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showProfilePopup]);
 
     /** Envoi du message */
     const handleSubmit = (e) => {
@@ -99,13 +118,64 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, s
                     <img
                         src={`/uploads/${otherUser.profile_picture}`}
                         alt={`${otherUser.first_name} ${otherUser.last_name}`}
-                        className="chat-avatar"
+                        className="chat-avatar clickable-avatar"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setShowProfilePopup(!showProfilePopup);
+                        }}
+                        style={{ cursor: 'pointer' }}
                     />
                 ) : (
-                    <div className="chat-avatar chat-avatar-initials">
+                    <div 
+                        className="chat-avatar chat-avatar-initials clickable-avatar"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setShowProfilePopup(!showProfilePopup);
+                        }}
+                        style={{ cursor: 'pointer' }}
+                    >
                         {otherUser.first_name?.charAt(0).toUpperCase()}
                     </div>
                 )}
+
+                {/* Popup de profil */}
+                {showProfilePopup && (
+                    <div className="profile-popup" ref={profilePopupRef}>
+                        <div className="profile-popup-header">
+                            {otherUser.profile_picture ? (
+                                <img
+                                    src={`/uploads/${otherUser.profile_picture}`}
+                                    alt={otherUser.first_name}
+                                    className="profile-popup-avatar"
+                                />
+                            ) : (
+                                <div className="profile-popup-avatar profile-popup-initials">
+                                    {otherUser.first_name?.charAt(0).toUpperCase()}
+                                </div>
+                            )}
+                            <div className="profile-popup-info">
+                                <h3>{otherUser.first_name} {otherUser.last_name}</h3>
+                                <p className="profile-popup-joined">
+                                    Membre depuis {otherUser.created_at ? new Date(otherUser.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : '2024'}
+                                </p>
+                            </div>
+                        </div>
+                        {otherUser.bio && (
+                            <p className="profile-popup-bio">{otherUser.bio}</p>
+                        )}
+                        <div className="profile-popup-stats">
+                            <div className="profile-popup-stat">
+                                <span className="stat-value">{otherUser.driver_rating ? parseFloat(otherUser.driver_rating).toFixed(1) : '-'}</span>
+                                <span className="stat-label">Conducteur</span>
+                            </div>
+                            <div className="profile-popup-stat">
+                                <span className="stat-value">{otherUser.passenger_rating ? parseFloat(otherUser.passenger_rating).toFixed(1) : '-'}</span>
+                                <span className="stat-label">Passager</span>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div className="chat-partner-info">
                     <h3 className="chat-partner-name">
                         {otherUser.first_name} {otherUser.last_name}
@@ -121,7 +191,6 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, s
             <div className="messages-container">
                 {messages.length === 0 ? (
                     <div className="no-messages">
-                        <span>👋</span>
                         <p>Commencez la conversation !</p>
                     </div>
                 ) : (
