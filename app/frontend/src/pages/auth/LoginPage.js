@@ -5,6 +5,7 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
+import { authAPI } from "../../services/api"
 import "../../styles/auth.css"
 
 export default function LoginPage() {
@@ -25,45 +26,37 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      console.log("[v0] Tentative de connexion pour:", formData.email)
-      console.log("[v0] URL de l'API:", "http://localhost:5000/api/auth/login")
+      console.log("Tentative de connexion pour:", formData.email)
 
-      const response = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      })
+      const data = await authAPI.login(formData)
+      console.log("Réponse du serveur:", data)
 
-      console.log("[v0] Status de la réponse:", response.status)
-      const data = await response.json()
-      console.log("[v0] Réponse du serveur:", data)
-
-      if (response.ok && data.success) {
+      if (data.success) {
         if (data.data && data.data.token && data.data.user) {
           // Stocke le token et redirige vers le dashboard
           login(data.data.user, data.data.token)
 
-          console.log("[v0] Token stocké:", data.data.token.substring(0, 20) + "...")
-          console.log("[v0] Utilisateur stocké:", data.data.user.email)
-          console.log("[v0] Connexion réussie, redirection vers /dashboard")
+          console.log("Token stocké:", data.data.token.substring(0, 20) + "...")
+          console.log("Utilisateur stocké:", data.data.user.email)
+          console.log("Connexion réussie, redirection vers /dashboard")
 
           navigate("/dashboard")
         } else {
-          console.error("[v0] Structure de réponse invalide:", data)
+          console.error("Structure de réponse invalide:", data)
           setError("Erreur: Réponse du serveur invalide")
         }
       } else {
-        console.log("[v0] Échec de connexion:", data.message)
+        console.log("Échec de connexion:", data.message)
         setError(data.message || "Email ou mot de passe incorrect")
       }
     } catch (err) {
-      console.error("[v0] Erreur réseau complète:", err)
-      console.error("[v0] Type d'erreur:", err.name)
-      console.error("[v0] Message d'erreur:", err.message)
+      console.error("Erreur réseau complète:", err)
+      console.error("Type d'erreur:", err.name)
+      console.error("Message d'erreur:", err.message)
 
       if (err.name === "TypeError" && err.message.includes("fetch")) {
         setError(
-          "❌ Impossible de se connecter au serveur backend. Vérifiez votre connexion.",
+          "Impossible de se connecter au serveur backend. Vérifiez votre connexion.",
         )
       } else {
         setError(`Erreur de connexion: ${err.message}`)
@@ -83,63 +76,62 @@ export default function LoginPage() {
 
         <div className="auth-card-modern">
           <form onSubmit={handleSubmit} className="auth-form-modern">
-          {error && (
-            <div className="error-message-modern">
-              <span className="error-icon">⚠️</span>
-              {error}
+            {error && (
+              <div className="error-message-modern">
+                {error}
+              </div>
+            )}
+
+            <div className="form-group-modern">
+              <label className="form-label-modern">Email</label>
+              <div className="input-wrapper-modern">
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="form-input-modern"
+                  placeholder="Entrez votre email"
+                  required
+                  disabled={loading}
+                />
+              </div>
             </div>
-          )}
 
-          <div className="form-group-modern">
-            <label className="form-label-modern">Email</label>
-            <div className="input-wrapper-modern">
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="form-input-modern"
-                placeholder="Entrez votre email"
-                required
-                disabled={loading}
-              />
+            <div className="form-group-modern">
+              <label className="form-label-modern">Mot de passe</label>
+              <div className="input-wrapper-modern">
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="form-input-modern"
+                  placeholder="******"
+                  required
+                  disabled={loading}
+                />
+              </div>
+              <Link to="/forgot-password" className="forgot-link-modern">
+                Mot de passe oublié ?
+              </Link>
             </div>
-          </div>
 
-          <div className="form-group-modern">
-            <label className="form-label-modern">Mot de passe</label>
-            <div className="input-wrapper-modern">
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="form-input-modern"
-                placeholder="******"
-                required
-                disabled={loading}
-              />
+            <div className="remember-me-modern">
+              <input type="checkbox" id="remember" className="checkbox-modern" />
+              <label htmlFor="remember" className="checkbox-label-modern">Se souvenir de moi</label>
             </div>
-            <Link to="/forgot-password" className="forgot-link-modern">
-              Mot de passe oublié ?
-            </Link>
+
+            <button type="submit" className="login-btn-modern" disabled={loading}>
+              {loading ? "CHARGEMENT..." : "CONNEXION"}
+            </button>
+          </form>
+
+          <div className="signup-link-modern" style={{ color: "#5B9FED" }}>
+            <p>
+              Vous n'avez pas de compte ? <Link to="/register" className="signup-text-modern" style={{ color: "#5B9FED" }}>Inscrivez-vous</Link>
+            </p>
           </div>
-
-          <div className="remember-me-modern">
-            <input type="checkbox" id="remember" className="checkbox-modern" />
-            <label htmlFor="remember" className="checkbox-label-modern">Se souvenir de moi</label>
-          </div>
-
-          <button type="submit" className="login-btn-modern" disabled={loading}>
-            {loading ? "CHARGEMENT..." : "CONNEXION"}
-          </button>
-        </form>
-
-        <div className="signup-link-modern" style={{ color: "#5B9FED" }}>
-          <p>
-            Vous n'avez pas de compte ? <Link to="/register" className="signup-text-modern" style={{ color: "#5B9FED" }}>Inscrivez-vous</Link>
-          </p>
-        </div>
         </div>
       </div>
     </div>
