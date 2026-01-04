@@ -126,7 +126,7 @@ jobs:
             $COMPOSE_CMD up -d --build
             
             # Attendre le démarrage
-            echo "⏳ Attente du démarrage des services..."
+            echo "Attente du démarrage des services..."
             sleep 15
             
             # Vérifier la santé des conteneurs
