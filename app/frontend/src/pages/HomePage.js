@@ -31,7 +31,7 @@ export default function HomePage() {
   // Triple clic navbar-brand
   const [brandClicks, setBrandClicks] = useState([])
   useEffect(() => {
-    if (brandClicks.length >= 5) {
+    if (brandClicks.length >= 3) {
       const now = Date.now()
       if (now - brandClicks[0] < 700) {
         const audio = new window.Audio('/chocobo.wav')
