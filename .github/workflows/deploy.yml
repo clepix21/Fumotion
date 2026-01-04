@@ -111,7 +111,7 @@ jobs:
             
             # Pull la dernière version du code
             echo "Récupération du code..."
-            git pull origin main || echo "Impossible de pull le code"
+            git pull || echo "Impossible de pull le code"
             
             # Pull les nouvelles images Docker
             echo "Récupération des nouvelles images..."
