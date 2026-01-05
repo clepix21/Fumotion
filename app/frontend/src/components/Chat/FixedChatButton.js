@@ -11,6 +11,8 @@ const FixedChatButton = () => {
     const [showNotification, setShowNotification] = useState(false);
     const prevUnreadCountRef = useRef(0);
 
+    const isFirstLoad = useRef(true);
+
     // Vérifier les messages non lus
     useEffect(() => {
         if (!isAuthenticated()) return;
@@ -25,7 +27,8 @@ const FixedChatButton = () => {
                     ).length;
 
                     // Si on a plus de messages non lus qu'avant, afficher la notification
-                    if (unread > prevUnreadCountRef.current) {
+                    // Ignorer la toute première charge pour éviter la notif au chargement de page
+                    if (!isFirstLoad.current && unread > prevUnreadCountRef.current) {
                         setShowNotification(true);
                         // Cacher après 3 secondes
                         setTimeout(() => setShowNotification(false), 3000);
@@ -33,6 +36,7 @@ const FixedChatButton = () => {
 
                     setUnreadCount(unread);
                     prevUnreadCountRef.current = unread;
+                    isFirstLoad.current = false;
                 }
             } catch (error) {
                 console.error("Erreur vérification messages", error);
