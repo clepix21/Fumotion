@@ -105,6 +105,22 @@ export default function AdminPage() {
     showNotification("Export réussi !")
   }
 
+  /** Exporte les données en JSON */
+  const exportToJSON = (data, filename) => {
+    if (!data || data.length === 0) {
+      showNotification("Aucune donnée à exporter", "warning")
+      return
+    }
+
+    const jsonContent = JSON.stringify(data, null, 2)
+    const blob = new Blob([jsonContent], { type: 'application/json' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = `${filename}_${new Date().toISOString().split('T')[0]}.json`
+    link.click()
+    showNotification("Export JSON réussi !")
+  }
+
   // Toggle selection helpers
   const toggleUserSelection = (userId) => {
     setSelectedUsers(prev =>
@@ -800,6 +816,13 @@ export default function AdminPage() {
                 >
                   Exporter CSV
                 </button>
+                <button
+                  className="admin-btn admin-btn-secondary"
+                  onClick={() => exportToJSON(users, 'utilisateurs')}
+                  style={{ marginLeft: '10px' }}
+                >
+                  Exporter JSON
+                </button>
               </div>
 
               <div className="admin-toolbar">
@@ -1017,6 +1040,13 @@ export default function AdminPage() {
                 >
                   Exporter CSV
                 </button>
+                <button
+                  className="admin-btn admin-btn-secondary"
+                  onClick={() => exportToJSON(trips, 'trajets')}
+                  style={{ marginLeft: '10px' }}
+                >
+                  Exporter JSON
+                </button>
               </div>
 
               <div className="admin-toolbar">
@@ -1129,7 +1159,7 @@ export default function AdminPage() {
                               <td><strong>{trip.price_per_seat}€</strong></td>
                               <td>
                                 <span className={`admin-badge ${trip.status === 'active' ? 'success' :
-                                    trip.status === 'completed' ? 'info' : 'danger'
+                                  trip.status === 'completed' ? 'info' : 'danger'
                                   }`}>
                                   {trip.status === 'active' ? 'Actif' :
                                     trip.status === 'completed' ? 'Terminé' : 'Annulé'}
@@ -1212,6 +1242,13 @@ export default function AdminPage() {
                   onClick={() => exportToCSV(bookings, 'reservations')}
                 >
                   Exporter CSV
+                </button>
+                <button
+                  className="admin-btn admin-btn-secondary"
+                  onClick={() => exportToJSON(bookings, 'reservations')}
+                  style={{ marginLeft: '10px' }}
+                >
+                  Exporter JSON
                 </button>
               </div>
 
@@ -1368,11 +1405,25 @@ export default function AdminPage() {
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <button className="admin-modal-close" onClick={() => setUserDetailModal(null)}>X</button>
 
-            <div className="admin-modal-header">
-              <Avatar user={userDetailModal} size="large" />
-              <div className="admin-modal-title">
-                <h2>{userDetailModal.first_name} {userDetailModal.last_name}</h2>
-                <p>{userDetailModal.email}</p>
+            <div className="admin-modal-header" style={{ flexDirection: 'column', padding: 0, overflow: 'hidden' }}>
+              <div
+                style={{
+                  width: '100%',
+                  height: '120px',
+                  background: userDetailModal.banner_picture
+                    ? `url(/uploads/${userDetailModal.banner_picture}) center/cover`
+                    : 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
+                  marginBottom: '-40px'
+                }}
+              />
+              <div style={{ padding: '0 24px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+                <div style={{ border: '4px solid white', borderRadius: '50%' }}>
+                  <Avatar user={userDetailModal} size="large" />
+                </div>
+                <div className="admin-modal-title" style={{ marginTop: '12px', textAlign: 'center' }}>
+                  <h2>{userDetailModal.first_name} {userDetailModal.last_name}</h2>
+                  <p>{userDetailModal.email}</p>
+                </div>
               </div>
             </div>
 
@@ -1401,11 +1452,15 @@ export default function AdminPage() {
                 <div className="detail-item">
                   <label>Statuts</label>
                   <div className="status-badges">
-                    <span className={`admin-badge ${userDetailModal.is_active ? 'success' : 'danger'}`}>
-                      {userDetailModal.is_active ? 'Actif' : 'Inactif'}
+                    <span className={`admin-badge ${Boolean(userDetailModal.is_active) ? 'success' : 'danger'}`}>
+                      {Boolean(userDetailModal.is_active) ? 'Actif' : 'Inactif'}
                     </span>
-                    {userDetailModal.is_verified && <span className="admin-badge info">Vérifié</span>}
-                    {userDetailModal.is_admin && <span className="admin-badge warning">Admin</span>}
+                    <span className={`admin-badge ${Boolean(userDetailModal.is_verified) ? 'info' : 'danger'}`}>
+                      {Boolean(userDetailModal.is_verified) ? 'Vérifié' : 'Non vérifié'}
+                    </span>
+                    <span className={`admin-badge ${Boolean(userDetailModal.is_admin) ? 'warning' : 'danger'}`}>
+                      {Boolean(userDetailModal.is_admin) ? 'Admin' : 'Utilisateur'}
+                    </span>
                   </div>
                 </div>
               </div>
