@@ -419,7 +419,6 @@ export default function SearchPage() {
                       <div className="trip-info">
                         <div className="trip-route">
                           <div className="route-point">
-                            <span className="route-icon">📍</span>
                             <div>
                               <strong>{trip.departure_location}</strong>
                               <p className="route-time">{formatDate(trip.departure_datetime)}</p>
@@ -427,7 +426,6 @@ export default function SearchPage() {
                           </div>
                           <div className="route-line"></div>
                           <div className="route-point">
-                            <span className="route-icon">🎯</span>
                             <div>
                               <strong>{trip.arrival_location}</strong>
                             </div>
