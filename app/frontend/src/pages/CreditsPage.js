@@ -20,6 +20,7 @@ import dockerLogo from '../assets/images/logos/docker.png';
 import nginxLogo from '../assets/images/logos/nginx.png';
 import leafletLogo from '../assets/images/logos/leaflet.png';
 import jwtLogo from '../assets/images/logos/jwt.png';
+import traefikLogo from '../assets/images/logos/traefik.svg';
 
 // Logos des APIs
 import osmLogo from '../assets/images/logos/openstreetmap.png';
@@ -34,7 +35,7 @@ export default function CreditsPage() {
         { name: 'Membre 2', role: 'Développeur', image: membre2, color: '#9b59b6' },
         { name: 'Membre 3', role: 'Développeur', image: membre3, color: '#e74c3c' },
         { name: 'Membre 4', role: 'Développeur', image: membre4, color: '#2ecc71' },
-        { name: 'Membre 5', role: 'Développeur', image: membre5, color: '#f39c12' },
+        { name: 'Léanne', role: 'Développeuse', image: membre5, color: '#f39c12' },
         { name: 'Membre 6', role: 'Développeur', image: membre6, color: '#1abc9c' }
     ];
 
@@ -46,7 +47,8 @@ export default function CreditsPage() {
         { name: 'Docker', category: 'Infrastructure', logo: dockerLogo, description: 'Plateforme de conteneurisation' },
         { name: 'Nginx', category: 'Infrastructure', logo: nginxLogo, description: 'Serveur web haute performance' },
         { name: 'Leaflet', category: 'Frontend', logo: leafletLogo, description: 'Bibliothèque de cartes interactives' },
-        { name: 'JWT', category: 'Sécurité', logo: jwtLogo, description: 'Authentification sécurisée par tokens' }
+        { name: 'JWT', category: 'Sécurité', logo: jwtLogo, description: 'Authentification sécurisée par tokens' },
+        { name: 'Traefik', category: 'Infrastructure', logo: traefikLogo, description: 'Reverse proxy moderne avec SSL automatique' }
     ];
 
     const apis = [
@@ -83,8 +85,8 @@ export default function CreditsPage() {
 
                     <div className="team-grid">
                         {teamMembers.map((member, index) => (
-                            <div 
-                                key={index} 
+                            <div
+                                key={index}
                                 className="team-card"
                                 style={{ '--accent-color': member.color }}
                             >
@@ -148,11 +150,11 @@ export default function CreditsPage() {
                         <h2>Remerciements</h2>
                         <div className="thanks-content">
                             <p>
-                                <strong>À ma famille et à mes amis</strong> pour leurs précieux retours tout au long du développement et pour leur soutien indéfectible 
+                                <strong>À ma famille et à mes amis</strong> pour leurs précieux retours tout au long du développement et pour leur soutien indéfectible
                                 durant ce projet.
                             </p>
                             <p>
-                                <strong>À la communauté Open Source</strong> pour les innombrables bibliothèques 
+                                <strong>À la communauté Open Source</strong> pour les innombrables bibliothèques
                                 et outils qui rendent ce projet possible.
                             </p>
 
@@ -160,7 +162,7 @@ export default function CreditsPage() {
                     </div>
                 </section>
             </main>
-            <Footer/>
+            <Footer />
         </div>
     );
 }

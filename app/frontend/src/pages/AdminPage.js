@@ -30,10 +30,10 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [notification, setNotification] = useState(null)
-  
+
   // États du dashboard (statistiques globales)
   const [statistics, setStatistics] = useState(null)
-  
+
   // États de la gestion des utilisateurs
   const [users, setUsers] = useState([])
   const [usersPage, setUsersPage] = useState(1)
@@ -42,7 +42,7 @@ export default function AdminPage() {
   const [usersFilter, setUsersFilter] = useState("")
   const [selectedUsers, setSelectedUsers] = useState([])
   const [userDetailModal, setUserDetailModal] = useState(null)
-  
+
   // États de la gestion des trajets
   const [trips, setTrips] = useState([])
   const [tripsPage, setTripsPage] = useState(1)
@@ -50,7 +50,7 @@ export default function AdminPage() {
   const [tripsFilter, setTripsFilter] = useState("")
   const [tripsSearch, setTripsSearch] = useState("")
   const [selectedTrips, setSelectedTrips] = useState([])
-  
+
   // États de la gestion des réservations
   const [bookings, setBookings] = useState([])
   const [bookingsPage, setBookingsPage] = useState(1)
@@ -107,16 +107,16 @@ export default function AdminPage() {
 
   // Toggle selection helpers
   const toggleUserSelection = (userId) => {
-    setSelectedUsers(prev => 
-      prev.includes(userId) 
+    setSelectedUsers(prev =>
+      prev.includes(userId)
         ? prev.filter(id => id !== userId)
         : [...prev, userId]
     )
   }
 
   const toggleTripSelection = (tripId) => {
-    setSelectedTrips(prev => 
-      prev.includes(tripId) 
+    setSelectedTrips(prev =>
+      prev.includes(tripId)
         ? prev.filter(id => id !== tripId)
         : [...prev, tripId]
     )
@@ -141,7 +141,7 @@ export default function AdminPage() {
   // Vérifier si l'utilisateur est admin
   useEffect(() => {
     if (authLoading) return // Attendre que l'authentification soit chargée
-    
+
     if (!token || !user?.is_admin) {
       console.log("Accès admin refusé:", { token: !!token, user })
       navigate("/")
@@ -226,7 +226,7 @@ export default function AdminPage() {
   // Charger les données selon l'onglet actif
   useEffect(() => {
     if (authLoading || !token || !user?.is_admin) return
-    
+
     const loadData = async () => {
       if (activeTab === "dashboard") {
         try {
@@ -243,9 +243,9 @@ export default function AdminPage() {
         }
       }
     }
-    
+
     loadData()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, authLoading, token, user?.is_admin])
 
   useEffect(() => {
@@ -253,7 +253,7 @@ export default function AdminPage() {
     if (activeTab === "users") {
       loadUsers()
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, authLoading, token, user?.is_admin, usersPage, usersSearch, usersFilter])
 
   useEffect(() => {
@@ -261,7 +261,7 @@ export default function AdminPage() {
     if (activeTab === "trips") {
       loadTrips()
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, authLoading, token, user?.is_admin, tripsPage, tripsFilter, tripsSearch])
 
   useEffect(() => {
@@ -269,7 +269,7 @@ export default function AdminPage() {
     if (activeTab === "bookings") {
       loadBookings()
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, authLoading, token, user?.is_admin, bookingsPage, bookingsFilter])
 
   const handleUpdateUser = async (userId, updates) => {
@@ -306,10 +306,10 @@ export default function AdminPage() {
       return
     }
 
-    const confirmMsg = action === 'delete' 
+    const confirmMsg = action === 'delete'
       ? `Supprimer ${selectedUsers.length} utilisateur(s) ?`
       : `Appliquer l'action sur ${selectedUsers.length} utilisateur(s) ?`
-    
+
     if (!window.confirm(confirmMsg)) return
 
     try {
@@ -432,7 +432,7 @@ export default function AdminPage() {
             <span className="brand-name">Fumotion</span>
           </div>
 
-          <button 
+          <button
             className="navbar-mobile-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
@@ -458,13 +458,13 @@ export default function AdminPage() {
         {/* Sidebar */}
         <aside className="admin-sidebar">
           <div className="sidebar-menu">
-            <button 
+            <button
               className={`sidebar-item ${activeTab === "dashboard" ? "active" : ""}`}
               onClick={() => setActiveTab("dashboard")}
             >
               <span className="sidebar-icon">Tableau de bord</span>
             </button>
-            <button 
+            <button
               className={`sidebar-item ${activeTab === "users" ? "active" : ""}`}
               onClick={() => setActiveTab("users")}
             >
@@ -473,7 +473,7 @@ export default function AdminPage() {
                 <span className="sidebar-badge">{statistics.users.total}</span>
               )}
             </button>
-            <button 
+            <button
               className={`sidebar-item ${activeTab === "trips" ? "active" : ""}`}
               onClick={() => setActiveTab("trips")}
             >
@@ -482,7 +482,7 @@ export default function AdminPage() {
                 <span className="sidebar-badge">{statistics.trips.total}</span>
               )}
             </button>
-            <button 
+            <button
               className={`sidebar-item ${activeTab === "bookings" ? "active" : ""}`}
               onClick={() => setActiveTab("bookings")}
             >
@@ -510,7 +510,7 @@ export default function AdminPage() {
                   <h1 className="admin-title">Tableau de bord</h1>
                   <p className="admin-subtitle">Vue d'ensemble de votre plateforme</p>
                 </div>
-                <button 
+                <button
                   className="admin-btn admin-btn-secondary"
                   onClick={loadStatistics}
                   disabled={loading}
@@ -518,7 +518,7 @@ export default function AdminPage() {
                   <img src={refreshIcon} alt="" className="btn-icon-svg" /> Actualiser
                 </button>
               </div>
-              
+
               {loading ? (
                 <div className="admin-loading">
                   <div className="admin-spinner"></div>
@@ -541,8 +541,8 @@ export default function AdminPage() {
                         </div>
                         <div className="stat-value">{statistics.users.total}</div>
                         <div className="stat-progress-bar">
-                          <div 
-                            className="stat-progress-fill active" 
+                          <div
+                            className="stat-progress-fill active"
                             style={{ width: `${statistics.users.total > 0 ? (statistics.users.active / statistics.users.total) * 100 : 0}%` }}
                           ></div>
                         </div>
@@ -573,8 +573,8 @@ export default function AdminPage() {
                         </div>
                         <div className="stat-value">{statistics.trips.total}</div>
                         <div className="stat-progress-bar">
-                          <div 
-                            className="stat-progress-fill trips" 
+                          <div
+                            className="stat-progress-fill trips"
                             style={{ width: `${statistics.trips.total > 0 ? (statistics.trips.completed / statistics.trips.total) * 100 : 0}%` }}
                           ></div>
                         </div>
@@ -607,8 +607,8 @@ export default function AdminPage() {
                         </div>
                         <div className="stat-value">{statistics.bookings.total}</div>
                         <div className="stat-progress-bar">
-                          <div 
-                            className="stat-progress-fill bookings" 
+                          <div
+                            className="stat-progress-fill bookings"
                             style={{ width: `${statistics.bookings.total > 0 ? (statistics.bookings.confirmed / statistics.bookings.total) * 100 : 0}%` }}
                           ></div>
                         </div>
@@ -677,8 +677,8 @@ export default function AdminPage() {
                       </span>
                       <div className="quick-stat-info">
                         <span className="quick-stat-value">
-                          {statistics.bookings.total > 0 
-                            ? Math.round((statistics.bookings.confirmed / statistics.bookings.total) * 100) 
+                          {statistics.bookings.total > 0
+                            ? Math.round((statistics.bookings.confirmed / statistics.bookings.total) * 100)
                             : 0}%
                         </span>
                         <span className="quick-stat-label">Taux de confirmation</span>
@@ -693,7 +693,7 @@ export default function AdminPage() {
                           <img src={profileIcon} alt="" className="icon-svg-heading" />
                           <h2>Derniers utilisateurs</h2>
                         </div>
-                        <button 
+                        <button
                           className="admin-btn-link"
                           onClick={() => setActiveTab("users")}
                         >
@@ -732,7 +732,7 @@ export default function AdminPage() {
                           <span className="recent-header-icon"><img src={voitureIcon} alt="" className="icon-svg-heading" /></span>
                           <h2>Derniers trajets</h2>
                         </div>
-                        <button 
+                        <button
                           className="admin-btn-link"
                           onClick={() => setActiveTab("trips")}
                         >
@@ -794,14 +794,14 @@ export default function AdminPage() {
             <div className="admin-section">
               <div className="admin-header">
                 <h1 className="admin-title">Gestion des utilisateurs</h1>
-                <button 
+                <button
                   className="admin-btn admin-btn-secondary"
                   onClick={() => exportToCSV(users, 'utilisateurs')}
                 >
                   Exporter CSV
                 </button>
               </div>
-              
+
               <div className="admin-toolbar">
                 <div className="admin-filters">
                   <input
@@ -821,23 +821,23 @@ export default function AdminPage() {
                     <option value="inactive">Inactifs</option>
                   </select>
                 </div>
-                
+
                 {selectedUsers.length > 0 && (
                   <div className="bulk-actions">
                     <span className="bulk-count">{selectedUsers.length} sélectionné(s)</span>
-                    <button 
+                    <button
                       className="admin-btn admin-btn-sm"
                       onClick={() => handleBulkUserAction('activate')}
                     >
                       Activer
                     </button>
-                    <button 
+                    <button
                       className="admin-btn admin-btn-sm"
                       onClick={() => handleBulkUserAction('deactivate')}
                     >
                       Désactiver
                     </button>
-                    <button 
+                    <button
                       className="admin-btn admin-btn-sm admin-btn-danger"
                       onClick={() => handleBulkUserAction('delete')}
                     >
@@ -859,7 +859,7 @@ export default function AdminPage() {
                       <thead>
                         <tr>
                           <th>
-                            <input 
+                            <input
                               type="checkbox"
                               checked={selectedUsers.length === users.length && users.length > 0}
                               onChange={toggleAllUsers}
@@ -882,7 +882,7 @@ export default function AdminPage() {
                           users.map(u => (
                             <tr key={u.id} className={selectedUsers.includes(u.id) ? 'selected' : ''}>
                               <td>
-                                <input 
+                                <input
                                   type="checkbox"
                                   checked={selectedUsers.includes(u.id)}
                                   onChange={() => toggleUserSelection(u.id)}
@@ -909,8 +909,12 @@ export default function AdminPage() {
                                   <span className={`admin-badge ${u.is_active ? 'success' : 'danger'}`}>
                                     {u.is_active ? 'Actif' : 'Inactif'}
                                   </span>
-                                  {u.is_verified && <span className="admin-badge info">Vérifié</span>}
-                                  {u.is_admin && <span className="admin-badge warning">Admin</span>}
+                                  <span className={`admin-badge ${u.is_verified ? 'info' : 'danger'}`}>
+                                    {u.is_verified ? 'Vérifié' : 'Non vérifié'}
+                                  </span>
+                                  <span className={`admin-badge ${u.is_admin ? 'warning' : 'danger'}`}>
+                                    {u.is_admin ? 'Admin' : 'Utilisateur'}
+                                  </span>
                                 </div>
                               </td>
                               <td>{formatDate(u.created_at)}</td>
@@ -1007,14 +1011,14 @@ export default function AdminPage() {
             <div className="admin-section">
               <div className="admin-header">
                 <h1 className="admin-title">Gestion des trajets</h1>
-                <button 
+                <button
                   className="admin-btn admin-btn-secondary"
                   onClick={() => exportToCSV(trips, 'trajets')}
                 >
                   Exporter CSV
                 </button>
               </div>
-              
+
               <div className="admin-toolbar">
                 <div className="admin-filters">
                   <input
@@ -1035,23 +1039,23 @@ export default function AdminPage() {
                     <option value="cancelled">Annulés</option>
                   </select>
                 </div>
-                
+
                 {selectedTrips.length > 0 && (
                   <div className="bulk-actions">
                     <span className="bulk-count">{selectedTrips.length} sélectionné(s)</span>
-                    <button 
+                    <button
                       className="admin-btn admin-btn-sm"
                       onClick={() => handleBulkTripAction('completed')}
                     >
                       Marquer terminé
                     </button>
-                    <button 
+                    <button
                       className="admin-btn admin-btn-sm"
                       onClick={() => handleBulkTripAction('cancelled')}
                     >
                       Annuler
                     </button>
-                    <button 
+                    <button
                       className="admin-btn admin-btn-sm admin-btn-danger"
                       onClick={() => handleBulkTripAction('delete')}
                     >
@@ -1073,7 +1077,7 @@ export default function AdminPage() {
                       <thead>
                         <tr>
                           <th>
-                            <input 
+                            <input
                               type="checkbox"
                               checked={selectedTrips.length === trips.length && trips.length > 0}
                               onChange={toggleAllTrips}
@@ -1098,7 +1102,7 @@ export default function AdminPage() {
                           trips.map(trip => (
                             <tr key={trip.id} className={selectedTrips.includes(trip.id) ? 'selected' : ''}>
                               <td>
-                                <input 
+                                <input
                                   type="checkbox"
                                   checked={selectedTrips.includes(trip.id)}
                                   onChange={() => toggleTripSelection(trip.id)}
@@ -1124,12 +1128,11 @@ export default function AdminPage() {
                               <td>{trip.available_seats}</td>
                               <td><strong>{trip.price_per_seat}€</strong></td>
                               <td>
-                                <span className={`admin-badge ${
-                                  trip.status === 'active' ? 'success' : 
-                                  trip.status === 'completed' ? 'info' : 'danger'
-                                }`}>
-                                  {trip.status === 'active' ? 'Actif' : 
-                                   trip.status === 'completed' ? 'Terminé' : 'Annulé'}
+                                <span className={`admin-badge ${trip.status === 'active' ? 'success' :
+                                    trip.status === 'completed' ? 'info' : 'danger'
+                                  }`}>
+                                  {trip.status === 'active' ? 'Actif' :
+                                    trip.status === 'completed' ? 'Terminé' : 'Annulé'}
                                 </span>
                               </td>
                               <td>
@@ -1204,14 +1207,14 @@ export default function AdminPage() {
             <div className="admin-section">
               <div className="admin-header">
                 <h1 className="admin-title">Gestion des réservations</h1>
-                <button 
+                <button
                   className="admin-btn admin-btn-secondary"
                   onClick={() => exportToCSV(bookings, 'reservations')}
                 >
                   Exporter CSV
                 </button>
               </div>
-              
+
               <div className="admin-toolbar">
                 <div className="admin-filters">
                   <select
@@ -1364,7 +1367,7 @@ export default function AdminPage() {
         <div className="admin-modal-overlay" onClick={() => setUserDetailModal(null)}>
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <button className="admin-modal-close" onClick={() => setUserDetailModal(null)}>X</button>
-            
+
             <div className="admin-modal-header">
               <Avatar user={userDetailModal} size="large" />
               <div className="admin-modal-title">
@@ -1409,7 +1412,7 @@ export default function AdminPage() {
             </div>
 
             <div className="admin-modal-footer">
-              <button 
+              <button
                 className="admin-btn admin-btn-secondary"
                 onClick={() => {
                   handleUpdateUser(userDetailModal.id, { is_active: !userDetailModal.is_active })
@@ -1418,7 +1421,7 @@ export default function AdminPage() {
               >
                 {userDetailModal.is_active ? 'Désactiver' : 'Activer'}
               </button>
-              <button 
+              <button
                 className="admin-btn admin-btn-primary"
                 onClick={() => setUserDetailModal(null)}
               >
