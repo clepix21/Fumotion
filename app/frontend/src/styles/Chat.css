@@ -4,28 +4,40 @@
 
 /* Layout global - Mobile-first */
 .chat-page {
-    min-height: 100vh;
-    min-height: 100svh; /* Support mobile viewport */
+    height: 100vh;
+    height: 100svh;
+    /* Force la hauteur écran */
+    overflow: hidden;
+    /* Empêche le scroll global */
     display: flex;
     flex-direction: column;
+    padding-top: var(--navbar-height, 4rem);
+    /* Espace pour la navbar fixe */
     background-color: var(--color-gray-50, #f9fafb);
+    box-sizing: border-box;
 }
 
 /* Mobile: container pleine hauteur moins navbar */
 .chat-page-container {
     display: flex;
     flex: 1;
-    /* Mobile: hauteur calculée avec svh pour mobile */
-    height: calc(100svh - var(--navbar-height, 4rem));
+    /* Mobile: hauteur calculée (Hauteur écran - Navbar) */
+    min-height: 0;
+    /* Important pour le scroll interne */
     overflow: hidden;
     flex-direction: column;
 }
 
 /* Desktop (1024px+): layout horizontal */
 @media (min-width: 64em) {
+    .chat-page {
+        padding-top: var(--navbar-height, 5rem);
+    }
+
     .chat-page-container {
         flex-direction: row;
-        height: calc(100vh - var(--navbar-height, 5rem));
+        height: auto;
+        /* Laisse flex: 1 gérer la hauteur */
     }
 }
 
@@ -33,7 +45,8 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-width: 0; /* Prevent flex overflow */
+    min-width: 0;
+    /* Prevent flex overflow */
 }
 
 .chat-loading {
@@ -142,8 +155,13 @@
 }
 
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .conversation-list {
@@ -365,8 +383,15 @@
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
 }
 
 .chat-placeholder {
@@ -409,9 +434,13 @@
     flex: 1;
     padding: 1.5rem;
     overflow-y: auto;
+    overflow-x: hidden;
+    /* Empêche le scroll horizontal */
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    padding-right: 2rem;
+    /* Plus d'espace à droite pour éviter que ça colle */
 }
 
 .no-messages {
@@ -453,6 +482,8 @@
 .message-wrapper {
     display: flex;
     width: 100%;
+    box-sizing: border-box;
+    /* S'assure que width: 100% ne déborde pas */
 }
 
 .message-wrapper.sent {
@@ -660,7 +691,8 @@
 
 /* Input mobile optimisé */
 .chat-input {
-    font-size: 16px !important; /* Empêche le zoom sur iOS */
+    font-size: 16px !important;
+    /* Empêche le zoom sur iOS */
 }
 
 /* Tablet+ (768px+): les deux panneaux visibles côte à côte */
@@ -734,6 +766,7 @@
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -863,6 +896,7 @@
             opacity: 0;
             transform: translate(-50%, -50%) scale(0.9);
         }
+
         to {
             opacity: 1;
             transform: translate(-50%, -50%) scale(1);
