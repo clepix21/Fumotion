@@ -481,20 +481,18 @@ export default function SearchPage() {
                           <span className="price-amount">{parseFloat(trip.price_per_seat).toFixed(2)}€</span>
                         </div>
                         <div className="trip-buttons" style={{ display: 'flex', gap: '10px' }}>
-                          {user?.id !== trip.driver_id && (
-                            <button
-                              onClick={() => {
-                                if (!isAuthenticated()) {
-                                  navigate("/login");
-                                  return;
-                                }
-                                navigate(`/chat/${trip.driver_id}`);
-                              }}
-                              className="contact-btn"
-                            >
-                              <img src={chatIcon} alt="chat" style={{ width: '20px', height: '20px' }} />
-                            </button>
-                          )}
+                          <button
+                            onClick={() => {
+                              if (!isAuthenticated()) {
+                                navigate("/login");
+                                return;
+                              }
+                              navigate(`/chat/${trip.driver_id}`);
+                            }}
+                            className="contact-btn"
+                          >
+                            <img src={chatIcon} alt="chat" style={{ width: '20px', height: '20px' }} />
+                          </button>
                           <button
                             onClick={() => handleBooking(trip.id)}
                             className="book-btn"
