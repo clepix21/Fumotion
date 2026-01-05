@@ -70,7 +70,7 @@ exports.getAllUsers = async (req, res) => {
     const limitNum = Math.max(1, Math.min(100, parseInt(limit) || 20))
     const offset = (pageNum - 1) * limitNum
 
-    let query = "SELECT id, email, first_name, last_name, phone, student_id, university, profile_picture, is_verified, is_active, is_admin, created_at FROM users WHERE 1=1"
+    let query = "SELECT id, email, first_name, last_name, phone, student_id, university, profile_picture, banner_picture, is_verified, is_active, is_admin, created_at FROM users WHERE 1=1"
     const params = []
 
     if (search) {
@@ -88,7 +88,7 @@ exports.getAllUsers = async (req, res) => {
 
     const users = await db.all(query, params)
 
-    const totalQuery = "SELECT COUNT(*) as count FROM users WHERE 1=1" + 
+    const totalQuery = "SELECT COUNT(*) as count FROM users WHERE 1=1" +
       (search ? " AND (email LIKE ? OR first_name LIKE ? OR last_name LIKE ?)" : "")
     const totalResult = await db.get(totalQuery, search ? [`%${search}%`, `%${search}%`, `%${search}%`] : [])
 
@@ -219,7 +219,7 @@ exports.getAllTrips = async (req, res) => {
 
     const trips = await db.all(query, params)
 
-    const totalQuery = "SELECT COUNT(*) as count FROM trips WHERE 1=1" + 
+    const totalQuery = "SELECT COUNT(*) as count FROM trips WHERE 1=1" +
       (status ? " AND status = ?" : "")
     const totalResult = await db.get(totalQuery, status ? [status] : [])
 
@@ -324,7 +324,7 @@ exports.getAllBookings = async (req, res) => {
 
     const bookings = await db.all(query, params)
 
-    const totalQuery = "SELECT COUNT(*) as count FROM bookings WHERE 1=1" + 
+    const totalQuery = "SELECT COUNT(*) as count FROM bookings WHERE 1=1" +
       (status ? " AND status = ?" : "")
     const totalResult = await db.get(totalQuery, status ? [status] : [])
 
