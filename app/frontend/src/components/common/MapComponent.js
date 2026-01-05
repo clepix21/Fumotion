@@ -21,7 +21,7 @@ L.Icon.Default.mergeOptions({
 function MapCenter({ center, zoom, skipIfBounds }) {
   const map = useMap()
   const lastCenter = useRef(null)
-  
+
   useEffect(() => {
     if (center && !skipIfBounds) {
       const centerStr = JSON.stringify(center)
@@ -55,7 +55,7 @@ function MapClickHandler({ onMapClick, interactive }) {
 function FitBounds({ bounds }) {
   const map = useMap()
   const lastBounds = useRef(null)
-  
+
   useEffect(() => {
     if (bounds && bounds.length >= 2) {
       const boundsStr = JSON.stringify(bounds)
@@ -148,13 +148,13 @@ function AddressSearch({ onSelect, placeholder, value, onChange }) {
   const formatShortAddress = (suggestion) => {
     const addr = suggestion.address || {}
     const parts = []
-    
+
     if (addr.house_number) parts.push(addr.house_number)
     if (addr.road || addr.pedestrian) parts.push(addr.road || addr.pedestrian)
-    
+
     const city = addr.city || addr.town || addr.village || addr.municipality
     if (city) parts.push(city)
-    
+
     return parts.length > 0 ? parts.join(', ') : suggestion.display_name.split(',').slice(0, 2).join(',')
   }
 
@@ -171,7 +171,7 @@ function AddressSearch({ onSelect, placeholder, value, onChange }) {
         />
         {loading && <span className="search-loading">⏳</span>}
       </div>
-      
+
       {showSuggestions && suggestions.length > 0 && (
         <ul className="address-suggestions">
           {suggestions.map((suggestion, index) => (
@@ -199,11 +199,11 @@ async function getRoute(start, end) {
     const response = await fetch(
       `https://router.project-osrm.org/route/v1/driving/${start.lng},${start.lat};${end.lng},${end.lat}?overview=full&geometries=geojson`
     )
-    
+
     if (!response.ok) throw new Error('Erreur OSRM')
-    
+
     const data = await response.json()
-    
+
     if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
       const route = data.routes[0]
       return {
@@ -342,11 +342,11 @@ export default function MapComponent({
       {routeInfo && (
         <div className="route-info-bar">
           <span className="route-info-item">
-            <span className="route-info-icon">🛣️</span>
+            <span className="route-info-label">Distance : </span>
             {routeInfo.distance} km
           </span>
           <span className="route-info-item">
-            <span className="route-info-icon">⏱️</span>
+            <span className="route-info-label">Temps estimé : </span>
             {routeInfo.duration} min
           </span>
         </div>
@@ -370,7 +370,7 @@ export default function MapComponent({
           <MapCenter center={center} zoom={zoom} skipIfBounds={!!bounds} />
           <MapClickHandler onMapClick={onMapClick} interactive={interactive} />
           {bounds && <FitBounds bounds={bounds} />}
-          
+
           {/* Tracé de la route */}
           {routeCoordinates.length > 0 && (
             <Polyline
