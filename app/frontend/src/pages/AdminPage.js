@@ -1405,11 +1405,25 @@ export default function AdminPage() {
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <button className="admin-modal-close" onClick={() => setUserDetailModal(null)}>X</button>
 
-            <div className="admin-modal-header">
-              <Avatar user={userDetailModal} size="large" />
-              <div className="admin-modal-title">
-                <h2>{userDetailModal.first_name} {userDetailModal.last_name}</h2>
-                <p>{userDetailModal.email}</p>
+            <div className="admin-modal-header" style={{ flexDirection: 'column', padding: 0, overflow: 'hidden' }}>
+              <div
+                style={{
+                  width: '100%',
+                  height: '120px',
+                  background: userDetailModal.banner_picture
+                    ? `url(/uploads/${userDetailModal.banner_picture}) center/cover`
+                    : 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
+                  marginBottom: '-40px'
+                }}
+              />
+              <div style={{ padding: '0 24px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+                <div style={{ border: '4px solid white', borderRadius: '50%' }}>
+                  <Avatar user={userDetailModal} size="large" />
+                </div>
+                <div className="admin-modal-title" style={{ marginTop: '12px', textAlign: 'center' }}>
+                  <h2>{userDetailModal.first_name} {userDetailModal.last_name}</h2>
+                  <p>{userDetailModal.email}</p>
+                </div>
               </div>
             </div>
 
