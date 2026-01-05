@@ -4,12 +4,12 @@ import Footer from '../components/common/Footer';
 import logo from '../assets/images/logo.png';
 import '../styles/StaticPages.css';
 
-import membre1 from '../assets/images/membres/membre1.png';
-import membre2 from '../assets/images/membres/membre1.png';
-import membre3 from '../assets/images/membres/membre1.png';
-import membre4 from '../assets/images/membres/membre1.png';
-import membre5 from '../assets/images/membres/membre1.png';
-import membre6 from '../assets/images/membres/membre1.png';
+import membre1 from '../assets/images/membres/membre1.jpg';
+import membre2 from '../assets/images/membres/membre1.jpg';
+import membre3 from '../assets/images/membres/membre1.jpg';
+import membre4 from '../assets/images/membres/membre1.jpg';
+import membre5 from '../assets/images/membres/membre5.jpg';
+import membre6 from '../assets/images/membres/membre1.jpg';
 
 // Logos des technologies
 import reactLogo from '../assets/images/logos/react.png';
