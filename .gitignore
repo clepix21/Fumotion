@@ -47,3 +47,4 @@ coverage/
 
 # Docker (si vous voulez ignorer les volumes locaux)
 # docker-compose.override.yml
+docker-compose.local.yml
