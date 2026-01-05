@@ -19,7 +19,7 @@ export default function SearchPage() {
   const navigate = useNavigate()
   const [searchParamsURL] = useSearchParams()
   const { user, isAuthenticated, logout } = useAuth()
-  
+
   // Critères de recherche
   const [searchParams, setSearchParams] = useState({
     departure: "",
@@ -27,13 +27,14 @@ export default function SearchPage() {
     date: "",
     passengers: 1,
   })
-  
+
   // Résultats et état
   const [trips, setTrips] = useState([])        // Trajets trouvés
   const [loading, setLoading] = useState(false)
   const [searched, setSearched] = useState(false) // Recherche effectuée ?
   const [error, setError] = useState(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [selectedTrip, setSelectedTrip] = useState(null)
 
   // Charger les paramètres de recherche depuis l'URL
   useEffect(() => {
@@ -223,13 +224,13 @@ export default function SearchPage() {
       {/* Menu mobile - en dehors de la navbar */}
       {mobileMenuOpen && (
         <>
-          <div 
+          <div
             className="navbar-overlay"
             onClick={() => setMobileMenuOpen(false)}
             aria-hidden="true"
           />
           <div className="navbar-menu-mobile">
-            <button 
+            <button
               className="navbar-menu-close"
               onClick={() => setMobileMenuOpen(false)}
               aria-label="Fermer le menu"
@@ -370,41 +371,50 @@ export default function SearchPage() {
                     {trips.length} trajet{trips.length > 1 ? "s" : ""} trouvé{trips.length > 1 ? "s" : ""}
                   </h2>
                   <MapComponent
-                    center={trips[0]?.departure_latitude && trips[0]?.departure_longitude
-                      ? [trips[0].departure_latitude, trips[0].departure_longitude]
-                      : [49.8942, 2.2957]}
-                    zoom={12}
-                    markers={trips
-                      .filter(trip => trip.departure_latitude && trip.departure_longitude)
-                      .map(trip => ({
-                        lat: trip.departure_latitude,
-                        lng: trip.departure_longitude,
-                        type: 'departure',
-                        popup: {
-                          title: `Départ: ${trip.departure_location}`,
-                          description: `${trip.price_per_seat}€ - ${trip.available_seats} places`
-                        }
-                      }))
-                      .concat(
-                        trips
-                          .filter(trip => trip.arrival_latitude && trip.arrival_longitude)
-                          .map(trip => ({
-                            lat: trip.arrival_latitude,
-                            lng: trip.arrival_longitude,
-                            type: 'arrival',
-                            popup: {
-                              title: `Arrivée: ${trip.arrival_location}`,
-                              description: `${trip.price_per_seat}€ - ${trip.available_seats} places`
-                            }
-                          }))
-                      )}
+                    center={selectedTrip && selectedTrip.departure_latitude
+                      ? [selectedTrip.departure_latitude, selectedTrip.departure_longitude]
+                      : (trips[0]?.departure_latitude && trips[0]?.departure_longitude
+                        ? [trips[0].departure_latitude, trips[0].departure_longitude]
+                        : [49.8942, 2.2957])}
+                    zoom={selectedTrip ? 13 : 12}
+                    markers={
+                      (selectedTrip ? [selectedTrip] : trips)
+                        .filter(trip => trip.departure_latitude && trip.departure_longitude)
+                        .map(trip => ({
+                          lat: trip.departure_latitude,
+                          lng: trip.departure_longitude,
+                          type: 'departure',
+                          popup: {
+                            title: `Départ: ${trip.departure_location}`,
+                            description: `${trip.price_per_seat}€ - ${trip.available_seats} places`
+                          }
+                        }))
+                        .concat(
+                          (selectedTrip ? [selectedTrip] : trips)
+                            .filter(trip => trip.arrival_latitude && trip.arrival_longitude)
+                            .map(trip => ({
+                              lat: trip.arrival_latitude,
+                              lng: trip.arrival_longitude,
+                              type: 'arrival',
+                              popup: {
+                                title: `Arrivée: ${trip.arrival_location}`,
+                                description: `${trip.price_per_seat}€ - ${trip.available_seats} places`
+                              }
+                            }))
+                        )
+                    }
                     height="500px"
                     interactive={true}
                   />
                 </div>
                 <div className="results-list">
                   {trips.map((trip) => (
-                    <div key={trip.id} className="trip-result-card">
+                    <div
+                      key={trip.id}
+                      className="trip-result-card"
+                      onMouseEnter={() => setSelectedTrip(trip)}
+                      onMouseLeave={() => setSelectedTrip(null)}
+                    >
                       <div className="trip-info">
                         <div className="trip-route">
                           <div className="route-point">
