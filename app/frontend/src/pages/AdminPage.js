@@ -1452,11 +1452,15 @@ export default function AdminPage() {
                 <div className="detail-item">
                   <label>Statuts</label>
                   <div className="status-badges">
-                    <span className={`admin-badge ${userDetailModal.is_active ? 'success' : 'danger'}`}>
-                      {userDetailModal.is_active ? 'Actif' : 'Inactif'}
+                    <span className={`admin-badge ${Boolean(userDetailModal.is_active) ? 'success' : 'danger'}`}>
+                      {Boolean(userDetailModal.is_active) ? 'Actif' : 'Inactif'}
                     </span>
-                    {userDetailModal.is_verified && <span className="admin-badge info">Vérifié</span>}
-                    {userDetailModal.is_admin && <span className="admin-badge warning">Admin</span>}
+                    <span className={`admin-badge ${Boolean(userDetailModal.is_verified) ? 'info' : 'danger'}`}>
+                      {Boolean(userDetailModal.is_verified) ? 'Vérifié' : 'Non vérifié'}
+                    </span>
+                    <span className={`admin-badge ${Boolean(userDetailModal.is_admin) ? 'warning' : 'danger'}`}>
+                      {Boolean(userDetailModal.is_admin) ? 'Admin' : 'Utilisateur'}
+                    </span>
                   </div>
                 </div>
               </div>
