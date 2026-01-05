@@ -10,11 +10,11 @@ import logo from "../assets/images/logo.png"
 import voiture from "../assets/icons/voiture.svg"
 import bouclier from "../assets/icons/bouclier.svg"
 import speed from "../assets/icons/speed.svg"
-import chatIcon from "../assets/icons/chat.svg"
 import searchIcon from "../assets/icons/search.svg"
 import checkIcon from "../assets/icons/check.svg"
 import "../styles/HomePage.css"
 import Footer from "../components/common/Footer"
+import FixedChatButton from "../components/Chat/FixedChatButton"
 
 export default function HomePage() {
   const navigate = useNavigate()
@@ -72,16 +72,16 @@ export default function HomePage() {
     <div className="homepage">
       <nav className="navbar">
         <div className="navbar-container">
-            <div
-              className="navbar-brand"
-              onClick={() => {
-                setBrandClicks((prev) => [...prev.slice(-2), Date.now()])
-                navigate("/")
-              }}
-            >
-              <img src={logo} alt="Fumotion" className="brand-logo" />
-              <span className="brand-name">Fumotion</span>
-            </div>
+          <div
+            className="navbar-brand"
+            onClick={() => {
+              setBrandClicks((prev) => [...prev.slice(-2), Date.now()])
+              navigate("/")
+            }}
+          >
+            <img src={logo} alt="Fumotion" className="brand-logo" />
+            <span className="brand-name">Fumotion</span>
+          </div>
 
           <button
             className="navbar-mobile-toggle"
@@ -138,20 +138,20 @@ export default function HomePage() {
       {/* Menu mobile - en dehors de la navbar pour éviter les problèmes de overflow */}
       {mobileMenuOpen && (
         <>
-          <div 
+          <div
             className="navbar-overlay"
             onClick={() => setMobileMenuOpen(false)}
             aria-hidden="true"
           />
           <div className="navbar-menu-mobile">
-            <button 
+            <button
               className="navbar-menu-close"
               onClick={() => setMobileMenuOpen(false)}
               aria-label="Fermer le menu"
             >
               ✕
             </button>
-            
+
             <a href="#benefits" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
               Pourquoi Fumotion ?
             </a>
@@ -329,15 +329,7 @@ export default function HomePage() {
 
       <Footer />
 
-      {/* Icône de chat fixe */}
-      <button 
-        className="fixed-chat-button"
-        onClick={() => isAuthenticated() ? navigate("/chat") : navigate("/login")}
-        title="Messagerie"
-      >
-        <img src={chatIcon} alt="Chat" className="chat-icon-img" />
-        <span className="chat-tooltip">Chat</span>
-      </button>
+      <FixedChatButton />
     </div>
   )
 }

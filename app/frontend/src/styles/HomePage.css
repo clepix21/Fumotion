@@ -89,8 +89,13 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideIn {
@@ -98,6 +103,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -574,7 +580,8 @@
   padding: calc(var(--navbar-height, 4rem) + 2rem) var(--container-padding, 1rem) 3rem;
   background: linear-gradient(135deg, rgba(0, 102, 255, 0.85) 0%, rgba(0, 180, 216, 0.85) 100%),
     url('../assets/images/regalia-ffxv.jpg') center/cover;
-  min-height: 100svh; /* svh pour mobile avec barre d'adresse */
+  min-height: 100svh;
+  /* svh pour mobile avec barre d'adresse */
   display: flex;
   align-items: center;
 }
@@ -1376,13 +1383,19 @@
 }
 
 /* Icône de chat fixe - Mobile-first */
-.fixed-chat-button {
+/* Icône de chat fixe - Mobile-first */
+.fixed-chat-wrapper {
   position: fixed;
-  /* Mobile: position en bas à droite plus accessible */
   bottom: 1rem;
   right: 1rem;
   left: auto;
-  /* Taille réduite sur mobile */
+  z-index: var(--z-fixed, 999);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fixed-chat-button {
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
@@ -1393,12 +1406,9 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 20px rgba(0, 102, 255, 0.4);
-  z-index: var(--z-fixed, 999);
   transition: all var(--transition-base, 0.3s ease);
-  overflow: visible;
-  /* Zone de touch minimum */
-  min-width: 2.75rem;
-  min-height: 2.75rem;
+  position: relative;
+  /* Pour le badge */
 }
 
 .fixed-chat-button:hover {
@@ -1426,6 +1436,71 @@
   filter: brightness(0) invert(1);
 }
 
+/* Badge non lu */
+.unread-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #ef4444;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Notification temporaire */
+/* Notification temporaire */
+.chat-notification-bubble {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-bottom: 0.75rem;
+  background-color: #ef4444;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  width: max-content;
+  /* Force la largeur selon le contenu */
+  min-width: 150px;
+  /* Largeur min pour éviter les coupures */
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  animation: slideUpFade 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1002;
+}
+
+.chat-notification-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  right: 1.25rem;
+  border-width: 6px;
+  border-style: solid;
+  border-color: #ef4444 transparent transparent transparent;
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Tooltip caché sur mobile */
 .chat-tooltip {
   display: none;
@@ -1435,6 +1510,8 @@
 .fixed-chat-button::after {
   content: '';
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   border-radius: 50%;
@@ -1448,10 +1525,12 @@
     transform: scale(1);
     opacity: 0.5;
   }
+
   70% {
     transform: scale(1.3);
     opacity: 0;
   }
+
   100% {
     transform: scale(1.3);
     opacity: 0;
@@ -1460,10 +1539,13 @@
 
 /* Tablet+ (768px+): taille plus grande et tooltip */
 @media (min-width: 48em) {
-  .fixed-chat-button {
+  .fixed-chat-wrapper {
     bottom: 1.5rem;
     right: auto;
     left: 1.5rem;
+  }
+
+  .fixed-chat-button {
     width: 3.5rem;
     height: 3.5rem;
   }
@@ -1515,9 +1597,12 @@
 
 /* Desktop (1024px+): taille maximum */
 @media (min-width: 64em) {
-  .fixed-chat-button {
+  .fixed-chat-wrapper {
     bottom: 2rem;
     left: 2rem;
+  }
+
+  .fixed-chat-button {
     width: 3.75rem;
     height: 3.75rem;
   }
