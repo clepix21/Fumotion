@@ -206,7 +206,7 @@ class Database {
       // Note: modifying column to remove NOT NULL might vary by SQL dialect/version, but standard MySQL:
       await this.pool.query("ALTER TABLE messages MODIFY COLUMN trip_id INTEGER NULL")
 
-      await this.createAdminUser()
+      // await this.createAdminUser()
     } catch (err) {
       console.error("Erreur lors de la vérification des colonnes:", err)
     }
@@ -218,7 +218,7 @@ class Database {
 
     try {
       const [rows] = await this.pool.execute("SELECT id FROM users WHERE email = ?", [adminEmail])
-      
+
       if (rows.length === 0) {
         await this.pool.execute(
           `INSERT INTO users (email, password, first_name, last_name, phone, is_verified, is_admin) 
