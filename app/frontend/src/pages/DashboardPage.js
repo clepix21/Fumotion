@@ -17,15 +17,16 @@ import profileIcon from "../assets/icons/profile.svg"
 import lumenIcon from "../assets/icons/lumen.webp"
 import "../styles/Dashboard.css"
 import "../styles/HomePage.css"
+import FixedChatButton from "../components/Chat/FixedChatButton"
 
 export default function DashboardPage() {
   const navigate = useNavigate()
   const { userId } = useParams()
   const { user, token, logout, updateUser } = useAuth()
-  
+
   // Détermine si on affiche son propre profil ou celui d'un autre utilisateur
   const isOwnProfile = !userId || (user && parseInt(userId) === user.id)
-  
+
   // ========== ÉTATS PRINCIPAUX ==========
   const [activeTab, setActiveTab] = useState("overview") // Onglet actif
   const [myTrips, setMyTrips] = useState([])             // Trajets créés
@@ -45,7 +46,7 @@ export default function DashboardPage() {
   const [savingProfile, setSavingProfile] = useState(false)
   const bannerInputRef = useRef(null)
   const avatarInputRef = useRef(null)
-  
+
   // États pour les modales de trajets
   const [selectedTrip, setSelectedTrip] = useState(null)
   const [showDetailsModal, setShowDetailsModal] = useState(false)
@@ -61,7 +62,7 @@ export default function DashboardPage() {
   const [tripPassengers, setTripPassengers] = useState([])
   const [modalLoading, setModalLoading] = useState(false)
   const [saving, setSaving] = useState(false)
-  
+
   // États pour les évaluations
   const [showReviewModal, setShowReviewModal] = useState(false)
   const [pendingReviews, setPendingReviews] = useState({ asPassenger: [], asDriver: [] })
@@ -295,14 +296,14 @@ export default function DashboardPage() {
     setSelectedTrip(trip)
     setShowDetailsModal(true)
     setModalLoading(true)
-    
+
     try {
       const response = await fetch(`/api/trips/${trip.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
-      
+
       if (response.ok) {
         const data = await response.json()
         if (data.success) {
@@ -342,7 +343,7 @@ export default function DashboardPage() {
   // Sauvegarder les modifications
   const handleSaveTrip = async () => {
     if (!selectedTrip) return
-    
+
     setSaving(true)
     try {
       const response = await fetch(`/api/trips/${selectedTrip.id}`, {
@@ -353,11 +354,11 @@ export default function DashboardPage() {
         },
         body: JSON.stringify(editFormData),
       })
-      
+
       const data = await response.json()
       if (data.success) {
         // Mettre à jour la liste des trajets
-        setMyTrips(prev => prev.map(t => 
+        setMyTrips(prev => prev.map(t =>
           t.id === selectedTrip.id ? { ...t, ...editFormData } : t
         ))
         closeModals()
@@ -378,7 +379,7 @@ export default function DashboardPage() {
     if (!window.confirm("Êtes-vous sûr de vouloir annuler ce trajet ? Cette action est irréversible.")) {
       return
     }
-    
+
     try {
       const response = await fetch(`/api/trips/${tripId}`, {
         method: "DELETE",
@@ -386,10 +387,10 @@ export default function DashboardPage() {
           Authorization: `Bearer ${token}`,
         },
       })
-      
+
       const data = await response.json()
       if (data.success) {
-        setMyTrips(prev => prev.map(t => 
+        setMyTrips(prev => prev.map(t =>
           t.id === tripId ? { ...t, status: 'cancelled' } : t
         ))
         closeModals()
@@ -408,25 +409,25 @@ export default function DashboardPage() {
     if (!window.confirm("Confirmer que ce trajet a bien été effectué ?")) {
       return
     }
-    
+
     try {
       const data = await reviewAPI.completeTrip(tripId)
       if (data.success) {
-        setMyTrips(prev => prev.map(t => 
+        setMyTrips(prev => prev.map(t =>
           t.id === tripId ? { ...t, status: 'completed' } : t
         ))
         closeModals()
-        
+
         // Recharger les évaluations en attente et ouvrir la modale automatiquement
         try {
           const pendingData = await reviewAPI.getPendingReviews()
           if (pendingData.success) {
             setPendingReviews(pendingData.data)
-            
+
             // Ouvrir automatiquement la modale d'évaluation si des évaluations sont en attente
             const firstDriverReview = pendingData.data.asDriver?.[0]
             const firstPassengerReview = pendingData.data.asPassenger?.[0]
-            
+
             if (firstDriverReview || firstPassengerReview) {
               // Priorité aux évaluations en tant que conducteur (évaluer les passagers)
               const reviewToOpen = firstDriverReview || firstPassengerReview
@@ -436,7 +437,7 @@ export default function DashboardPage() {
         } catch (error) {
           console.error("Erreur lors du chargement des évaluations:", error)
         }
-        
+
         loadDashboardData() // Recharger le reste des données
       } else {
         alert(data.message || "Erreur lors de la finalisation")
@@ -457,7 +458,7 @@ export default function DashboardPage() {
   // Soumettre une évaluation
   const handleSubmitReview = async () => {
     if (!currentReview) return
-    
+
     setSubmittingReview(true)
     try {
       const data = await reviewAPI.createReview(currentReview.booking_id, {
@@ -465,7 +466,7 @@ export default function DashboardPage() {
         comment: reviewData.comment,
         type: currentReview.review_type
       })
-      
+
       if (data.success) {
         alert("Évaluation envoyée avec succès !")
         setShowReviewModal(false)
@@ -711,8 +712,8 @@ export default function DashboardPage() {
                     </div>
                     <h3>{myTrips.length}</h3>
                     <div className="stat-progress">
-                      <div 
-                        className="stat-progress-bar trips" 
+                      <div
+                        className="stat-progress-bar trips"
                         style={{ width: `${myTrips.length > 0 ? (myTrips.filter(t => t.status === 'completed').length / myTrips.length) * 100 : 0}%` }}
                       ></div>
                     </div>
@@ -731,8 +732,8 @@ export default function DashboardPage() {
                     </div>
                     <h3>{myBookings.length}</h3>
                     <div className="stat-progress">
-                      <div 
-                        className="stat-progress-bar bookings" 
+                      <div
+                        className="stat-progress-bar bookings"
                         style={{ width: `${myBookings.length > 0 ? (myBookings.filter(b => b.status === 'confirmed').length / myBookings.length) * 100 : 0}%` }}
                       ></div>
                     </div>
@@ -766,7 +767,7 @@ export default function DashboardPage() {
                   <h2><span className="section-icon">📍</span> Prochains trajets</h2>
                   <button className="view-all-btn" onClick={() => setActiveTab("trips")}>Voir tout →</button>
                 </div>
-                
+
                 {myTrips.filter(t => t.status === 'active' && new Date(t.departure_datetime) > new Date()).length === 0 ? (
                   <div className="upcoming-empty">
                     <p>Aucun trajet à venir</p>
@@ -878,21 +879,21 @@ export default function DashboardPage() {
                       </div>
                       <div className="trip-actions">
                         {trip.status === 'active' && (
-                          <button 
+                          <button
                             className="trip-btn success"
                             onClick={() => handleCompleteTrip(trip.id)}
                           >
                             ✓ Trajet effectué
                           </button>
                         )}
-                        <button 
+                        <button
                           className="trip-btn secondary"
                           onClick={() => openEditModal(trip)}
                           disabled={trip.status !== 'active'}
                         >
                           Modifier
                         </button>
-                        <button 
+                        <button
                           className="trip-btn primary"
                           onClick={() => openDetailsModal(trip)}
                         >
@@ -967,7 +968,7 @@ export default function DashboardPage() {
           {activeTab === "reviews" && (
             <div className="reviews-section">
               <h1>Évaluations</h1>
-              
+
               {/* Évaluations en attente */}
               {(pendingReviews.asPassenger?.length > 0 || pendingReviews.asDriver?.length > 0) && (
                 <div className="pending-reviews-section">
@@ -975,7 +976,7 @@ export default function DashboardPage() {
                   <p className="section-description">
                     Évaluez les personnes avec qui vous avez voyagé pour aider la communauté !
                   </p>
-                  
+
                   <div className="pending-reviews-grid">
                     {/* Évaluer les conducteurs (en tant que passager) */}
                     {pendingReviews.asPassenger?.map((item, index) => (
@@ -999,7 +1000,7 @@ export default function DashboardPage() {
                             {new Date(item.departure_datetime).toLocaleDateString('fr-FR')}
                           </span>
                         </div>
-                        <button 
+                        <button
                           className="review-now-btn"
                           onClick={() => openReviewModal(item)}
                         >
@@ -1007,7 +1008,7 @@ export default function DashboardPage() {
                         </button>
                       </div>
                     ))}
-                    
+
                     {/* Évaluer les passagers (en tant que conducteur) */}
                     {pendingReviews.asDriver?.map((item, index) => (
                       <div key={`passenger-${index}`} className="pending-review-card">
@@ -1030,7 +1031,7 @@ export default function DashboardPage() {
                             {new Date(item.departure_datetime).toLocaleDateString('fr-FR')}
                           </span>
                         </div>
-                        <button 
+                        <button
                           className="review-now-btn"
                           onClick={() => openReviewModal(item)}
                         >
@@ -1041,7 +1042,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
               )}
-              
+
               {/* Aucune évaluation en attente */}
               {pendingReviews.asPassenger?.length === 0 && pendingReviews.asDriver?.length === 0 && (
                 <div className="empty-state">
@@ -1052,7 +1053,7 @@ export default function DashboardPage() {
                   <p>Vous avez évalué tous vos trajets terminés !</p>
                 </div>
               )}
-              <br/>
+              <br />
               {/* Mes notes */}
               <div className="my-ratings-section">
                 <h2><img src={statsIcon} alt="stats" className="icon-svg-heading" /> Mes notes</h2>
@@ -1156,7 +1157,7 @@ export default function DashboardPage() {
                         <textarea
                           className="profile-bio-edit"
                           value={profileFormData.bio}
-                          onChange={(e) => setProfileFormData({...profileFormData, bio: e.target.value})}
+                          onChange={(e) => setProfileFormData({ ...profileFormData, bio: e.target.value })}
                           placeholder="Écrivez votre biographie..."
                           maxLength={67}
                         />
@@ -1245,14 +1246,14 @@ export default function DashboardPage() {
         <div className="modal-overlay" onClick={closeModals}>
           <div className="modal-content trip-details-modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={closeModals}>✕</button>
-            
+
             <div className="modal-header">
               <h2>Détails du trajet</h2>
               <span className={`trip-status ${selectedTrip.status}`}>
                 {selectedTrip.status === "active" ? "Actif" : selectedTrip.status === "completed" ? "Terminé" : "Annulé"}
               </span>
             </div>
-            
+
             {modalLoading ? (
               <div className="modal-loading">
                 <div className="loading-spinner"></div>
@@ -1347,15 +1348,15 @@ export default function DashboardPage() {
 
                 <div className="modal-actions">
                   {selectedTrip.status === 'active' && (
-                    <button 
+                    <button
                       className="btn-success"
                       onClick={() => handleCompleteTrip(selectedTrip.id)}
                     >
                       ✓ Trajet effectué
                     </button>
                   )}
-                  <button 
-                    className="btn-secondary" 
+                  <button
+                    className="btn-secondary"
                     onClick={() => {
                       closeModals()
                       openEditModal(selectedTrip)
@@ -1364,7 +1365,7 @@ export default function DashboardPage() {
                   >
                     Modifier
                   </button>
-                  <button 
+                  <button
                     className="btn-danger"
                     onClick={() => handleCancelTrip(selectedTrip.id)}
                     disabled={selectedTrip.status !== 'active'}
@@ -1383,18 +1384,18 @@ export default function DashboardPage() {
         <div className="modal-overlay" onClick={closeModals}>
           <div className="modal-content trip-edit-modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={closeModals}>✕</button>
-            
+
             <div className="modal-header">
               <h2>Modifier le trajet</h2>
             </div>
-            
+
             <form className="edit-trip-form" onSubmit={(e) => { e.preventDefault(); handleSaveTrip(); }}>
               <div className="modal-form-group">
                 <label>Lieu de départ</label>
                 <input
                   type="text"
                   value={editFormData.departure_location}
-                  onChange={(e) => setEditFormData({...editFormData, departure_location: e.target.value})}
+                  onChange={(e) => setEditFormData({ ...editFormData, departure_location: e.target.value })}
                   placeholder="Adresse de départ"
                   required
                 />
@@ -1404,7 +1405,7 @@ export default function DashboardPage() {
                 <input
                   type="text"
                   value={editFormData.arrival_location}
-                  onChange={(e) => setEditFormData({...editFormData, arrival_location: e.target.value})}
+                  onChange={(e) => setEditFormData({ ...editFormData, arrival_location: e.target.value })}
                   placeholder="Adresse d'arrivée"
                   required
                 />
@@ -1414,7 +1415,7 @@ export default function DashboardPage() {
                 <input
                   type="datetime-local"
                   value={editFormData.departure_datetime}
-                  onChange={(e) => setEditFormData({...editFormData, departure_datetime: e.target.value})}
+                  onChange={(e) => setEditFormData({ ...editFormData, departure_datetime: e.target.value })}
                   required
                 />
               </div>
@@ -1426,7 +1427,7 @@ export default function DashboardPage() {
                     min="1"
                     max="8"
                     value={editFormData.available_seats}
-                    onChange={(e) => setEditFormData({...editFormData, available_seats: parseInt(e.target.value)})}
+                    onChange={(e) => setEditFormData({ ...editFormData, available_seats: parseInt(e.target.value) })}
                     required
                   />
                 </div>
@@ -1437,7 +1438,7 @@ export default function DashboardPage() {
                     min="0"
                     step="0.5"
                     value={editFormData.price_per_seat}
-                    onChange={(e) => setEditFormData({...editFormData, price_per_seat: parseFloat(e.target.value)})}
+                    onChange={(e) => setEditFormData({ ...editFormData, price_per_seat: parseFloat(e.target.value) })}
                     required
                   />
                 </div>
@@ -1446,7 +1447,7 @@ export default function DashboardPage() {
                 <label>Description (optionnel)</label>
                 <textarea
                   value={editFormData.description}
-                  onChange={(e) => setEditFormData({...editFormData, description: e.target.value})}
+                  onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
                   placeholder="Informations supplémentaires sur le trajet..."
                   rows="3"
                 />
@@ -1476,22 +1477,22 @@ export default function DashboardPage() {
         <div className="modal-overlay" onClick={() => setShowReviewModal(false)}>
           <div className="modal-content review-modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setShowReviewModal(false)}>✕</button>
-            
+
             <div className="modal-header">
               <h2>Évaluer {currentReview.review_type === 'driver' ? 'le conducteur' : 'le passager'}</h2>
             </div>
-            
+
             <div className="review-content">
               <div className="review-user-info">
                 <div className="review-avatar">
-                  {currentReview.review_type === 'driver' 
+                  {currentReview.review_type === 'driver'
                     ? (currentReview.driver_first_name?.charAt(0) || '?')
                     : (currentReview.passenger_first_name?.charAt(0) || '?')
                   }
                 </div>
                 <div className="review-user-details">
                   <span className="review-user-name">
-                    {currentReview.review_type === 'driver' 
+                    {currentReview.review_type === 'driver'
                       ? `${currentReview.driver_first_name} ${currentReview.driver_last_name}`
                       : `${currentReview.passenger_first_name} ${currentReview.passenger_last_name}`
                     }
@@ -1501,7 +1502,7 @@ export default function DashboardPage() {
                   </span>
                 </div>
               </div>
-              
+
               <div className="rating-section">
                 <label>Note</label>
                 <div className="star-rating">
@@ -1510,7 +1511,7 @@ export default function DashboardPage() {
                       key={star}
                       type="button"
                       className={`star-btn ${star <= reviewData.rating ? 'active' : ''}`}
-                      onClick={() => setReviewData({...reviewData, rating: star})}
+                      onClick={() => setReviewData({ ...reviewData, rating: star })}
                     >
                       <img src={starIcon} alt="star" className="icon-svg-star" />
                     </button>
@@ -1518,28 +1519,28 @@ export default function DashboardPage() {
                 </div>
                 <span className="rating-value">{reviewData.rating}/5</span>
               </div>
-              
+
               <div className="modal-form-group">
                 <label>Commentaire (optionnel)</label>
                 <textarea
                   value={reviewData.comment}
-                  onChange={(e) => setReviewData({...reviewData, comment: e.target.value})}
+                  onChange={(e) => setReviewData({ ...reviewData, comment: e.target.value })}
                   placeholder="Partagez votre expérience..."
                   rows="4"
                 />
               </div>
             </div>
-            
+
             <div className="modal-actions">
-              <button 
-                type="button" 
-                className="btn-secondary" 
+              <button
+                type="button"
+                className="btn-secondary"
                 onClick={() => setShowReviewModal(false)}
               >
                 Annuler
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="btn-primary"
                 onClick={handleSubmitReview}
                 disabled={submittingReview}
@@ -1561,7 +1562,7 @@ export default function DashboardPage() {
             <span className="notification-text">
               Vous avez {(pendingReviews.asPassenger?.length || 0) + (pendingReviews.asDriver?.length || 0)} évaluation(s) en attente
             </span>
-            <button 
+            <button
               className="notification-btn"
               onClick={() => setActiveTab("reviews")}
             >
