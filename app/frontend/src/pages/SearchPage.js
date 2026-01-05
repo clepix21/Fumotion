@@ -12,6 +12,8 @@ import logo from "../assets/images/logo.png"
 import voiture from "../assets/icons/voiture.svg"
 import starIcon from "../assets/icons/star.svg"
 import warningCircle from "../assets/icons/warning-circle.svg"
+import usersIcon from "../assets/icons/users.svg"
+import chatIcon from "../assets/icons/chat.svg"
 import "../styles/Search.css"
 import "../styles/HomePage.css"
 
@@ -457,7 +459,9 @@ export default function SearchPage() {
 
                           <div className="trip-meta">
                             <span className="meta-item">
-                              <span className="meta-icon">👥</span>
+                              <span className="meta-icon">
+                                <img src={usersIcon} alt="passengers" style={{ width: '16px', height: '16px' }} />
+                              </span>
                               {trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats} place
                               {(trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats) > 1 ? "s" : ""} disponible
                             </span>
@@ -488,7 +492,7 @@ export default function SearchPage() {
                               }}
                               className="contact-btn"
                             >
-                              💬
+                              <img src={chatIcon} alt="chat" style={{ width: '20px', height: '20px' }} />
                             </button>
                           )}
                           <button
