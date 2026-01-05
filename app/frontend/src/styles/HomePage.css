@@ -1456,6 +1456,7 @@
 }
 
 /* Notification temporaire */
+/* Notification temporaire */
 .chat-notification-bubble {
   position: absolute;
   bottom: 100%;
@@ -1468,8 +1469,14 @@
   font-size: 0.875rem;
   font-weight: 600;
   white-space: nowrap;
+  width: max-content;
+  /* Force la largeur selon le contenu */
+  min-width: 150px;
+  /* Largeur min pour éviter les coupures */
+  text-align: center;
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
   animation: slideUpFade 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1002;
 }
 
 .chat-notification-bubble::after {
