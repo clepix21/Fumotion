@@ -105,6 +105,22 @@ export default function AdminPage() {
     showNotification("Export réussi !")
   }
 
+  /** Exporte les données en JSON */
+  const exportToJSON = (data, filename) => {
+    if (!data || data.length === 0) {
+      showNotification("Aucune donnée à exporter", "warning")
+      return
+    }
+
+    const jsonContent = JSON.stringify(data, null, 2)
+    const blob = new Blob([jsonContent], { type: 'application/json' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = `${filename}_${new Date().toISOString().split('T')[0]}.json`
+    link.click()
+    showNotification("Export JSON réussi !")
+  }
+
   // Toggle selection helpers
   const toggleUserSelection = (userId) => {
     setSelectedUsers(prev =>
@@ -800,6 +816,13 @@ export default function AdminPage() {
                 >
                   Exporter CSV
                 </button>
+                <button
+                  className="admin-btn admin-btn-secondary"
+                  onClick={() => exportToJSON(users, 'utilisateurs')}
+                  style={{ marginLeft: '10px' }}
+                >
+                  Exporter JSON
+                </button>
               </div>
 
               <div className="admin-toolbar">
@@ -1017,6 +1040,13 @@ export default function AdminPage() {
                 >
                   Exporter CSV
                 </button>
+                <button
+                  className="admin-btn admin-btn-secondary"
+                  onClick={() => exportToJSON(trips, 'trajets')}
+                  style={{ marginLeft: '10px' }}
+                >
+                  Exporter JSON
+                </button>
               </div>
 
               <div className="admin-toolbar">
@@ -1129,7 +1159,7 @@ export default function AdminPage() {
                               <td><strong>{trip.price_per_seat}€</strong></td>
                               <td>
                                 <span className={`admin-badge ${trip.status === 'active' ? 'success' :
-                                    trip.status === 'completed' ? 'info' : 'danger'
+                                  trip.status === 'completed' ? 'info' : 'danger'
                                   }`}>
                                   {trip.status === 'active' ? 'Actif' :
                                     trip.status === 'completed' ? 'Terminé' : 'Annulé'}
@@ -1212,6 +1242,13 @@ export default function AdminPage() {
                   onClick={() => exportToCSV(bookings, 'reservations')}
                 >
                   Exporter CSV
+                </button>
+                <button
+                  className="admin-btn admin-btn-secondary"
+                  onClick={() => exportToJSON(bookings, 'reservations')}
+                  style={{ marginLeft: '10px' }}
+                >
+                  Exporter JSON
                 </button>
               </div>
 
