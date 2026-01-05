@@ -396,15 +396,12 @@ export default function SearchPage() {
                               lat: trip.arrival_latitude,
                               lng: trip.arrival_longitude,
                               type: 'arrival',
-                              popup: {
-                                title: `Arrivée: ${trip.arrival_location}`,
-                                description: `${trip.price_per_seat}€ - ${trip.available_seats} places`
-                              }
                             }))
                         )
                     }
                     height="500px"
                     interactive={true}
+                    showRoute={!!selectedTrip || trips.length === 1}
                   />
                 </div>
                 <div className="results-list">
