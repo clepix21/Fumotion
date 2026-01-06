@@ -12,6 +12,15 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, s
     const inputRef = useRef(null);
     const profilePopupRef = useRef(null);
 
+    // Vérifier si l'utilisateur est en ligne (actif dans les 5 dernières minutes)
+    const isOnline = React.useMemo(() => {
+        if (!otherUser?.last_active_at) return false;
+        const lastActive = new Date(otherUser.last_active_at);
+        const now = new Date();
+        const diff = now - lastActive;
+        return diff < 5 * 60 * 1000; // 5 minutes
+    }, [otherUser?.last_active_at]);
+
     // Scroll automatique vers le bas à chaque nouveau message
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -66,17 +75,17 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, s
     const formatMessageDate = (dateString) => {
         const date = new Date(dateString);
         const today = new Date();
-        
+
         if (date.toDateString() === today.toDateString()) return "Aujourd'hui";
-        
+
         const yesterday = new Date(today);
         yesterday.setDate(yesterday.getDate() - 1);
         if (date.toDateString() === yesterday.toDateString()) return "Hier";
-        
-        return date.toLocaleDateString('fr-FR', { 
-            weekday: 'long', 
-            day: 'numeric', 
-            month: 'long' 
+
+        return date.toLocaleDateString('fr-FR', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long'
         });
     };
 
@@ -107,12 +116,14 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, s
 
     const groupedMessages = groupMessagesByDate(messages);
 
+
+
     return (
         <div className="chat-window">
             {/* Header */}
             <div className="chat-header">
                 <button className="back-button mobile-only" onClick={onBack}>
-                    ← 
+                    ←
                 </button>
                 {otherUser.profile_picture ? (
                     <img
@@ -126,7 +137,7 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, s
                         style={{ cursor: 'pointer' }}
                     />
                 ) : (
-                    <div 
+                    <div
                         className="chat-avatar chat-avatar-initials clickable-avatar"
                         onClick={(e) => {
                             e.stopPropagation();
@@ -180,9 +191,9 @@ const ChatWindow = ({ messages, currentUser, otherUser, onSendMessage, onBack, s
                     <h3 className="chat-partner-name">
                         {otherUser.first_name} {otherUser.last_name}
                     </h3>
-                    <span className="chat-status">
-                        <span className="status-dot"></span>
-                        En ligne
+                    <span className={`chat-status ${isOnline ? 'online' : 'offline'}`}>
+                        <span className={`status-dot ${isOnline ? 'online' : 'offline'}`}></span>
+                        {isOnline ? 'En ligne' : 'Hors ligne'}
                     </span>
                 </div>
             </div>

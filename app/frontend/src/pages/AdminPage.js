@@ -531,7 +531,6 @@ export default function AdminPage() {
                   onClick={loadStatistics}
                   disabled={loading}
                 >
-                  <img src={refreshIcon} alt="" className="btn-icon-svg" /> Actualiser
                 </button>
               </div>
 

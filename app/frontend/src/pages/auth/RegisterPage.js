@@ -122,7 +122,7 @@ export default function RegisterPage() {
 
             <div style={{ display: 'flex', gap: '1rem' }}>
               <div className="form-group-modern" style={{ flex: 1 }}>
-                <label className="form-label-modern">Prénom</label>
+                <label className="form-label-modern">Prénom <span style={{ color: "red" }}>*</span></label>
                 <div className="input-wrapper-modern">
                   <input
                     type="text"
@@ -141,7 +141,7 @@ export default function RegisterPage() {
               </div>
 
               <div className="form-group-modern" style={{ flex: 1 }}>
-                <label className="form-label-modern">Nom</label>
+                <label className="form-label-modern">Nom <span style={{ color: "red" }}>*</span></label>
                 <div className="input-wrapper-modern">
                   <input
                     type="text"
@@ -161,7 +161,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="form-group-modern">
-              <label className="form-label-modern">Email</label>
+              <label className="form-label-modern">Email <span style={{ color: "red" }}>*</span></label>
               <div className="input-wrapper-modern">
                 <input
                   type="email"
@@ -181,7 +181,7 @@ export default function RegisterPage() {
 
             <div style={{ display: 'flex', gap: '1rem' }}>
               <div className="form-group-modern" style={{ flex: 1 }}>
-                <label className="form-label-modern">Mot de passe</label>
+                <label className="form-label-modern">Mot de passe <span style={{ color: "red" }}>*</span></label>
                 <div className="input-wrapper-modern">
                   <input
                     type="password"
@@ -200,7 +200,7 @@ export default function RegisterPage() {
               </div>
 
               <div className="form-group-modern" style={{ flex: 1 }}>
-                <label className="form-label-modern">Confirmer le mot de passe</label>
+                <label className="form-label-modern">Confirmer le mot de passe <span style={{ color: "red" }}>*</span></label>
                 <div className="input-wrapper-modern">
                   <input
                     type="password"
@@ -255,7 +255,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="form-group-modern">
-              <label className="form-label-modern">Établissement</label>
+              <label className="form-label-modern">Établissement <span style={{ color: "red" }}>*</span></label>
               <div className="input-wrapper-modern">
                 <select
                   name="university"
@@ -265,6 +265,7 @@ export default function RegisterPage() {
                   required
                   disabled={loading}
                 >
+                  <option value="UPJV - IUT Amiens">UPJV - IUT Amiens</option>
                   <option value="UPJV - Campus Citadelle">UPJV - Campus Citadelle</option>
                   <option value="UPJV - Campus Teinturerie">UPJV - Campus Teinturerie</option>
                   <option value="UPJV - Campus Cathedrale">UPJV - Campus Cathédrale</option>
@@ -272,8 +273,7 @@ export default function RegisterPage() {
                   <option value="UPJV - Campus Saint-Charles">UPJV - Campus Saint-Charles</option>
                   <option value="UPJV - Campus Campus-Sud">UPJV - Campus Sud (Pôle Campus / Thil)</option>
                   <option value="UPJV - Campus Bailly">UPJV - Campus Bailly (STAPS)</option>
-                  <option value="UPJV - IUT Amiens">UPJV - IUT Amiens</option>
-                  <option value="Autre établissement Amiens">Autre établissement Amiens</option>
+                  <option value="Autre établissement">Autre établissement</option>
                 </select>
               </div>
             </div>

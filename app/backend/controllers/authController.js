@@ -7,6 +7,8 @@ const jwt = require("jsonwebtoken")
 const db = require("../config/database")
 const fs = require("fs")
 const path = require("path")
+const crypto = require("crypto")
+const nodemailer = require("nodemailer");
 
 class AuthController {
   /**
@@ -15,14 +17,14 @@ class AuthController {
    */
   async register(req, res) {
     try {
-      const { email, password, firstName, lastName, phone, studentId } = req.body
+      const { email, password, firstName, lastName, phone, studentId, university } = req.body
 
-      console.log("[v0] Tentative d'inscription pour:", email)
+      console.log("Tentative d'inscription pour:", email)
 
       // Vérifier l'unicité de l'email
       const existingUser = await db.get("SELECT id FROM users WHERE email = ?", [email])
       if (existingUser) {
-        console.log("[v0] Email déjà existant:", email)
+        console.log("Email déjà existant:", email)
         return res.status(400).json({
           success: false,
           message: "Un compte avec cet email existe déjà",
@@ -34,12 +36,12 @@ class AuthController {
 
       // Créer l'utilisateur
       const result = await db.run(
-        `INSERT INTO users (email, password, first_name, last_name, phone, student_id) 
-         VALUES (?, ?, ?, ?, ?, ?)`,
-        [email, hashedPassword, firstName, lastName, phone, studentId],
+        `INSERT INTO users (email, password, first_name, last_name, phone, student_id, university) 
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [email, hashedPassword, firstName, lastName, phone, studentId, university || 'IUT Amiens'],
       )
 
-      console.log("[v0] Utilisateur créé avec ID:", result.id)
+      console.log("Utilisateur créé avec ID:", result.id)
 
       // Générer le token JWT
       const token = jwt.sign({ userId: result.id }, process.env.JWT_SECRET, { expiresIn: "7d" })
@@ -50,7 +52,7 @@ class AuthController {
         [result.id],
       )
 
-      console.log("[v0] Inscription réussie pour:", email)
+      console.log("Inscription réussie pour:", email)
 
       res.status(201).json({
         success: true,
@@ -61,7 +63,7 @@ class AuthController {
         },
       })
     } catch (error) {
-      console.error("[v0] Erreur lors de l'inscription:", error)
+      console.error("Erreur lors de l'inscription:", error)
       res.status(500).json({
         success: false,
         message: "Erreur serveur lors de l'inscription",
@@ -74,7 +76,7 @@ class AuthController {
     try {
       const { email, password } = req.body
 
-      console.log("[v0] Tentative de connexion pour:", email)
+      console.log("Tentative de connexion pour:", email)
 
       // Vérifier si l'utilisateur existe
       const user = await db.get(
@@ -83,7 +85,7 @@ class AuthController {
       )
 
       if (!user) {
-        console.log("[v0] Utilisateur non trouvé:", email)
+        console.log("Utilisateur non trouvé:", email)
         return res.status(401).json({
           success: false,
           message: "Email ou mot de passe incorrect",
@@ -91,7 +93,7 @@ class AuthController {
       }
 
       if (!user.is_active) {
-        console.log("[v0] Compte désactivé:", email)
+        console.log("Compte désactivé:", email)
         return res.status(401).json({
           success: false,
           message: "Compte désactivé",
@@ -101,7 +103,7 @@ class AuthController {
       // Vérifier le mot de passe
       const isPasswordValid = await bcrypt.compare(password, user.password)
       if (!isPasswordValid) {
-        console.log("[v0] Mot de passe incorrect pour:", email)
+        console.log("Mot de passe incorrect pour:", email)
         return res.status(401).json({
           success: false,
           message: "Email ou mot de passe incorrect",
@@ -114,7 +116,7 @@ class AuthController {
       // Retourner les informations utilisateur (sans le mot de passe)
       const { password: _, ...userInfo } = user
 
-      console.log("[v0] Connexion réussie pour:", email)
+      console.log("Connexion réussie pour:", email)
 
       res.json({
         success: true,
@@ -125,7 +127,7 @@ class AuthController {
         },
       })
     } catch (error) {
-      console.error("[v0] Erreur lors de la connexion:", error)
+      console.error("Erreur lors de la connexion:", error)
       res.status(500).json({
         success: false,
         message: "Erreur serveur lors de la connexion",
@@ -297,47 +299,134 @@ class AuthController {
     }
   }
 
-  // Réinitialisation de mot de passe avec email et numéro étudiant
+  // Demande de réinitialisation de mot de passe (Email + Token)
   async forgotPassword(req, res) {
     try {
-      const { email, studentId, password } = req.body
+      const { email } = req.body
 
-      console.log("[v0] Demande de réinitialisation de mot de passe pour:", email)
+      console.log("Demande de réinitialisation de mot de passe pour:", email)
 
-      // Vérifier si l'utilisateur existe avec l'email et le numéro étudiant
       const user = await db.get(
-        "SELECT id, email FROM users WHERE email = ? AND student_id = ?",
-        [email, studentId]
+        "SELECT id, email FROM users WHERE email = ?",
+        [email]
+      )
+
+      // Pour la sécurité, on ne dit pas si l'email existe ou non, sauf logs serveur
+      if (!user) {
+        console.log("Utilisateur non trouvé (email inconnu)")
+        return res.json({
+          success: true,
+          message: "Si un compte est associé à cet email, un lien de réinitialisation a été envoyé."
+        })
+      }
+
+      // Générer un token sécurisé
+      const token = crypto.randomBytes(32).toString("hex")
+      const expires = new Date(Date.now() + 3600000) // 1 heure
+
+      // Sauvegarder le token
+      await db.run(
+        "UPDATE users SET reset_token = ?, reset_token_expires = ? WHERE id = ?",
+        [token, expires, user.id]
+      )
+
+      // Configuration du transporteur Nodemailer
+      const transporter = nodemailer.createTransport({
+        service: "gmail", // Peut être changé selon le fournisseur
+        auth: {
+          user: process.env.SMTP_EMAIL,
+          pass: process.env.SMTP_PASSWORD,
+        },
+      })
+
+      // Générer le lien (Prod vs Dev)
+      const baseUrl = process.env.FRONTEND_URL || "https://fumotion.tech";
+      const resetLink = `${baseUrl}/reset-password?token=${token}`;
+
+      const mailOptions = {
+        from: '"Support Fumotion" <fumotion.help@gmail.com>',
+        to: email,
+        subject: "Réinitialisation de votre mot de passe",
+        html: `
+          <div style="font-family: Arial, sans-serif; color: #333;">
+            <h2>Réinitialisation de mot de passe</h2>
+            <p>Bonjour,</p>
+            <p>Vous avez demandé la réinitialisation de votre mot de passe sur Fumotion.</p>
+            <p>Cliquez sur le lien ci-dessous pour définir un nouveau mot de passe :</p>
+            <p>
+              <a href="${resetLink}" style="background-color: #5B9FED; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                Réinitialiser mon mot de passe
+              </a>
+            </p>
+            <p style="font-size: 0.9em; color: #777;">Ce lien est valide pour 1 heure.</p>
+            <hr>
+            <p style="font-size: 0.8em; color: #999;">Si vous n'êtes pas à l'origine de cette demande, veuillez ignorer cet email.</p>
+          </div>
+        `,
+      }
+
+      // Envoi de l'email
+      try {
+        await transporter.sendMail(mailOptions)
+        console.log(`📧 Email de réinitialisation envoyé à ${email}`)
+      } catch (emailError) {
+        console.error("Erreur d'envoi d'email:", emailError)
+        // On ne bloque pas la réponse pour autant
+      }
+
+      res.json({
+        success: true,
+        message: "Si un compte est associé à cet email, un lien de réinitialisation a été envoyé."
+      })
+    } catch (error) {
+      console.error("Erreur lors de la demande de réinitialisation:", error)
+      res.status(500).json({
+        success: false,
+        message: "Erreur serveur lors de la demande"
+      })
+    }
+  }
+
+  // Effectuer la réinitialisation (Token + Nouveau mot de passe)
+  async resetPassword(req, res) {
+    try {
+      const { token, password } = req.body
+
+      console.log("Tentative de réinitialisation avec token")
+
+      // Vérifier le token et l'expiration
+      const user = await db.get(
+        "SELECT id, email FROM users WHERE reset_token = ? AND reset_token_expires > NOW()",
+        [token]
       )
 
       if (!user) {
-        console.log("[v0] Email ou numéro étudiant incorrect")
         return res.status(400).json({
           success: false,
-          message: "Email ou numéro étudiant incorrect",
+          message: "Le lien de réinitialisation est invalide ou a expiré."
         })
       }
 
       // Hasher le nouveau mot de passe
       const hashedPassword = await bcrypt.hash(password, 10)
 
-      // Mettre à jour le mot de passe
+      // Mettre à jour le mot de passe et effacer le token
       await db.run(
-        "UPDATE users SET password = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+        "UPDATE users SET password = ?, reset_token = NULL, reset_token_expires = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
         [hashedPassword, user.id]
       )
 
-      console.log("[v0] Mot de passe réinitialisé avec succès pour:", user.email)
+      console.log("Mot de passe réinitialisé avec succès pour:", user.email)
 
       res.json({
         success: true,
-        message: "Mot de passe réinitialisé avec succès",
+        message: "Votre mot de passe a été modifié avec succès."
       })
     } catch (error) {
-      console.error("[v0] Erreur lors de la réinitialisation:", error)
+      console.error("Erreur lors de la réinitialisation finale:", error)
       res.status(500).json({
         success: false,
-        message: "Erreur serveur lors de la réinitialisation",
+        message: "Erreur serveur lors de la réinitialisation"
       })
     }
   }
@@ -347,7 +436,7 @@ class AuthController {
     try {
       const { id } = req.params;
       const user = await db.get(
-        "SELECT id, first_name, last_name, profile_picture, created_at FROM users WHERE id = ?",
+        "SELECT id, first_name, last_name, profile_picture, created_at, last_active_at FROM users WHERE id = ?",
         [id]
       );
 

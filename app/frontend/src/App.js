@@ -21,7 +21,7 @@ import ChatPage from './pages/ChatPage';
 
 // Pages statiques
 import NotFoundPage from './pages/NotFoundPage';
-import HelpPage from './pages/HelpPage';
+
 import TermsPage from './pages/TermsPage';
 import CreditsPage from './pages/CreditsPage';
 
@@ -34,7 +34,7 @@ function App() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/search" element={<SearchPage />} />
-      
+
       {/* Routes protégées (nécessitent authentification) */}
       <Route
         path="/dashboard"
@@ -84,7 +84,7 @@ function App() {
           </ProtectedRoute>
         }
       />
-      <Route path="/help" element={<HelpPage />} />
+
       <Route path="/terms" element={<TermsPage />} />
       <Route path="/credits" element={<CreditsPage />} />
       <Route path="*" element={<NotFoundPage />} />

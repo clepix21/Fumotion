@@ -4,7 +4,8 @@
 
 .auth-page {
   min-height: 100vh;
-  min-height: 100svh; /* Support mobile viewport */
+  min-height: 100svh;
+  /* Support mobile viewport */
   background: linear-gradient(135deg, var(--color-secondary, #3b82f6) 0%, #1e40af 100%);
   /* Mobile: padding réduit */
   padding: 1rem;
@@ -374,6 +375,15 @@
   color: #1e293b;
   font-size: 1rem;
   outline: none;
+  padding: 0;
+  margin: 0;
+  height: 24px;
+  /* Force height validation */
+  line-height: 24px;
+}
+
+.input-wrapper-modern:has(.password-toggle-btn) .form-input-modern {
+  padding-right: 32px;
 }
 
 .form-input-modern::placeholder {
@@ -394,6 +404,30 @@
   margin-top: 0.25rem;
   display: block;
   font-weight: 500;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #5B9FED;
+  padding: 0;
+  margin: 0;
+  height: 24px;
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: color 0.2s ease;
+}
+
+.password-toggle-btn:hover {
+  color: #4A8FDD;
 }
 
 .forgot-link-modern {
