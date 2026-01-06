@@ -15,6 +15,7 @@ import starIcon from "../assets/icons/star.svg"
 import statsIcon from "../assets/icons/stats.svg"
 import profileIcon from "../assets/icons/profile.svg"
 import lumenIcon from "../assets/icons/lumen.webp"
+import targetIcon from "../assets/icons/target.svg"
 import "../styles/Dashboard.css"
 import "../styles/HomePage.css"
 import FixedChatButton from "../components/Chat/FixedChatButton"
@@ -764,7 +765,7 @@ export default function DashboardPage() {
               {/* Section Prochains trajets */}
               <div className="upcoming-section">
                 <div className="section-header-row">
-                  <h2><span className="section-icon">📍</span> Prochains trajets</h2>
+                  <h2><span className="section-icon"><img src={targetIcon} alt="target" className="icon-svg-heading" /></span> Prochains trajets</h2>
                   <button className="view-all-btn" onClick={() => setActiveTab("trips")}>Voir tout →</button>
                 </div>
 
@@ -1227,7 +1228,7 @@ export default function DashboardPage() {
                       </div>
                       <div className="detail-item">
                         <label>
-                          <span className="detail-icon">📍</span>
+                          <span className="detail-icon"><img src={targetIcon} alt="target" className="icon-svg-inline" /></span>
                           Ville d'étude
                         </label>
                         <span>Amiens, Hauts-de-France</span>
