@@ -1210,28 +1210,24 @@ export default function DashboardPage() {
                     <div className="details-grid">
                       <div className="detail-item">
                         <label>
-                          <span className="detail-icon">📞</span>
                           Téléphone
                         </label>
                         <span>{displayUser?.phone || "Non renseigné"}</span>
                       </div>
                       <div className="detail-item">
                         <label>
-                          <span className="detail-icon">🎓</span>
                           Numéro étudiant
                         </label>
                         <span>{displayUser?.student_id || "Non renseigné"}</span>
                       </div>
                       <div className="detail-item">
                         <label>
-                          <span className="detail-icon">🏫</span>
                           Établissement
                         </label>
-                        <span>{displayUser?.university || "IUT Amiens"}</span>
+                        <span>{displayUser?.university || "Non renseigné"}</span>
                       </div>
                       <div className="detail-item">
                         <label>
-                          <span className="detail-icon"><img src={targetIcon} alt="target" className="icon-svg-inline" /></span>
                           Ville d'étude
                         </label>
                         <span>Amiens, Hauts-de-France</span>
