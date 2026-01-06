@@ -18,6 +18,7 @@ import lumenIcon from "../assets/icons/lumen.webp"
 import targetIcon from "../assets/icons/target.svg"
 import clockIcon from "../assets/icons/clock.svg"
 import usersIcon from "../assets/icons/users.svg"
+import moneyIcon from "../assets/icons/money.svg"
 import "../styles/Dashboard.css"
 import "../styles/HomePage.css"
 import FixedChatButton from "../components/Chat/FixedChatButton"
@@ -808,7 +809,7 @@ export default function DashboardPage() {
                               <img src={usersIcon} alt="users" className="icon-svg-inline" /> {trip.remaining_seats || trip.available_seats} places
                             </span>
                             <span className="trip-price-display">
-                              💶 {trip.price_per_seat}€
+                              <img src={moneyIcon} alt="price" className="icon-svg-inline" /> {trip.price_per_seat}€
                             </span>
                           </div>
                         </div>
