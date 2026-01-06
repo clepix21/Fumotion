@@ -201,6 +201,16 @@ class Database {
         console.log(" Colonne receiver_id ajoutée à la table messages")
       }
 
+      if (!columnNames.includes("reset_token")) {
+        await this.pool.query("ALTER TABLE users ADD COLUMN reset_token TEXT")
+        console.log(" Colonne reset_token ajoutée")
+      }
+
+      if (!columnNames.includes("reset_token_expires")) {
+        await this.pool.query("ALTER TABLE users ADD COLUMN reset_token_expires DATETIME")
+        console.log(" Colonne reset_token_expires ajoutée")
+      }
+
       if (!columnNames.includes("last_active_at")) {
         await this.pool.query("ALTER TABLE users ADD COLUMN last_active_at DATETIME")
         console.log(" Colonne last_active_at ajoutée")

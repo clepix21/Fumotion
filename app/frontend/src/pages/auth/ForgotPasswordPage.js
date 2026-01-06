@@ -1,62 +1,40 @@
 /**
- * Page de récupération de mot de passe
- * Vérifie email + n° étudiant avant de permettre le changement
+ * Page de demande de réinitialisation de mot de passe
+ * Envoie un lien de réinitialisation par email
  */
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import '../../styles/auth.css';
 
 export default function ForgotPasswordPage() {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '', studentId: '', password: '', confirmPassword: ''
-  });
+  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  /** Soumet la demande de réinitialisation */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
-    // Validations
-    if (formData.password !== formData.confirmPassword) {
-      setError('Les mots de passe ne correspondent pas');
-      return;
-    }
-    if (formData.password.length < 6) {
-      setError('Le mot de passe doit contenir au moins 6 caractères');
-      return;
-    }
-
+    setMessage('');
     setLoading(true);
 
     try {
       const response = await fetch('/api/auth/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: formData.email,
-          studentId: formData.studentId,
-          password: formData.password
-        }),
+        body: JSON.stringify({ email }),
       });
 
       const data = await response.json();
 
       if (response.ok && data.success) {
-        alert('Mot de passe réinitialisé avec succès !');
-        navigate('/login');
+        setMessage('Si un compte est associé à cet email, un lien de réinitialisation vous a été envoyé.');
       } else {
-        setError(data.message || 'Erreur lors de la réinitialisation du mot de passe');
+        setError(data.message || 'Erreur lors de la demande');
       }
     } catch (err) {
       console.error('Erreur réseau:', err);
-      setError('Erreur de connexion au serveur. Vérifiez que le serveur backend est démarré.');
+      setError('Erreur de connexion au serveur.');
     } finally {
       setLoading(false);
     }
@@ -68,12 +46,12 @@ export default function ForgotPasswordPage() {
         <Link to="/login" className="back-link-modern">
           ← Retour à la connexion
         </Link>
-        <h1 className="auth-title-modern">Réinitialiser le mot de passe</h1>
+        <h1 className="auth-title-modern">Mot de passe oublié</h1>
 
         <div className="auth-card-modern">
           <form onSubmit={handleSubmit} className="auth-form-modern">
             <p className="forgot-description-modern">
-              Entrez votre email et votre numéro étudiant pour réinitialiser votre mot de passe.
+              Entrez votre adresse email. Nous vous enverrons un lien pour réinitialiser votre mot de passe.
             </p>
 
             {error && (
@@ -83,72 +61,31 @@ export default function ForgotPasswordPage() {
               </div>
             )}
 
+            {message && (
+              <div className="success-message-modern">
+                <span className="success-icon">✓</span>
+                <p>{message}</p>
+              </div>
+            )}
+
             <div className="form-group-modern">
               <label className="form-label-modern">Email</label>
               <div className="input-wrapper-modern">
                 <input
                   type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="form-input-modern"
-                  placeholder="Entrez votre email"
+                  placeholder="votre.email@exemple.com"
                   required
                   disabled={loading}
-                />
-              </div>
-            </div>
-
-            <div className="form-group-modern">
-              <label className="form-label-modern">Numéro étudiant</label>
-              <div className="input-wrapper-modern">
-                <input
-                  type="text"
-                  name="studentId"
-                  value={formData.studentId}
-                  onChange={handleChange}
-                  className="form-input-modern"
-                  placeholder="Votre numéro étudiant"
-                  required
-                  disabled={loading}
-                />
-              </div>
-            </div>
-
-            <div className="form-group-modern">
-              <label className="form-label-modern">Nouveau mot de passe</label>
-              <div className="input-wrapper-modern">
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="form-input-modern"
-                  placeholder="Au moins 6 caractères"
-                  required
-                  disabled={loading}
-                />
-              </div>
-            </div>
-
-            <div className="form-group-modern">
-              <label className="form-label-modern">Confirmer le mot de passe</label>
-              <div className="input-wrapper-modern">
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="form-input-modern"
-                  placeholder="Répétez le mot de passe"
-                  required
-                  disabled={loading}
+                  style={{ height: '24px', padding: 0, margin: 0, lineHeight: '24px' }}
                 />
               </div>
             </div>
 
             <button type="submit" className="login-btn-modern" disabled={loading}>
-              {loading ? "CHARGEMENT..." : "RÉINITIALISER LE MOT DE PASSE"}
+              {loading ? "ENVOI EN COURS..." : "ENVOYER LE LIEN"}
             </button>
           </form>
 
