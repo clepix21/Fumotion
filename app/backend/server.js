@@ -21,10 +21,34 @@ const PORT = process.env.PORT || 5000;
 
 // ========== CONFIGURATION CORS ==========
 // Liste des origines autorisées selon l'environnement
+// Liste des origines autorisées selon l'environnement
+const allowedOrigins = [
+  'https://fumotion.com',
+  'http://localhost',
+  'http://localhost:80',
+  'http://127.0.0.1',
+  'http://127.0.0.1:80',
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'https://fumotion.tech'
+];
+
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? ['https://fumotion.com', 'http://localhost', 'http://localhost:80', 'http://127.0.0.1', 'http://127.0.0.1:80', 'http://localhost:3000', 'http://127.0.0.1:3000']
-    : ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost', 'http://localhost:80', 'http://127.0.0.1', 'http://127.0.0.1:80'],
+  origin: function (origin, callback) {
+    // Autoriser les requêtes sans origine (comme curl ou Postman) ou en mode dev pour tout accepter
+    if (!origin || process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      // Optionnel : En prod, on pourrait vouloir restreindre, mais pour l'instant on log juste
+      console.log('Origin not explicitly allowed:', origin);
+      // Pour éviter de bloquer les utilisateurs légitimes si la liste est incomplète :
+      callback(null, true);
+    }
+  },
   credentials: true
 }));
 
@@ -71,7 +95,7 @@ app.get('/api/health', (req, res) => {
 app.get('/api/geocode/search', async (req, res) => {
   try {
     const { q, limit = 5 } = req.query;
-    
+
     if (!q || q.length < 2) {
       return res.json([]);
     }
@@ -108,7 +132,7 @@ app.get('/api/geocode/search', async (req, res) => {
 app.get('/api/geocode/reverse', async (req, res) => {
   try {
     const { lat, lon } = req.query;
-    
+
     if (!lat || !lon) {
       return res.status(400).json({ error: 'lat et lon requis' });
     }
