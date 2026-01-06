@@ -201,6 +201,11 @@ class Database {
         console.log(" Colonne receiver_id ajoutée à la table messages")
       }
 
+      if (!columnNames.includes("last_active_at")) {
+        await this.pool.query("ALTER TABLE users ADD COLUMN last_active_at DATETIME")
+        console.log(" Colonne last_active_at ajoutée")
+      }
+
       await this.pool.query("ALTER TABLE messages MODIFY COLUMN trip_id INTEGER NULL")
 
       // await this.createAdminUser()

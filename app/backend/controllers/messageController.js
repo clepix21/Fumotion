@@ -60,7 +60,7 @@ exports.getConversations = async (req, res) => {
         // Elle récupère aussi le dernier message échangé
         const query = `
       SELECT 
-        u.id, u.first_name, u.last_name, u.profile_picture, u.created_at,
+        u.id, u.first_name, u.last_name, u.profile_picture, u.created_at, u.last_active_at,
         m.message as last_message,
         m.created_at as last_message_date,
         m.is_read,

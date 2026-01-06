@@ -347,7 +347,7 @@ class AuthController {
     try {
       const { id } = req.params;
       const user = await db.get(
-        "SELECT id, first_name, last_name, profile_picture, created_at FROM users WHERE id = ?",
+        "SELECT id, first_name, last_name, profile_picture, created_at, last_active_at FROM users WHERE id = ?",
         [id]
       );
 

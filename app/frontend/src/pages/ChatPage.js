@@ -53,17 +53,20 @@ const ChatPage = () => {
 
     /** Charge les infos de l'utilisateur sélectionné */
     const loadSelectedUser = useCallback(async (id) => {
-        const conv = conversations.find(c => c.id === parseInt(id));
-        if (conv) {
-            setSelectedUser(conv);
-            return;
-        }
         try {
             const { authAPI } = await import('../services/api');
             const response = await authAPI.getPublicProfile(id);
-            if (response.success) setSelectedUser(response.data);
+            if (response.success) {
+                setSelectedUser(response.data);
+            } else {
+                // Fallback si l'API échoue
+                const conv = conversations.find(c => c.id === parseInt(id));
+                if (conv) setSelectedUser(conv);
+            }
         } catch (err) {
             console.error("Impossible de charger l'utilisateur", err);
+            const conv = conversations.find(c => c.id === parseInt(id));
+            if (conv) setSelectedUser(conv);
         }
     }, [conversations]);
 
@@ -80,13 +83,14 @@ const ChatPage = () => {
             loadMessages(userId);
             loadSelectedUser(userId);
             setShowConversations(false);
-            
-            // Rafraîchir les messages toutes les 3 secondes
+
+            // Rafraîchir les messages et le statut toutes les 3 secondes
             if (messagesIntervalRef.current) {
                 clearInterval(messagesIntervalRef.current);
             }
             messagesIntervalRef.current = setInterval(() => {
                 loadMessages(userId);
+                loadSelectedUser(userId);
             }, 3000);
         } else {
             setMessages([]);
@@ -190,20 +194,20 @@ const ChatPage = () => {
             {/* Menu mobile - en dehors de la navbar */}
             {mobileMenuOpen && (
                 <>
-                    <div 
+                    <div
                         className="navbar-overlay"
                         onClick={() => setMobileMenuOpen(false)}
                         aria-hidden="true"
                     />
                     <div className="navbar-menu-mobile">
-                        <button 
+                        <button
                             className="navbar-menu-close"
                             onClick={() => setMobileMenuOpen(false)}
                             aria-label="Fermer le menu"
                         >
                             ✕
                         </button>
-                        
+
                         <Link to="/search" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
                             Rechercher
                         </Link>
