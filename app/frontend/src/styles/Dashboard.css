@@ -161,9 +161,8 @@
 .dashboard-container {
   max-width: var(--container-xl, 80rem);
   margin: 0 auto;
-  /* Padding augmenté significativement pour mobile pour éviter le chevauchement */
-  /* Padding augmenté significativement pour mobile pour éviter le chevauchement - Force avec !important */
-  padding: 10rem 1rem 2rem !important;
+  /* Padding ajusté pour mobile : ~104px (Navbar 72px + 32px gap) */
+  padding: 6.5rem 1rem 2rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -172,7 +171,7 @@
 /* Tablet+ (768px+): sidebar en haut */
 @media (min-width: 48em) {
   .dashboard-container {
-    padding: calc(var(--navbar-height, 4.5rem) + 4rem) 1.5rem 2rem !important;
+    padding: calc(var(--navbar-height, 4.5rem) + 2rem) 1.5rem 2rem;
   }
 }
 
