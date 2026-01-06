@@ -161,7 +161,8 @@
 .dashboard-container {
   max-width: var(--container-xl, 80rem);
   margin: 0 auto;
-  padding: calc(var(--navbar-height, 4rem) + 1rem) 1rem 2rem;
+  /* Padding augmenté pour éviter que le bouton soit coupé par la navbar */
+  padding: calc(var(--navbar-height, 4.5rem) + 2rem) 1rem 2rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
