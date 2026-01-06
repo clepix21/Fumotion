@@ -15,7 +15,7 @@ class AuthController {
    */
   async register(req, res) {
     try {
-      const { email, password, firstName, lastName, phone, studentId } = req.body
+      const { email, password, firstName, lastName, phone, studentId, university } = req.body
 
       console.log("[v0] Tentative d'inscription pour:", email)
 
@@ -34,9 +34,9 @@ class AuthController {
 
       // Créer l'utilisateur
       const result = await db.run(
-        `INSERT INTO users (email, password, first_name, last_name, phone, student_id) 
-         VALUES (?, ?, ?, ?, ?, ?)`,
-        [email, hashedPassword, firstName, lastName, phone, studentId],
+        `INSERT INTO users (email, password, first_name, last_name, phone, student_id, university) 
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [email, hashedPassword, firstName, lastName, phone, studentId, university || 'IUT Amiens'],
       )
 
       console.log("[v0] Utilisateur créé avec ID:", result.id)
