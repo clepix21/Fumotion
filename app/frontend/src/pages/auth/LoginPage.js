@@ -114,16 +114,7 @@ export default function LoginPage() {
                 />
                 <button
                   type="button"
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "#5B9FED",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    padding: "0 8px 0 0"
-                  }}
+                  className="password-toggle-btn"
                   onMouseDown={() => setShowPassword(true)}
                   onMouseUp={() => setShowPassword(false)}
                   onMouseLeave={() => setShowPassword(false)}
