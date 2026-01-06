@@ -15,6 +15,10 @@ import starIcon from "../assets/icons/star.svg"
 import statsIcon from "../assets/icons/stats.svg"
 import profileIcon from "../assets/icons/profile.svg"
 import lumenIcon from "../assets/icons/lumen.webp"
+import targetIcon from "../assets/icons/target.svg"
+import clockIcon from "../assets/icons/clock.svg"
+import usersIcon from "../assets/icons/users.svg"
+import moneyIcon from "../assets/icons/money.svg"
 import "../styles/Dashboard.css"
 import "../styles/HomePage.css"
 import FixedChatButton from "../components/Chat/FixedChatButton"
@@ -607,7 +611,7 @@ export default function DashboardPage() {
               </div>
             </div>
             <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="navbar-btn-logout">
-              <span>🚪</span> Déconnexion
+              Déconnexion
             </button>
           </div>
         </div>
@@ -764,7 +768,7 @@ export default function DashboardPage() {
               {/* Section Prochains trajets */}
               <div className="upcoming-section">
                 <div className="section-header-row">
-                  <h2><span className="section-icon">📍</span> Prochains trajets</h2>
+                  <h2><span className="section-icon"><img src={targetIcon} alt="target" className="icon-svg-heading" /></span> Prochains trajets</h2>
                   <button className="view-all-btn" onClick={() => setActiveTab("trips")}>Voir tout →</button>
                 </div>
 
@@ -799,13 +803,13 @@ export default function DashboardPage() {
                           </div>
                           <div className="trip-meta">
                             <span className="trip-time-display">
-                              🕐 {new Date(trip.departure_datetime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                              <img src={clockIcon} alt="clock" className="icon-svg-inline" /> {new Date(trip.departure_datetime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                             </span>
                             <span className="trip-seats-display">
-                              👥 {trip.remaining_seats || trip.available_seats} places
+                              <img src={usersIcon} alt="users" className="icon-svg-inline" /> {trip.remaining_seats || trip.available_seats} places
                             </span>
                             <span className="trip-price-display">
-                              💶 {trip.price_per_seat}€
+                              <img src={moneyIcon} alt="price" className="icon-svg-inline" /> {trip.price_per_seat}€
                             </span>
                           </div>
                         </div>
@@ -1227,7 +1231,7 @@ export default function DashboardPage() {
                       </div>
                       <div className="detail-item">
                         <label>
-                          <span className="detail-icon">📍</span>
+                          <span className="detail-icon"><img src={targetIcon} alt="target" className="icon-svg-inline" /></span>
                           Ville d'étude
                         </label>
                         <span>Amiens, Hauts-de-France</span>

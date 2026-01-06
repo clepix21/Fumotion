@@ -161,7 +161,8 @@
 .dashboard-container {
   max-width: var(--container-xl, 80rem);
   margin: 0 auto;
-  padding: calc(var(--navbar-height, 4rem) + 1rem) 1rem 2rem;
+  /* Padding ajusté (compromis) pour mobile avec !important pour éviter l'écrasement */
+  padding: 8.5rem 1rem 2rem !important;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -170,7 +171,7 @@
 /* Tablet+ (768px+): sidebar en haut */
 @media (min-width: 48em) {
   .dashboard-container {
-    padding: calc(var(--navbar-height, 4rem) + 1.5rem) 1.5rem 2rem;
+    padding: calc(var(--navbar-height, 4.5rem) + 2rem) 1.5rem 2rem;
   }
 }
 
@@ -738,9 +739,16 @@
 .upcoming-section {
   background: white;
   border-radius: 1rem;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
   border: 1px solid #e2e8f0;
+}
+
+@media (min-width: 48em) {
+  .upcoming-section {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
 }
 
 .section-header-row {
@@ -748,6 +756,9 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  /* Permettre le passage à la ligne */
+  gap: 0.5rem;
 }
 
 .section-header-row h2 {
@@ -757,6 +768,8 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  white-space: nowrap;
+  /* Empêcher la coupure du titre */
 }
 
 .section-icon {
@@ -772,6 +785,8 @@
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
   transition: background 0.2s;
+  white-space: nowrap;
+  /* Empêcher la coupure du bouton */
 }
 
 .view-all-btn:hover {
@@ -922,6 +937,11 @@
   font-size: 0.875rem;
   color: #1e293b;
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: block;
 }
 
 .trip-meta {
@@ -1106,9 +1126,37 @@
     align-self: flex-start;
   }
 
+  .overview-date {
+    align-self: flex-start;
+  }
+
+  /* Carte trajet optimisée pour mobile */
+  .upcoming-trip-card {
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .trip-route-info {
+    min-width: 0;
+    /* Essentiel pour le text-overflow */
+    flex: 1;
+    padding-right: 0.5rem;
+  }
+
   .trip-meta {
-    flex-direction: column;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    padding-top: 0.75rem;
+    border-top: 1px dashed #cbd5e1;
+    margin-top: 0.25rem;
     gap: 0.5rem;
+  }
+
+  .trip-meta span {
+    font-size: 0.875rem;
+    /* Un peu plus grand sur mobile pour lisibilité */
   }
 
   .reviews-alert {
