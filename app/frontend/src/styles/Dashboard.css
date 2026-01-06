@@ -161,8 +161,8 @@
 .dashboard-container {
   max-width: var(--container-xl, 80rem);
   margin: 0 auto;
-  /* Padding ajusté pour mobile : ~104px (Navbar 72px + 32px gap) */
-  padding: 6.5rem 1rem 2rem;
+  /* Padding ajusté (compromis) pour mobile avec !important pour éviter l'écrasement */
+  padding: 8.5rem 1rem 2rem !important;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
