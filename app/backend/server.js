@@ -21,9 +21,7 @@ const PORT = process.env.PORT || 5000;
 
 // ========== CONFIGURATION CORS ==========
 // Liste des origines autorisées selon l'environnement
-// Liste des origines autorisées selon l'environnement
 const allowedOrigins = [
-  'https://fumotion.com',
   'http://localhost',
   'http://localhost:80',
   'http://127.0.0.1',
