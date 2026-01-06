@@ -162,7 +162,8 @@
   max-width: var(--container-xl, 80rem);
   margin: 0 auto;
   /* Padding augmenté significativement pour mobile pour éviter le chevauchement */
-  padding: 8rem 1rem 2rem;
+  /* Padding augmenté significativement pour mobile pour éviter le chevauchement */
+  padding: 10rem 1rem 2rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
