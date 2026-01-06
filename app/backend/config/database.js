@@ -208,42 +208,11 @@ class Database {
 
       await this.pool.query("ALTER TABLE messages MODIFY COLUMN trip_id INTEGER NULL")
 
-      // await this.createAdminUser()
     } catch (err) {
       console.error("Erreur lors de la vérification des colonnes:", err)
     }
   }
 
-  async createAdminUser() {
-    const adminEmail = "admin@fumotion.com"
-    const adminPassword = await bcrypt.hash("admin123", 10)
-
-    try {
-      const [rows] = await this.pool.execute("SELECT id FROM users WHERE email = ?", [adminEmail])
-
-      if (rows.length === 0) {
-        await this.pool.execute(
-          `INSERT INTO users (email, password, first_name, last_name, phone, is_verified, is_admin) 
-           VALUES (?, ?, ?, ?, ?, ?, ?)`,
-          [adminEmail, adminPassword, "Admin", "Fumotion", "0123456789", 1, 1],
-        )
-        console.log(" Utilisateur admin créé avec succès")
-        console.log(" Email: admin@fumotion.com")
-        console.log(" Mot de passe: admin123")
-      } else {
-        await this.pool.execute(
-          "UPDATE users SET is_admin = 1, is_verified = 1 WHERE email = ?",
-          [adminEmail]
-        )
-        console.log("  Utilisateur admin déjà existant (droits vérifiés)")
-      }
-
-      // Créer les vues et index pour optimisation
-      await this.createViewsAndIndexes()
-    } catch (err) {
-      console.error(" Erreur lors de la gestion de l'admin:", err)
-    }
-  }
 
   /**
    * Crée les vues SQL et les index pour optimiser les performances
