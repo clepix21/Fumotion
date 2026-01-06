@@ -810,19 +810,20 @@ export default function AdminPage() {
             <div className="admin-section">
               <div className="admin-header">
                 <h1 className="admin-title">Gestion des utilisateurs</h1>
-                <button
-                  className="admin-btn admin-btn-secondary"
-                  onClick={() => exportToCSV(users, 'utilisateurs')}
-                >
-                  Exporter CSV
-                </button>
-                <button
-                  className="admin-btn admin-btn-secondary"
-                  onClick={() => exportToJSON(users, 'utilisateurs')}
-                  style={{ marginLeft: '10px' }}
-                >
-                  Exporter JSON
-                </button>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    className="admin-btn admin-btn-secondary"
+                    onClick={() => exportToCSV(users, 'utilisateurs')}
+                  >
+                    Exporter CSV
+                  </button>
+                  <button
+                    className="admin-btn admin-btn-secondary"
+                    onClick={() => exportToJSON(users, 'utilisateurs')}
+                  >
+                    Exporter JSON
+                  </button>
+                </div>
               </div>
 
               <div className="admin-toolbar">
@@ -1034,19 +1035,20 @@ export default function AdminPage() {
             <div className="admin-section">
               <div className="admin-header">
                 <h1 className="admin-title">Gestion des trajets</h1>
-                <button
-                  className="admin-btn admin-btn-secondary"
-                  onClick={() => exportToCSV(trips, 'trajets')}
-                >
-                  Exporter CSV
-                </button>
-                <button
-                  className="admin-btn admin-btn-secondary"
-                  onClick={() => exportToJSON(trips, 'trajets')}
-                  style={{ marginLeft: '10px' }}
-                >
-                  Exporter JSON
-                </button>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    className="admin-btn admin-btn-secondary"
+                    onClick={() => exportToCSV(trips, 'trajets')}
+                  >
+                    Exporter CSV
+                  </button>
+                  <button
+                    className="admin-btn admin-btn-secondary"
+                    onClick={() => exportToJSON(trips, 'trajets')}
+                  >
+                    Exporter JSON
+                  </button>
+                </div>
               </div>
 
               <div className="admin-toolbar">
@@ -1237,19 +1239,20 @@ export default function AdminPage() {
             <div className="admin-section">
               <div className="admin-header">
                 <h1 className="admin-title">Gestion des réservations</h1>
-                <button
-                  className="admin-btn admin-btn-secondary"
-                  onClick={() => exportToCSV(bookings, 'reservations')}
-                >
-                  Exporter CSV
-                </button>
-                <button
-                  className="admin-btn admin-btn-secondary"
-                  onClick={() => exportToJSON(bookings, 'reservations')}
-                  style={{ marginLeft: '10px' }}
-                >
-                  Exporter JSON
-                </button>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    className="admin-btn admin-btn-secondary"
+                    onClick={() => exportToCSV(bookings, 'reservations')}
+                  >
+                    Exporter CSV
+                  </button>
+                  <button
+                    className="admin-btn admin-btn-secondary"
+                    onClick={() => exportToJSON(bookings, 'reservations')}
+                  >
+                    Exporter JSON
+                  </button>
+                </div>
               </div>
 
               <div className="admin-toolbar">
