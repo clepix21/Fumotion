@@ -551,7 +551,7 @@ export default function DashboardPage() {
                       className="navbar-btn-primary"
                       onClick={() => navigate(`/chat/${userId}`)}
                     >
-                      💬 Envoyer un message
+                      Envoyer un message
                     </button>
                   </div>
 
