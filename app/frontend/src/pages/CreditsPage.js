@@ -10,6 +10,7 @@ import membre3 from '../assets/images/membres/membre3.png';
 import membre4 from '../assets/images/membres/membre4.png';
 import membre5 from '../assets/images/membres/membre5.jpg';
 import membre6 from '../assets/images/membres/membre6.jpg';
+import lvlupSound from '../assets/sounds/lvlup.wav';
 
 // Logos des technologies
 import reactLogo from '../assets/images/logos/react.png';
@@ -57,6 +58,13 @@ export default function CreditsPage() {
         { name: 'OSRM', logo: osrmLogo, description: 'Calcul d\'itinéraires et navigation' }
     ];
 
+    const handleMemberClick = (name) => {
+        if (name === 'Clément') {
+            const audio = new Audio(lvlupSound);
+            audio.play().catch(err => console.error("Error playing sound:", err));
+        }
+    };
+
     return (
         <div className="static-page credits-page">
             <nav className="navbar">
@@ -89,6 +97,7 @@ export default function CreditsPage() {
                                 key={index}
                                 className="team-card"
                                 style={{ '--accent-color': member.color }}
+                                onClick={() => handleMemberClick(member.name)}
                             >
                                 <div className="team-avatar">
                                     <img src={member.image} alt={member.name} className="team-photo" />
