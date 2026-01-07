@@ -6,7 +6,12 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 const db = require('./config/database');
+
+// Middleware de sécurité
+const { globalLimiter, geocodeLimiter } = require('./middleware/rateLimiter');
+const { csrfProtection, csrfTokenRoute } = require('./middleware/csrf');
 
 // ========== IMPORT DES ROUTES ==========
 const authRoutes = require('./routes/auth');
@@ -53,6 +58,13 @@ app.use(cors({
 // ========== MIDDLEWARE GLOBAUX ==========
 app.use(express.json({ limit: '10mb' })); // Parse JSON avec limite de taille
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(cookieParser()); // Parser les cookies (requis pour CSRF)
+
+// Rate limiting global
+app.use(globalLimiter);
+
+// Protection CSRF (vérifie les tokens sur POST/PUT/DELETE)
+app.use(csrfProtection);
 
 // Servir les fichiers statiques (photos de profil, etc.)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -80,6 +92,9 @@ app.get('/', (req, res) => {
   });
 });
 
+// Route pour obtenir un token CSRF
+app.get('/api/csrf-token', csrfTokenRoute);
+
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'OK',
@@ -90,7 +105,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // Proxy pour le géocodage Nominatim (évite les problèmes CORS)
-app.get('/api/geocode/search', async (req, res) => {
+app.get('/api/geocode/search', geocodeLimiter, async (req, res) => {
   try {
     const { q, limit = 5 } = req.query;
 
@@ -127,7 +142,7 @@ app.get('/api/geocode/search', async (req, res) => {
   }
 });
 
-app.get('/api/geocode/reverse', async (req, res) => {
+app.get('/api/geocode/reverse', geocodeLimiter, async (req, res) => {
   try {
     const { lat, lon } = req.query;
 

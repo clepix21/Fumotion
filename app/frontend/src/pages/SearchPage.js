@@ -13,6 +13,7 @@ import voiture from "../assets/icons/voiture.svg"
 import starIcon from "../assets/icons/star.svg"
 import warningCircle from "../assets/icons/warning-circle.svg"
 import usersIcon from "../assets/icons/users.svg"
+import moneyIcon from "../assets/icons/money.svg"
 import chatIcon from "../assets/icons/chat.svg"
 import "../styles/Search.css"
 import "../styles/HomePage.css"
@@ -475,7 +476,9 @@ export default function SearchPage() {
                               {(trip.remaining_seats !== undefined ? trip.remaining_seats : trip.available_seats) > 1 ? "s" : ""} disponible
                             </span>
                             <span className="meta-item">
-                              <span className="meta-icon">💰</span>
+                              <span className="meta-icon">
+                                <img src={moneyIcon} alt="price" style={{ width: '16px', height: '16px' }} />
+                              </span>
                               {parseFloat(trip.price_per_seat).toFixed(2)}€ / place
                             </span>
                           </div>
