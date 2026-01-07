@@ -131,7 +131,7 @@
 
 .search-header p {
   font-size: clamp(0.875rem, 2vw, 1.25rem);
-  color: var(--color-gray-500, #64748b);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
