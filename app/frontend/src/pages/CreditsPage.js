@@ -6,10 +6,11 @@ import '../styles/StaticPages.css';
 
 import membre1 from '../assets/images/membres/membre1.jpg';
 import membre2 from '../assets/images/membres/membre2.jpg';
-import membre3 from '../assets/images/membres/membre1.jpg';
-import membre4 from '../assets/images/membres/membre1.jpg';
+import membre3 from '../assets/images/membres/membre3.png';
+import membre4 from '../assets/images/membres/membre4.png';
 import membre5 from '../assets/images/membres/membre5.jpg';
 import membre6 from '../assets/images/membres/membre6.jpg';
+import lvlupSound from '../assets/sounds/lvlup.wav';
 
 // Logos des technologies
 import reactLogo from '../assets/images/logos/react.png';
@@ -31,11 +32,11 @@ export default function CreditsPage() {
     const navigate = useNavigate();
 
     const teamMembers = [
-        { name: 'Clément', role: 'Développeur Full Stack', image: membre1, color: '#3498db' },
+        { name: 'Clément', role: 'Product Owner (Chef de projet)', image: membre1, color: '#3498db' },
         { name: 'Noa', role: 'Développeur Backend', image: membre2, color: '#9b59b6' },
-        { name: 'Membre 3', role: 'Développeur', image: membre3, color: '#e74c3c' },
-        { name: 'Membre 4', role: 'Développeur', image: membre4, color: '#2ecc71' },
-        { name: 'Léanne', role: 'Développeuse', image: membre5, color: '#f39c12' },
+        { name: 'Maxence', role: 'QA Engineer (Testeur)', image: membre3, color: '#e74c3c' },
+        { name: 'Louka', role: 'Développeur Frontend', image: membre4, color: '#2ecc71' },
+        { name: 'Léanne', role: 'UI/UX Designer', image: membre5, color: '#f39c12' },
         { name: 'Loïc', role: 'Database Administrator', image: membre6, color: '#1abc9c' }
     ];
 
@@ -56,6 +57,13 @@ export default function CreditsPage() {
         { name: 'Nominatim', logo: nominatimLogo, description: 'Service de géocodage des adresses' },
         { name: 'OSRM', logo: osrmLogo, description: 'Calcul d\'itinéraires et navigation' }
     ];
+
+    const handleMemberClick = (name) => {
+        if (name === 'Clément') {
+            const audio = new Audio(lvlupSound);
+            audio.play().catch(err => console.error("Error playing sound:", err));
+        }
+    };
 
     return (
         <div className="static-page credits-page">
@@ -89,6 +97,7 @@ export default function CreditsPage() {
                                 key={index}
                                 className="team-card"
                                 style={{ '--accent-color': member.color }}
+                                onClick={() => handleMemberClick(member.name)}
                             >
                                 <div className="team-avatar">
                                     <img src={member.image} alt={member.name} className="team-photo" />
