@@ -81,7 +81,7 @@
 
 .nav-link {
   text-decoration: none;
-  color: var(--color-gray-500, #64748b);
+  color: var(--text-secondary);
   font-weight: 500;
   transition: color var(--transition-fast, 0.2s);
   padding: 0.5rem 0;
@@ -122,14 +122,16 @@
 
 .user-name {
   font-weight: 600;
-  color: var(--color-gray-800, #1e293b);
+  color: var(--text-primary);
   font-size: 0.875rem;
 }
 
+
 .user-email {
   font-size: 0.75rem;
-  color: var(--color-gray-500, #64748b);
+  color: var(--text-secondary);
 }
+
 
 /* Bouton logout responsive */
 .logout-btn {
@@ -215,7 +217,7 @@
 .sidebar-section h3 {
   font-size: 0.7rem;
   font-weight: 600;
-  color: var(--color-gray-500, #64748b);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.25rem;
@@ -243,7 +245,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--color-gray-500, #64748b);
+  color: var(--text-secondary);
   font-size: 0.875rem;
   min-height: 2.5rem;
   width: 100%;
@@ -254,10 +256,11 @@
 }
 
 .sidebar-btn:hover {
-  background: var(--color-gray-100, #f1f5f9);
-  color: var(--color-gray-800, #1e293b);
-  border-color: var(--color-gray-300, #cbd5e1);
+  background: var(--bg-surface-hover);
+  color: var(--text-primary);
+  border-color: var(--border-color-hover);
 }
+
 
 .sidebar-btn:focus-visible {
   outline: 2px solid var(--color-primary, #0066ff);
