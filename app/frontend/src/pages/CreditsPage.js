@@ -5,11 +5,11 @@ import logo from '../assets/images/logo.png';
 import '../styles/StaticPages.css';
 
 import membre1 from '../assets/images/membres/membre1.jpg';
-import membre2 from '../assets/images/membres/membre1.jpg';
+import membre2 from '../assets/images/membres/membre2.jpg';
 import membre3 from '../assets/images/membres/membre1.jpg';
 import membre4 from '../assets/images/membres/membre1.jpg';
 import membre5 from '../assets/images/membres/membre5.jpg';
-import membre6 from '../assets/images/membres/membre1.jpg';
+import membre6 from '../assets/images/membres/membre6.jpg';
 
 // Logos des technologies
 import reactLogo from '../assets/images/logos/react.png';
@@ -32,11 +32,11 @@ export default function CreditsPage() {
 
     const teamMembers = [
         { name: 'Clément', role: 'Développeur Full Stack', image: membre1, color: '#3498db' },
-        { name: 'Membre 2', role: 'Développeur', image: membre2, color: '#9b59b6' },
+        { name: 'Noa', role: 'Développeur Backend', image: membre2, color: '#9b59b6' },
         { name: 'Membre 3', role: 'Développeur', image: membre3, color: '#e74c3c' },
         { name: 'Membre 4', role: 'Développeur', image: membre4, color: '#2ecc71' },
         { name: 'Léanne', role: 'Développeuse', image: membre5, color: '#f39c12' },
-        { name: 'Membre 6', role: 'Développeur', image: membre6, color: '#1abc9c' }
+        { name: 'Loïc', role: 'Database Administrator', image: membre6, color: '#1abc9c' }
     ];
 
     const technologies = [
