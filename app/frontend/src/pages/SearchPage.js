@@ -528,9 +528,10 @@ export default function SearchPage() {
             )}
           </div>
         </div>
-    </div>
+
+
       </main >
-    <Footer />
+      <Footer />
     </div >
   )
 }

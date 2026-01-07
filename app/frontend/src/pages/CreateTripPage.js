@@ -706,9 +706,10 @@ export default function CreateTripPage() {
             </div>
           </aside>
         </div>
-    </div>
+
+
       </main >
-    <Footer />
+      <Footer />
     </div >
   )
 }
