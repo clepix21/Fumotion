@@ -4,16 +4,18 @@
 
 .dashboard {
   min-height: 100vh;
-  background-color: var(--color-gray-50, #f8fafc);
+  background-color: var(--bg-surface);
 }
 
+
 .dashboard-header {
-  background: white;
-  border-bottom: 1px solid var(--color-gray-200, #e2e8f0);
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
   position: sticky;
   top: 0;
   z-index: var(--z-sticky, 100);
 }
+
 
 /* Mobile-first: padding réduit */
 .header-content {
@@ -47,10 +49,11 @@
   align-items: center;
   gap: 0.5rem;
   text-decoration: none;
-  color: var(--color-gray-800, #1e293b);
+  color: var(--text-primary);
   font-weight: 700;
   font-size: 1.125rem;
 }
+
 
 .logo-icon {
   font-size: 1.25rem;
@@ -187,11 +190,12 @@
 
 /* Sidebar - Mobile-first: menu vertical compact */
 .dashboard-sidebar {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--border-radius-lg, 0.75rem);
   padding: 1rem;
-  border: 1px solid var(--color-gray-200, #e2e8f0);
+  border: 1px solid var(--border-color);
   display: flex;
+
   flex-direction: column;
   gap: 0.75rem;
   width: 100%;
@@ -463,11 +467,12 @@
 
 /* Main Content - Mobile-first */
 .dashboard-main {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--border-radius-lg, 0.75rem);
   padding: 1rem;
-  border: 1px solid var(--color-gray-200, #e2e8f0);
+  border: 1px solid var(--border-color);
 }
+
 
 @media (min-width: 48em) {
   .dashboard-main {
@@ -562,13 +567,14 @@
 }
 
 .stat-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: 1rem;
   padding: 1.5rem;
   display: flex;
   gap: 1rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
   transition: all 0.3s ease;
+
   position: relative;
   overflow: hidden;
 }
@@ -737,12 +743,13 @@
 
 /* Upcoming Section */
 .upcoming-section {
-  background: white;
+  background: var(--bg-card);
   border-radius: 1rem;
   padding: 1rem;
   margin-bottom: 1.5rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
 }
+
 
 @media (min-width: 48em) {
   .upcoming-section {

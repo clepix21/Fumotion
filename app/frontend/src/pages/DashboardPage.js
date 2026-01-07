@@ -22,6 +22,8 @@ import moneyIcon from "../assets/icons/money.svg"
 import "../styles/Dashboard.css"
 import "../styles/HomePage.css"
 import FixedChatButton from "../components/Chat/FixedChatButton"
+import ThemeToggle from "../components/common/ThemeToggle"
+
 
 export default function DashboardPage() {
   const navigate = useNavigate()
@@ -508,7 +510,13 @@ export default function DashboardPage() {
               <img src={logo} alt="Fumotion" className="brand-logo" />
               <span className="brand-name">Fumotion</span>
             </div>
+
+            <div style={{ marginLeft: 'auto', marginRight: '1rem' }}>
+              <ThemeToggle />
+            </div>
+
             <div className="navbar-menu">
+
               <Link to="/search" className="navbar-link">Rechercher</Link>
               <div className="navbar-divider"></div>
               <button onClick={() => navigate("/dashboard")} className="navbar-btn-primary">
@@ -588,6 +596,11 @@ export default function DashboardPage() {
             <span className="brand-name">Fumotion</span>
           </div>
 
+          <div className="navbar-theme-toggle hide-mobile" style={{ marginLeft: 'auto', marginRight: '1rem' }}>
+            <ThemeToggle />
+          </div>
+
+
           <button
             className="navbar-mobile-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -597,7 +610,12 @@ export default function DashboardPage() {
           </button>
 
           <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
+            <div className="navbar-mobile-theme-item show-mobile-only" style={{ padding: '1rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span>Mode sombre</span>
+              <ThemeToggle />
+            </div>
             <a href="/search" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
+
               Rechercher
             </a>
             <div className="navbar-divider"></div>

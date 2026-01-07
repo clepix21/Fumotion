@@ -16,6 +16,8 @@ import usersIcon from "../assets/icons/users.svg"
 import chatIcon from "../assets/icons/chat.svg"
 import "../styles/Search.css"
 import "../styles/HomePage.css"
+import ThemeToggle from "../components/common/ThemeToggle"
+
 
 export default function SearchPage() {
   const navigate = useNavigate()
@@ -181,6 +183,11 @@ export default function SearchPage() {
             <span className="brand-name">Fumotion</span>
           </div>
 
+          <div className="navbar-theme-toggle hide-mobile" style={{ marginLeft: 'auto', marginRight: '1rem' }}>
+            <ThemeToggle />
+          </div>
+
+
           <button
             className="navbar-mobile-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -239,6 +246,11 @@ export default function SearchPage() {
             >
               ✕
             </button>
+            <div className="navbar-mobile-theme-item show-mobile-only" style={{ padding: '1rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span>Mode sombre</span>
+              <ThemeToggle />
+            </div>
+
 
             {isAuthenticated() ? (
               <>
