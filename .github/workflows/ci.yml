@@ -54,6 +54,9 @@ jobs:
           echo "DB_PASSWORD=root_password_test" >> .env
           echo "DB_NAME=fumotion_test" >> .env
           echo "NODE_ENV=test" >> .env
+          echo "SMTP_EMAIL=ci_test@example.com" >> .env
+          echo "SMTP_PASSWORD=ci_dummy_password" >> .env
+          echo "FRONTEND_URL=http://localhost:3000" >> .env
 
       - name: Démarrage serveur backend pour tests
         run: |
@@ -87,6 +90,16 @@ jobs:
             -d '{"firstName":"Test","lastName":"Utilisateur","email":"test@ci.com","password":"motdepasse123"}' \
             -s)
           echo "Réponse inscription: $response"
+          echo "$response" | grep -q "success" || exit 1
+
+      - name: Test endpoint mot de passe oublié API
+        run: |
+          # Test avec un email quelconque (le backend renvoie success:true par sécurité même si introuvable)
+          response=$(curl -X POST http://localhost:5000/api/auth/forgot-password \
+            -H "Content-Type: application/json" \
+            -d '{"email":"test@ci.com"}' \
+            -s)
+          echo "Réponse forgot-password: $response"
           echo "$response" | grep -q "success" || exit 1
 
       - name: Test endpoint recherche trajets API
@@ -189,6 +202,9 @@ jobs:
           echo "DB_PASSWORD=root_password_integration" >> .env
           echo "DB_NAME=fumotion_integration" >> .env
           echo "NODE_ENV=test" >> .env
+          echo "SMTP_EMAIL=integration_test@example.com" >> .env
+          echo "SMTP_PASSWORD=integration_dummy" >> .env
+          echo "FRONTEND_URL=http://localhost:3000" >> .env
           cd ../..
           
           # Environnement frontend
