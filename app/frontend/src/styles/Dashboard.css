@@ -304,11 +304,12 @@
     display: block;
     font-size: 0.75rem;
     font-weight: 600;
-    color: var(--color-gray-500, #64748b);
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     margin-bottom: 0.75rem;
   }
+
 
   .sidebar-section:first-child {
     flex-wrap: nowrap;
@@ -518,27 +519,30 @@
 
 .overview-welcome h1 {
   margin: 0 0 0.5rem 0;
-  color: #1e293b;
+  color: var(--text-primary);
   font-size: 1.75rem;
 }
 
+
 .overview-subtitle {
-  color: #64748b;
+  color: var(--text-secondary);
   margin: 0;
   font-size: 1rem;
 }
+
 
 .overview-date {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  background: white;
+  background: var(--bg-card);
   border-radius: 0.75rem;
-  border: 1px solid #e2e8f0;
-  color: #64748b;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
   font-size: 0.875rem;
 }
+
 
 .date-icon {
   font-size: 1.1rem;
@@ -653,9 +657,10 @@
 
 .stat-label {
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--text-secondary);
   font-weight: 500;
 }
+
 
 .stat-badge {
   font-size: 0.6875rem;
@@ -687,10 +692,11 @@
 .stat-content h3 {
   font-size: 2rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0 0 0.5rem 0;
   line-height: 1;
 }
+
 
 .stat-progress {
   height: 6px;
@@ -716,8 +722,9 @@
 
 .stat-detail {
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: var(--text-secondary);
 }
+
 
 .star-display {
   display: flex;

@@ -299,9 +299,9 @@
 
 .map-select-btn {
   padding: 0.75rem 1.25rem;
-  background: #f1f5f9;
-  color: #475569;
-  border: 1px solid #e2e8f0;
+  background: var(--bg-surface-hover);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 0.5rem;
   font-weight: 500;
   font-size: 0.875rem;
@@ -311,9 +311,10 @@
 }
 
 .map-select-btn:hover {
-  background: #e2e8f0;
-  color: #1e293b;
+  background: var(--bg-surface);
+  color: var(--text-primary);
 }
+
 
 .map-select-btn.active {
   background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
@@ -436,9 +437,10 @@
 .hint-content p {
   font-size: 0.8125rem;
   margin: 0;
-  color: #1e293b;
+  color: var(--text-primary);
   font-weight: 500;
 }
+
 
 .hint-icon {
   font-size: 1rem;
@@ -471,7 +473,7 @@
 
 .hint-content p {
   margin: 0;
-  color: #1e293b;
+  color: var(--text-primary);
   font-weight: 500;
   font-size: 0.875rem;
 }
@@ -489,15 +491,16 @@
   gap: 1rem;
   justify-content: flex-end;
   padding-top: 1.5rem;
-  border-top: 2px solid #f1f5f9;
+  border-top: 2px solid var(--border-color);
   margin-top: 1rem;
 }
 
+
 .cancel-btn {
   padding: 0.875rem 1.75rem;
-  background: white;
-  color: #64748b;
-  border: 2px solid #e2e8f0;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 2px solid var(--border-color);
   border-radius: 0.5rem;
   font-weight: 600;
   font-size: 0.875rem;
@@ -506,10 +509,11 @@
 }
 
 .cancel-btn:hover:not(:disabled) {
-  background: #f8fafc;
-  border-color: #cbd5e1;
-  color: #475569;
+  background: var(--bg-surface-hover);
+  border-color: var(--border-color-hover);
+  color: var(--text-primary);
 }
+
 
 .cancel-btn:disabled {
   opacity: 0.5;
