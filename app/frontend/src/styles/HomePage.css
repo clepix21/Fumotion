@@ -8,7 +8,7 @@
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-card);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
@@ -210,7 +210,7 @@
 }
 
 .navbar-link {
-  color: #475569;
+  color: var(--text-secondary);
   text-decoration: none;
   font-weight: 500;
   font-size: 0.9375rem;
@@ -294,7 +294,7 @@
 }
 
 .navbar-user-name {
-  color: #1e293b;
+  color: var(--text-primary);
   font-weight: 600;
   font-size: 0.875rem;
   line-height: 1.2;
@@ -302,10 +302,9 @@
 
 .navbar-user {
   display: flex;
-  align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  color: #1e293b;
+  color: var(--text-primary);
   font-weight: 600;
   font-size: 0.875rem;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
