@@ -5,9 +5,12 @@
 .create-trip-page {
   min-height: 100vh;
   min-height: 100svh;
-  background: linear-gradient(to bottom, var(--color-gray-50, #f8fafc) 0%, #ffffff 100%);
-  padding-top: 4rem; /* Compenser la navbar fixe */
+  min-height: 100svh;
+  background: var(--bg-body);
+  padding-top: 4rem;
+  /* Compenser la navbar fixe */
 }
+
 
 @media (min-width: 48em) {
   .create-trip-page {
@@ -23,8 +26,8 @@
 
 /* Header avec breadcrumb */
 .page-header {
-  background: white;
-  border-bottom: 1px solid var(--color-gray-200, #e2e8f0);
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
   padding: 0.75rem 0;
   box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.05));
 }
@@ -117,11 +120,12 @@
 
 /* Card principale - Mobile-first */
 .create-trip-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--border-radius-lg, 0.75rem);
   padding: 1.25rem;
   box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
-  border: 1px solid var(--color-gray-200, #e2e8f0);
+  box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
+  border: 1px solid var(--border-color);
 }
 
 @media (min-width: 48em) {
@@ -141,8 +145,9 @@
   text-align: center;
   margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
-  border-bottom: 2px solid var(--color-gray-100, #f1f5f9);
+  border-bottom: 2px solid var(--border-color);
 }
+
 
 @media (min-width: 48em) {
   .trip-header {
@@ -152,7 +157,7 @@
 }
 
 .trip-header h1 {
-  color: var(--color-gray-800, #1e293b);
+  color: var(--text-primary);
   font-size: clamp(1.25rem, 4vw, 2rem);
   font-weight: 700;
   margin-bottom: 0.5rem;
@@ -163,9 +168,10 @@
 }
 
 .trip-header p {
-  color: var(--color-gray-500, #64748b);
+  color: var(--text-secondary);
   font-size: clamp(0.875rem, 2vw, 1rem);
 }
+
 
 /* Messages d'erreur */
 .error-message {
@@ -193,6 +199,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -207,8 +214,8 @@
 }
 
 .form-section {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   border-radius: 0.75rem;
   padding: 1.75rem;
   transition: all 0.2s;
@@ -223,13 +230,14 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  gap: 0.75rem;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid var(--border-color);
 }
 
 .section-title h2 {
-  color: #1e293b;
+  color: var(--text-primary);
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0;
@@ -253,7 +261,7 @@
 
 .form-label {
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
   font-size: 0.875rem;
   display: flex;
   align-items: center;
@@ -291,9 +299,9 @@
 
 .map-select-btn {
   padding: 0.75rem 1.25rem;
-  background: #f1f5f9;
-  color: #475569;
-  border: 1px solid #e2e8f0;
+  background: var(--bg-surface-hover);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 0.5rem;
   font-weight: 500;
   font-size: 0.875rem;
@@ -303,9 +311,10 @@
 }
 
 .map-select-btn:hover {
-  background: #e2e8f0;
-  color: #1e293b;
+  background: var(--bg-surface);
+  color: var(--text-primary);
 }
+
 
 .map-select-btn.active {
   background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
@@ -325,14 +334,15 @@
 .form-input,
 .form-textarea {
   padding: 0.875rem 1rem;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--border-color);
   border-radius: 0.5rem;
   font-size: 1rem;
   transition: all 0.2s;
-  background: white;
-  color: #1e293b;
+  background: var(--bg-input);
+  color: var(--text-primary);
   font-family: inherit;
 }
+
 
 .form-input:focus,
 .form-textarea:focus {
@@ -385,9 +395,12 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.8;
   }
@@ -424,9 +437,10 @@
 .hint-content p {
   font-size: 0.8125rem;
   margin: 0;
-  color: #1e293b;
+  color: var(--text-primary);
   font-weight: 500;
 }
+
 
 .hint-icon {
   font-size: 1rem;
@@ -434,9 +448,12 @@
 }
 
 @keyframes bounceDown {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(5px);
   }
@@ -447,6 +464,7 @@
     opacity: 0;
     transform: scale(0.9);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -455,7 +473,7 @@
 
 .hint-content p {
   margin: 0;
-  color: #1e293b;
+  color: var(--text-primary);
   font-weight: 500;
   font-size: 0.875rem;
 }
@@ -473,15 +491,16 @@
   gap: 1rem;
   justify-content: flex-end;
   padding-top: 1.5rem;
-  border-top: 2px solid #f1f5f9;
+  border-top: 2px solid var(--border-color);
   margin-top: 1rem;
 }
 
+
 .cancel-btn {
   padding: 0.875rem 1.75rem;
-  background: white;
-  color: #64748b;
-  border: 2px solid #e2e8f0;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 2px solid var(--border-color);
   border-radius: 0.5rem;
   font-weight: 600;
   font-size: 0.875rem;
@@ -490,10 +509,11 @@
 }
 
 .cancel-btn:hover:not(:disabled) {
-  background: #f8fafc;
-  border-color: #cbd5e1;
-  color: #475569;
+  background: var(--bg-surface-hover);
+  border-color: var(--border-color-hover);
+  color: var(--text-primary);
 }
+
 
 .cancel-btn:disabled {
   opacity: 0.5;
@@ -556,15 +576,16 @@
 }
 
 .tips-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: 0.75rem;
   padding: 1.5rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
 }
 
+
 .tips-card h3 {
-  color: #1e293b;
+  color: var(--text-primary);
   font-size: 1.125rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -586,10 +607,11 @@
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  color: #475569;
+  color: var(--text-secondary);
   font-size: 0.875rem;
   line-height: 1.6;
 }
+
 
 .tip-icon {
   color: #10b981;
@@ -633,7 +655,8 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  order: -1; /* Afficher en premier sur mobile */
+  order: -1;
+  /* Afficher en premier sur mobile */
 }
 
 /* Desktop (1024px+): sidebar sticky à droite */
@@ -686,6 +709,7 @@
 }
 
 @media (min-width: 30em) {
+
   .cancel-btn,
   .submit-btn {
     width: auto;
@@ -708,6 +732,7 @@
 }
 
 @media (min-width: 30em) {
+
   .input-with-button,
   .address-input-group {
     flex-direction: row;
@@ -778,8 +803,13 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .address-suggestions {
@@ -952,6 +982,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

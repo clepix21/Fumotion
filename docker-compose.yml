@@ -41,7 +41,7 @@ services:
       - DB_NAME=${DB_NAME:-fumotion}
       - SMTP_EMAIL=${SMTP_EMAIL}
       - SMTP_PASSWORD=${SMTP_PASSWORD}
-      - FRONTEND_URL=${FRONTEND_URL}
+      - FRONTEND_URL=${FRONTEND_URL:-https://fumotion.tech}
     volumes:
       - backend-uploads:/app/uploads # Stockage persistant des avatars
     depends_on:

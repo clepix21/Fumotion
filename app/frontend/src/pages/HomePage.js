@@ -16,6 +16,8 @@ import "../styles/HomePage.css"
 import Footer from "../components/common/Footer"
 import FixedChatButton from "../components/Chat/FixedChatButton"
 
+
+
 export default function HomePage() {
   const navigate = useNavigate()
   const { user, isAuthenticated, logout } = useAuth()
@@ -82,6 +84,10 @@ export default function HomePage() {
             <img src={logo} alt="Fumotion" className="brand-logo" />
             <span className="brand-name">Fumotion</span>
           </div>
+
+
+
+
 
           <button
             className="navbar-mobile-toggle"
@@ -151,6 +157,10 @@ export default function HomePage() {
             >
               ✕
             </button>
+
+
+
+
 
             <a href="#benefits" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
               Pourquoi Fumotion ?

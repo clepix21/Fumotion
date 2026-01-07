@@ -12,22 +12,24 @@ import logo from "../assets/images/logo.png"
 import { reverseGeocode, formatAddressShort } from "../utils/geocoding"
 import "../styles/CreateTrip.css"
 import "../styles/HomePage.css"
+import Footer from "../components/common/Footer"
+
 
 export default function CreateTripPage() {
   const navigate = useNavigate()
   const { user, logout } = useAuth()
-  
+
   // États du formulaire
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  
+
   // États de la carte
   const [mapCenter, setMapCenter] = useState([49.8942, 2.2957]) // Amiens par défaut
   const [markers, setMarkers] = useState([])                    // Marqueurs départ/arrivée
   const [selectingPoint, setSelectingPoint] = useState(null)    // 'departure' ou 'arrival'
   const [routeInfo, setRouteInfo] = useState(null)              // Distance et durée
-  
+
   // Données du formulaire
   const [formData, setFormData] = useState({
     departure_location: "",
@@ -64,7 +66,7 @@ export default function CreateTripPage() {
     } else {
       document.body.classList.remove('menu-open')
     }
-    
+
     // Cleanup au démontage du composant
     return () => {
       document.body.classList.remove('menu-open')
@@ -74,7 +76,7 @@ export default function CreateTripPage() {
   // Mettre à jour les marqueurs quand les coordonnées changent
   useEffect(() => {
     const newMarkers = []
-    
+
     if (formData.departure_latitude && formData.departure_longitude) {
       newMarkers.push({
         lat: formData.departure_latitude,
@@ -83,7 +85,7 @@ export default function CreateTripPage() {
         popup: { title: 'Départ', description: formData.departure_location }
       })
     }
-    
+
     if (formData.arrival_latitude && formData.arrival_longitude) {
       newMarkers.push({
         lat: formData.arrival_latitude,
@@ -92,7 +94,7 @@ export default function CreateTripPage() {
         popup: { title: 'Arrivée', description: formData.arrival_location }
       })
     }
-    
+
     setMarkers(newMarkers)
   }, [formData.departure_latitude, formData.departure_longitude, formData.arrival_latitude, formData.arrival_longitude, formData.departure_location, formData.arrival_location])
 
@@ -283,12 +285,12 @@ export default function CreateTripPage() {
 
       // Utiliser le formatage court de l'adresse
       let locationText = null
-      
+
       if (geocodeResult) {
         locationText = formatAddressShort(geocodeResult)
         console.log('formatAddressShort result:', locationText)
       }
-      
+
       // Fallback : utiliser display_name directement
       if (!locationText && geocodeResult && geocodeResult.display_name) {
         const parts = geocodeResult.display_name.split(',').map(p => p.trim())
@@ -350,6 +352,10 @@ export default function CreateTripPage() {
             <span className="brand-name">Fumotion</span>
           </div>
 
+
+
+
+
           <button
             className="navbar-mobile-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -383,20 +389,24 @@ export default function CreateTripPage() {
       {/* Menu mobile - en dehors de la navbar */}
       {mobileMenuOpen && (
         <>
-          <div 
+          <div
             className="navbar-overlay"
             onClick={() => setMobileMenuOpen(false)}
             aria-hidden="true"
           />
           <div className="navbar-menu-mobile">
-            <button 
+            <button
               className="navbar-menu-close"
               onClick={() => setMobileMenuOpen(false)}
               aria-label="Fermer le menu"
             >
               ✕
             </button>
-            
+
+
+
+
+
             <a href="/search" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
               Rechercher
             </a>
@@ -420,7 +430,8 @@ export default function CreateTripPage() {
             </button>
           </div>
         </>
-      )}
+      )
+      }
 
       <main className="create-trip-main">
         <div className="create-trip-container">
@@ -555,8 +566,8 @@ export default function CreateTripPage() {
                       <div className="eco-message">
                         <span className="eco-tree">🌳</span>
                         <p>
-                          En partageant ce trajet avec <strong>{formData.available_seats} passager{parseInt(formData.available_seats) > 1 ? 's' : ''}</strong>, 
-                          vous économisez l'équivalent de <strong>{calculateCO2Savings(routeInfo.distance, parseInt(formData.available_seats) || 1)?.savedTrees || '0'}</strong> arbres 
+                          En partageant ce trajet avec <strong>{formData.available_seats} passager{parseInt(formData.available_seats) > 1 ? 's' : ''}</strong>,
+                          vous économisez l'équivalent de <strong>{calculateCO2Savings(routeInfo.distance, parseInt(formData.available_seats) || 1)?.savedTrees || '0'}</strong> arbres
                           absorbant du CO₂ pendant un an !
                         </p>
                       </div>
@@ -695,7 +706,10 @@ export default function CreateTripPage() {
             </div>
           </aside>
         </div>
-      </main>
-    </div>
+
+
+      </main >
+      <Footer />
+    </div >
   )
 }

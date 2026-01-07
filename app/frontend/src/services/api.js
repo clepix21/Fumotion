@@ -5,28 +5,77 @@
 
 const BASE_URL = process.env.REACT_APP_API_URL || '';
 
+// Stockage du token CSRF en mémoire
+let csrfToken = null;
+
 // Récupère le token JWT depuis le localStorage
 const getAuthToken = () => {
   return localStorage.getItem('token');
 };
 
 /**
+ * Récupère un token CSRF depuis le serveur
+ * Appelé automatiquement lors de la première requête mutante
+ */
+const fetchCsrfToken = async () => {
+  try {
+    const res = await fetch(`${BASE_URL}/api/csrf-token`, {
+      method: 'GET',
+      credentials: 'include', // Inclure les cookies
+    });
+    
+    if (res.ok) {
+      const data = await res.json();
+      csrfToken = data.csrfToken;
+      return csrfToken;
+    }
+  } catch (error) {
+    console.error('Erreur lors de la récupération du token CSRF:', error);
+  }
+  return null;
+};
+
+/**
+ * Retourne le token CSRF, le récupère si nécessaire
+ */
+const getCsrfToken = async () => {
+  if (!csrfToken) {
+    await fetchCsrfToken();
+  }
+  return csrfToken;
+};
+
+/**
  * Fonction générique pour les appels API
- * Gère automatiquement : headers, auth, erreurs 401
+ * Gère automatiquement : headers, auth, CSRF, erreurs 401/403
  */
 export async function apiRequest(path, options = {}) {
   const url = `${BASE_URL}${path}`;
   const token = getAuthToken();
+  const method = options.method || 'GET';
+  
+  // Pour les requêtes mutantes (POST, PUT, DELETE), ajouter le token CSRF
+  const isMutatingRequest = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method);
+  let csrf = null;
+  
+  if (isMutatingRequest) {
+    csrf = await getCsrfToken();
+  }
 
   // Headers par défaut avec token si disponible
   const headers = {
     'Content-Type': 'application/json',
     ...(token && { 'Authorization': `Bearer ${token}` }),
+    ...(csrf && { 'X-CSRF-Token': csrf }),
     ...(options.headers || {}),
   };
 
   try {
-    const res = await fetch(url, { ...options, headers });
+    const res = await fetch(url, { 
+      ...options, 
+      headers,
+      credentials: 'include', // Toujours inclure les cookies
+    });
     const isJson = res.headers.get('content-type')?.includes('application/json');
     const data = isJson ? await res.json() : await res.text();
 
@@ -37,6 +86,27 @@ export async function apiRequest(path, options = {}) {
         localStorage.removeItem('user');
         window.location.href = '/login';
         return;
+      }
+      
+      // Token CSRF invalide : le renouveler et réessayer une fois
+      if (res.status === 403 && data?.message?.includes('CSRF')) {
+        csrfToken = null; // Invalider le token actuel
+        const newCsrf = await fetchCsrfToken();
+        if (newCsrf) {
+          // Réessayer la requête avec le nouveau token
+          headers['X-CSRF-Token'] = newCsrf;
+          const retryRes = await fetch(url, { 
+            ...options, 
+            headers,
+            credentials: 'include',
+          });
+          if (retryRes.ok) {
+            const retryData = retryRes.headers.get('content-type')?.includes('application/json')
+              ? await retryRes.json()
+              : await retryRes.text();
+            return retryData;
+          }
+        }
       }
 
       // Construire une erreur détaillée pour le debugging

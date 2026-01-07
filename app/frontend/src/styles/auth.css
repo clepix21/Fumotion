@@ -66,7 +66,7 @@
 
 /* Carte d'authentification - Mobile-first */
 .auth-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--border-radius-xl, 1rem);
   /* Mobile: padding réduit */
   padding: 1.5rem;
@@ -100,7 +100,7 @@
 }
 
 .auth-card-header h1 {
-  color: var(--color-gray-800, #2d3748);
+  color: var(--text-primary);
   font-size: clamp(1.25rem, 4vw, 1.75rem);
   margin-bottom: 0.5rem;
 }
@@ -145,13 +145,16 @@
 
 .form-label {
   font-weight: 600;
-  color: var(--color-gray-800, #2d3748);
+  color: var(--text-primary);
   font-size: 0.875rem;
 }
 
+
 .form-input {
   padding: 0.75rem 1rem;
-  border: 2px solid var(--color-gray-200, #e2e8f0);
+  border: 2px solid var(--border-color);
+  background: var(--bg-input);
+  color: var(--text-primary);
   border-radius: var(--border-radius-md, 0.5rem);
   font-size: 1rem;
   transition: border-color var(--transition-fast, 0.2s);
@@ -316,7 +319,7 @@
 }
 
 .auth-card-modern {
-  background: #ffffff;
+  background: var(--bg-card);
   border-radius: 1.5rem;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   padding: 2.5rem;
@@ -348,7 +351,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  background: rgba(91, 159, 237, 0.08);
+  background: var(--bg-input);
   border-radius: 12px;
   padding: 16px 20px;
   border: 1px solid rgba(91, 159, 237, 0.2);
@@ -372,7 +375,7 @@
   flex: 1;
   background: transparent;
   border: none;
-  color: #1e293b;
+  color: var(--text-primary);
   font-size: 1rem;
   outline: none;
   padding: 0;
@@ -512,7 +515,7 @@
   height: 70px;
   border-radius: 50%;
   border: none;
-  background: white;
+  background: var(--bg-card);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -643,7 +646,7 @@
   height: 3.5rem;
   border-radius: 50%;
   border: none;
-  background: white;
+  background: var(--bg-card);
   display: flex;
   align-items: center;
   justify-content: center;

@@ -5,10 +5,11 @@
   min-height: 100vh;
   min-height: 100svh;
   /* Support mobile viewport */
-  background: linear-gradient(135deg, var(--color-gray-50, #f8fafc) 0%, #e0f2fe 100%);
+  background: var(--bg-body);
   /* Mobile: padding réduit */
   padding-top: calc(var(--navbar-height, 4rem) + 0.5rem);
 }
+
 
 .search-main {
   padding: 1.5rem 0;
@@ -130,7 +131,7 @@
 
 .search-header p {
   font-size: clamp(0.875rem, 2vw, 1.25rem);
-  color: var(--color-gray-500, #64748b);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -146,7 +147,7 @@
 
 /* ===== SEARCH FORM - Mobile-first ===== */
 .search-card {
-  background: #ffffff;
+  background: var(--bg-card);
   border-radius: var(--border-radius-xl, 1rem);
   box-shadow: var(--shadow-xl, 0 10px 40px rgba(0, 0, 0, 0.15));
   /* Mobile: padding réduit */
@@ -207,32 +208,35 @@
   align-items: center;
   gap: 0.5rem;
   font-weight: 600;
-  color: #334155;
+  color: var(--text-primary);
   font-size: 0.9375rem;
 }
+
 
 .label-icon {
   font-size: 1.125rem;
 }
 
 .form-input {
-  padding: 0.875rem 1rem;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--border-color);
   border-radius: 0.75rem;
   font-size: 1rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: #fafafa;
+  background: var(--bg-input);
+  color: var(--text-primary);
 }
 
+
 .form-input:hover {
-  border-color: #cbd5e1;
-  background: white;
+  border-color: var(--border-color-hover);
+  background: var(--bg-input);
 }
+
 
 .form-input:focus {
   outline: none;
   border-color: #0066ff;
-  background: white;
+  background: var(--bg-input);
   box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.08);
   transform: translateY(-1px);
 }
@@ -280,11 +284,9 @@
 }
 
 /* ===== STATE SCREENS ===== */
-.loading-state,
-.empty-state,
 .initial-state,
 .error-state {
-  background: white;
+  background: var(--bg-card);
   border-radius: 1.5rem;
   padding: 4rem 2rem;
   text-align: center;
@@ -305,7 +307,7 @@
 
 .loading-state p {
   font-size: 1.125rem;
-  color: #64748b;
+  color: var(--text-secondary);
   font-weight: 600;
   animation: pulse 1.5s ease-in-out infinite;
 }
@@ -332,25 +334,27 @@
 .error-state h3 {
   font-size: 1.875rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
+
 
 .empty-state p,
 .initial-state p,
 .error-state p {
   font-size: 1.125rem;
-  color: #64748b;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
+
 /* ===== TRIP RESULT CARDS ===== */
 .trip-result-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: 1rem;
   padding: 1rem;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--border-color);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
   position: relative;
   overflow: hidden;
@@ -400,23 +404,26 @@
 .route-point strong {
   font-size: 0.9375rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
   line-height: 1.2;
 }
 
+
 .route-time {
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--text-secondary);
   font-weight: 500;
 }
+
 
 .route-line {
   flex: 0 0 60px;
   height: 2px;
-  background: #e2e8f0;
+  background: var(--border-color);
   position: relative;
   margin: 0 0.5rem;
 }
+
 
 .route-line::after {
   content: '';
@@ -426,9 +433,10 @@
   transform: translateY(-50%);
   width: 6px;
   height: 6px;
-  background: #e2e8f0;
+  background: var(--border-color);
   border-radius: 50%;
 }
+
 
 .trip-result-card:hover .route-line {
   background: #0066ff;
@@ -457,13 +465,14 @@
 .driver-info strong {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #334155;
+  color: var(--text-primary);
   margin-bottom: 0px;
 }
 
+
 .driver-rating {
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   gap: 0.25rem;
@@ -483,14 +492,15 @@
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.75rem;
   font-weight: 500;
-  background: #f8fafc;
+  background: var(--bg-surface);
   padding: 0.25rem 0.5rem;
   border-radius: 6px;
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--border-color);
 }
+
 
 /* ===== TRIP ACTIONS ===== */
 .trip-actions {

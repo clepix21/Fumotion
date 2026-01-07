@@ -8,12 +8,18 @@ const AuthController = require('../controllers/authController');
 const { authMiddleware } = require('../middleware/auth');
 const { validateRegistration, validateLogin } = require('../middleware/validation');
 const upload = require('../middleware/upload');
+const { 
+  authLimiter, 
+  registerLimiter, 
+  passwordResetLimiter 
+} = require('../middleware/rateLimiter');
 
 // ========== ROUTES PUBLIQUES ==========
-router.post('/register', validateRegistration, AuthController.register);
-router.post('/login', validateLogin, AuthController.login);
-router.post('/forgot-password', AuthController.forgotPassword);
-router.post('/reset-password', AuthController.resetPassword);
+// Rate limiting strict sur les routes sensibles
+router.post('/register', registerLimiter, validateRegistration, AuthController.register);
+router.post('/login', authLimiter, validateLogin, AuthController.login);
+router.post('/forgot-password', passwordResetLimiter, AuthController.forgotPassword);
+router.post('/reset-password', passwordResetLimiter, AuthController.resetPassword);
 
 // ========== ROUTES PROTÉGÉES (token requis) ==========
 router.get('/profile', authMiddleware, AuthController.getProfile);

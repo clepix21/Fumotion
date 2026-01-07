@@ -223,11 +223,61 @@
   }
 }
 
-/* ===== UTILITAIRES DARK MODE (préparation future) ===== */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Les couleurs peuvent être inversées ici si besoin */
-  }
+/* ===== COULEURS SÉMANTIQUES (THEMING) ===== */
+:root {
+  /* Arrière-plans */
+  --bg-body: var(--color-white);
+  --bg-card: var(--color-white);
+  --bg-surface: var(--color-gray-50);
+  --bg-surface-hover: var(--color-gray-100);
+  --bg-input: var(--color-white);
+
+  /* Textes */
+  --text-primary: var(--color-gray-800);
+  --text-secondary: var(--color-gray-500);
+  --text-tertiary: var(--color-gray-400);
+  --text-inverse: var(--color-white);
+
+  /* Bordures */
+  --border-color: var(--color-gray-200);
+  --border-color-hover: var(--color-gray-300);
+
+  /* Autres sémantiques */
+  --color-primary-text: var(--color-white);
+}
+
+/* ===== DARK MODE OVERRIDES ===== */
+[data-theme='dark'] {
+  /* Redéfinition des couleurs de base pour le mode sombre */
+  --bg-body: #0f172a;
+  /* gray-900 */
+  --bg-card: #1e293b;
+  /* gray-800 */
+  --bg-surface: #1e293b;
+  --bg-surface-hover: #334155;
+  /* gray-700 */
+  --bg-input: #1e293b;
+
+  --text-primary: #f8fafc;
+  /* gray-50 */
+  --text-secondary: #94a3b8;
+  /* gray-400 */
+  --text-tertiary: #64748b;
+  /* gray-500 */
+  --text-inverse: #0f172a;
+  /* gray-900 */
+
+  --border-color: #334155;
+  /* gray-700 */
+  --border-color-hover: #475569;
+  /* gray-600 */
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+
+  /* Ajustements spécifiques */
+  --color-primary-alpha-10: rgba(59, 130, 246, 0.2);
 }
 
 /* ===== RÉDUCTION DE MOUVEMENT POUR ACCESSIBILITÉ ===== */

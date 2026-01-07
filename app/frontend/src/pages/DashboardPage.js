@@ -21,7 +21,10 @@ import usersIcon from "../assets/icons/users.svg"
 import moneyIcon from "../assets/icons/money.svg"
 import "../styles/Dashboard.css"
 import "../styles/HomePage.css"
+import Footer from "../components/common/Footer"
 import FixedChatButton from "../components/Chat/FixedChatButton"
+
+
 
 export default function DashboardPage() {
   const navigate = useNavigate()
@@ -508,7 +511,12 @@ export default function DashboardPage() {
               <img src={logo} alt="Fumotion" className="brand-logo" />
               <span className="brand-name">Fumotion</span>
             </div>
+
+
+
+
             <div className="navbar-menu">
+
               <Link to="/search" className="navbar-link">Rechercher</Link>
               <div className="navbar-divider"></div>
               <button onClick={() => navigate("/dashboard")} className="navbar-btn-primary">
@@ -574,6 +582,7 @@ export default function DashboardPage() {
             </div>
           </main>
         </div>
+        <Footer />
       </div>
     )
   }
@@ -588,6 +597,10 @@ export default function DashboardPage() {
             <span className="brand-name">Fumotion</span>
           </div>
 
+
+
+
+
           <button
             className="navbar-mobile-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -597,7 +610,9 @@ export default function DashboardPage() {
           </button>
 
           <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
+
             <a href="/search" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>
+
               Rechercher
             </a>
             <div className="navbar-divider"></div>
@@ -1571,6 +1586,7 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
+      <Footer />
       <FixedChatButton />
     </div>
   )
