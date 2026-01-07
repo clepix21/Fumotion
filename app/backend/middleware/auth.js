@@ -40,8 +40,9 @@ const authMiddleware = async (req, res, next) => {
         });
       }
 
-      // Mettre à jour la dernière activité (sans bloquer la réponse si possible, mais ici on await pour sûreté)
-      await db.run('UPDATE users SET last_active_at = NOW() WHERE id = ?', [user.id]);
+      // Mettre à jour la dernière activité en arrière-plan
+      db.run('UPDATE users SET last_active_at = NOW() WHERE id = ?', [user.id])
+        .catch(err => console.error('Erreur mise à jour last_active_at:', err));
 
       req.user = user;
       next();
