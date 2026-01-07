@@ -124,7 +124,7 @@
   bottom: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(255, 255, 255, 0.98);
+  background: var(--bg-card);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   display: flex;
@@ -138,6 +138,7 @@
   -webkit-overflow-scrolling: touch;
   animation: slideIn 0.25s ease-out;
 }
+
 
 /* Menu desktop - caché sur mobile, visible sur desktop */
 .navbar-menu-desktop {
@@ -153,7 +154,7 @@
   bottom: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(255, 255, 255, 0.98);
+  background: var(--bg-card);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   display: flex;
