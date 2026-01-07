@@ -1185,7 +1185,7 @@
 /* Legacy styles - keeping for backward compatibility */
 .overview-section h1 {
   margin-bottom: 2rem;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 /* Trips Section */
@@ -1222,12 +1222,12 @@
 }
 
 .empty-state h3 {
-  color: #1e293b;
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
 .empty-state p {
-  color: #64748b;
+  color: var(--text-secondary);
   margin-bottom: 2rem;
 }
 
@@ -1298,7 +1298,7 @@
 .departure,
 .arrival {
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-primary);
   font-size: 0.9375rem;
 }
 
@@ -1338,7 +1338,7 @@
 .trip-date,
 .trip-price,
 .trip-seats {
-  color: #64748b;
+  color: var(--text-secondary);
   margin: 0.25rem 0;
 }
 
@@ -1405,7 +1405,7 @@
 
 .booking-date,
 .booking-driver {
-  color: #64748b;
+  color: var(--text-secondary);
   margin: 0.25rem 0;
   font-size: 0.875rem;
 }
@@ -1420,11 +1420,11 @@
 .booking-price {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 .booking-seats {
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.875rem;
 }
 
