@@ -16,7 +16,6 @@ import usersIcon from "../assets/icons/users.svg"
 import chatIcon from "../assets/icons/chat.svg"
 import "../styles/Search.css"
 import "../styles/HomePage.css"
-import ThemeToggle from "../components/common/ThemeToggle"
 
 
 export default function SearchPage() {
@@ -183,9 +182,8 @@ export default function SearchPage() {
             <span className="brand-name">Fumotion</span>
           </div>
 
-          <div className="navbar-theme-toggle hide-mobile" style={{ marginLeft: 'auto', marginRight: '1rem' }}>
-            <ThemeToggle />
-          </div>
+
+
 
 
           <button

@@ -12,7 +12,6 @@ import logo from "../assets/images/logo.png"
 import { reverseGeocode, formatAddressShort } from "../utils/geocoding"
 import "../styles/CreateTrip.css"
 import "../styles/HomePage.css"
-import ThemeToggle from "../components/common/ThemeToggle"
 
 
 export default function CreateTripPage() {
@@ -352,9 +351,8 @@ export default function CreateTripPage() {
             <span className="brand-name">Fumotion</span>
           </div>
 
-          <div className="navbar-theme-toggle hide-mobile" style={{ marginLeft: 'auto', marginRight: '1rem' }}>
-            <ThemeToggle />
-          </div>
+
+
 
 
           <button
