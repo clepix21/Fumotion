@@ -824,8 +824,9 @@
 .benefits-section {
   /* Mobile: padding réduit */
   padding: var(--spacing-2xl, 2rem) var(--container-padding, 1rem);
-  background: var(--color-gray-50, #f8fafc);
+  background: var(--bg-surface);
 }
+
 
 .benefits-container {
   max-width: var(--container-xl, 80rem);
@@ -836,10 +837,11 @@
   /* Taille fluide */
   font-size: clamp(1.5rem, 4vw, 2.25rem);
   font-weight: 700;
-  color: var(--color-gray-800, #1e293b);
+  color: var(--text-primary);
   text-align: center;
   margin-bottom: var(--spacing-xl, 2rem);
 }
+
 
 /* Mobile-first: 1 colonne */
 .benefits-grid {
@@ -876,7 +878,7 @@
 }
 
 .benefit-card {
-  background: #ffffff;
+  background: var(--bg-card);
   border-radius: 1rem;
   padding: 2.5rem;
   display: flex;
@@ -901,23 +903,26 @@
 .benefit-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0;
 }
 
+
 .benefit-description {
   font-size: 0.95rem;
-  color: #64748b;
+  color: var(--text-secondary);
   margin: 0;
   line-height: 1.6;
 }
+
 
 /* Popular Trips Section */
 /* Popular Trips Section - Mobile-first */
 .popular-trips-section {
   padding: var(--spacing-2xl, 2rem) var(--container-padding, 1rem);
-  background: var(--color-gray-50, #f8fafc);
+  background: var(--bg-surface);
 }
+
 
 .popular-container {
   max-width: var(--container-xl, 80rem);
@@ -961,7 +966,7 @@
 }
 
 .trip-card {
-  background: #ffffff;
+  background: var(--bg-card);
   border-radius: 1rem;
   overflow: hidden;
   cursor: pointer;
@@ -986,9 +991,10 @@
 .trip-info h3 {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0 0 0.5rem 0;
 }
+
 
 .trip-info p {
   font-size: 1rem;
@@ -998,8 +1004,8 @@
 }
 
 .benefit-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 1rem;
   padding: 2rem;
   transition: all 0.3s;
@@ -1028,21 +1034,24 @@
 .benefit-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
+
 .benefit-description {
   font-size: 1rem;
-  color: #64748b;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
+
 
 /* How It Works Section - Mobile-first */
 .how-it-works-section {
   padding: var(--spacing-2xl, 2rem) var(--container-padding, 1rem);
-  background: var(--color-gray-50, #f8fafc);
+  background: var(--bg-surface);
 }
+
 
 .how-it-works-container {
   max-width: var(--container-xl, 80rem);
@@ -1094,14 +1103,15 @@
 }
 
 .step-card {
-  background: #ffffff;
+  background: var(--bg-card);
   border-radius: 1rem;
   padding: 2.5rem 2rem;
   text-align: center;
   position: relative;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--border-color);
   transition: all 0.3s;
 }
+
 
 .step-card:hover {
   border-color: #0066ff;
@@ -1144,15 +1154,17 @@
 .step-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
+
 .step-description {
   font-size: 1rem;
-  color: #64748b;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
+
 
 /* CTA Section */
 .cta-section {
@@ -1199,8 +1211,9 @@
 /* Pricing Section - Mobile-first */
 .pricing-section {
   padding: var(--spacing-2xl, 2rem) var(--container-padding, 1rem);
-  background: #ffffff;
+  background: var(--bg-body);
 }
+
 
 .pricing-container {
   max-width: var(--container-xl, 80rem);
@@ -1251,8 +1264,8 @@
 }
 
 .pricing-card {
-  background: #f8fafc;
-  border: 2px solid #e2e8f0;
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
   border-radius: 1rem;
   padding: 2rem;
   text-align: center;
