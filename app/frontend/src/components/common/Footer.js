@@ -12,6 +12,8 @@ import bonnie from '../../assets/images/fnaf/bonnie.jpg';
 import foxy from '../../assets/images/fnaf/foxy.jpg';
 
 
+import ThemeToggle from './ThemeToggle';
+
 export default function Footer() {
     const [currentImage, setCurrentImage] = useState(null);
 
@@ -50,7 +52,7 @@ export default function Footer() {
                             <li><Link to="/create-trip">Proposer un trajet</Link></li>
                         </ul>
                     </div>
-                    
+
                     <div className="footer-column">
                         <h4 className="footer-heading">Légal</h4>
                         <ul className="footer-links">
@@ -61,7 +63,10 @@ export default function Footer() {
                 </div>
 
                 <div className="footer-bottom">
-                    <p>&copy; {new Date().getFullYear()} Fumotion. Tous droits réservés.</p>
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <p>&copy; {new Date().getFullYear()} Fumotion. Tous droits réservés.</p>
+                        <ThemeToggle />
+                    </div>
                     <div className="footer-social">
                         <button onClick={() => handleSocialClick(freddy)} className="social-link">Twitter</button>
                         <button onClick={() => handleSocialClick(chica)} className="social-link">Instagram</button>
