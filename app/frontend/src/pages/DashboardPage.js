@@ -21,6 +21,7 @@ import usersIcon from "../assets/icons/users.svg"
 import moneyIcon from "../assets/icons/money.svg"
 import "../styles/Dashboard.css"
 import "../styles/HomePage.css"
+import Footer from "../components/common/Footer"
 import FixedChatButton from "../components/Chat/FixedChatButton"
 
 
@@ -1584,6 +1585,7 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
+      <Footer />
       <FixedChatButton />
     </div>
   )

@@ -12,6 +12,7 @@ import logo from "../assets/images/logo.png"
 import { reverseGeocode, formatAddressShort } from "../utils/geocoding"
 import "../styles/CreateTrip.css"
 import "../styles/HomePage.css"
+import Footer from "../components/common/Footer"
 
 
 export default function CreateTripPage() {
@@ -705,7 +706,9 @@ export default function CreateTripPage() {
             </div>
           </aside>
         </div>
-      </main>
+    </div>
+      </main >
+    <Footer />
     </div >
   )
 }

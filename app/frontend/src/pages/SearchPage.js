@@ -16,6 +16,7 @@ import usersIcon from "../assets/icons/users.svg"
 import chatIcon from "../assets/icons/chat.svg"
 import "../styles/Search.css"
 import "../styles/HomePage.css"
+import Footer from "../components/common/Footer"
 
 
 export default function SearchPage() {
@@ -527,7 +528,9 @@ export default function SearchPage() {
             )}
           </div>
         </div>
+    </div>
       </main >
+    <Footer />
     </div >
   )
 }
