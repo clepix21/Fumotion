@@ -515,7 +515,7 @@
   height: 70px;
   border-radius: 50%;
   border: none;
-  background: white;
+  background: var(--bg-card);
   display: flex;
   align-items: center;
   justify-content: center;
