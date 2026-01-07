@@ -244,10 +244,8 @@ export default function SearchPage() {
             >
               ✕
             </button>
-            <div className="navbar-mobile-theme-item show-mobile-only" style={{ padding: '1rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span>Mode sombre</span>
-              <ThemeToggle />
-            </div>
+
+
 
 
             {isAuthenticated() ? (
