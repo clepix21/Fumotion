@@ -5,10 +5,15 @@ const jwt = require('jsonwebtoken');
 const { generateTestToken, generateExpiredToken, createTestUser } = require('../helpers/testHelpers');
 
 // Mock de la base de données
-jest.mock('../../config/database', () => require('../mocks/database').mockDb);
+const mockDb = {
+  get: jest.fn(),
+  run: jest.fn(() => Promise.resolve({ affectedRows: 1 })),
+  all: jest.fn(),
+};
+
+jest.mock('../../config/database', () => mockDb);
 
 const { authMiddleware, optionalAuth } = require('../../middleware/auth');
-const { resetMockData, seedUser } = require('../mocks/database');
 
 describe('Auth Middleware', () => {
   let mockReq;
@@ -17,16 +22,17 @@ describe('Auth Middleware', () => {
   let testUser;
 
   beforeEach(async () => {
-    resetMockData();
+    jest.clearAllMocks();
     
     // Créer un utilisateur de test
-    testUser = seedUser({
+    testUser = {
+      id: 1,
       email: 'test@example.com',
       first_name: 'John',
       last_name: 'Doe',
       is_active: 1,
       is_admin: 0,
-    });
+    };
 
     // Mock de la requête
     mockReq = {
@@ -94,6 +100,11 @@ describe('Auth Middleware', () => {
     it('devrait accepter un token valide et ajouter user à la requête', async () => {
       const validToken = generateTestToken(testUser.id);
       mockReq.header.mockReturnValue(`Bearer ${validToken}`);
+      
+      // Mock db.get pour retourner l'utilisateur
+      mockDb.get.mockResolvedValueOnce(testUser);
+      // Mock db.run pour retourner une Promise (pour la mise à jour last_active_at)
+      mockDb.run.mockReturnValue(Promise.resolve({ affectedRows: 1 }));
 
       await authMiddleware(mockReq, mockRes, mockNext);
 
@@ -106,6 +117,9 @@ describe('Auth Middleware', () => {
     it('devrait rejeter si l\'utilisateur n\'existe pas en base', async () => {
       const tokenForNonExistentUser = generateTestToken(9999);
       mockReq.header.mockReturnValue(`Bearer ${tokenForNonExistentUser}`);
+      
+      // Mock db.get pour retourner null (utilisateur non trouvé)
+      mockDb.get.mockResolvedValueOnce(null);
 
       await authMiddleware(mockReq, mockRes, mockNext);
 
@@ -117,12 +131,16 @@ describe('Auth Middleware', () => {
     });
 
     it('devrait rejeter si l\'utilisateur est désactivé', async () => {
-      const inactiveUser = seedUser({
+      const inactiveUser = {
+        id: 2,
         email: 'inactive@test.com',
         is_active: 0,
-      });
+      };
       const token = generateTestToken(inactiveUser.id);
       mockReq.header.mockReturnValue(`Bearer ${token}`);
+      
+      // Mock db.get pour retourner null (car la requête SQL filtre is_active = 1)
+      mockDb.get.mockResolvedValueOnce(null);
 
       await authMiddleware(mockReq, mockRes, mockNext);
 
@@ -143,6 +161,11 @@ describe('Auth Middleware', () => {
     it('devrait ajouter user si token valide présent', async () => {
       const validToken = generateTestToken(testUser.id);
       mockReq.header.mockReturnValue(`Bearer ${validToken}`);
+      
+      // Mock db.get pour retourner l'utilisateur
+      mockDb.get.mockResolvedValueOnce(testUser);
+      // Mock db.run pour retourner une Promise (pour la mise à jour last_active_at)
+      mockDb.run.mockReturnValue(Promise.resolve({ affectedRows: 1 }));
 
       await optionalAuth(mockReq, mockRes, mockNext);
 

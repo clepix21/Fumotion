@@ -7,6 +7,17 @@ const express = require('express');
 // Mock de la base de données
 jest.mock('../../config/database', () => require('../mocks/database').mockDb);
 
+// Mock du rate limiter pour éviter les blocages pendant les tests
+jest.mock('../../middleware/rateLimiter', () => ({
+  globalLimiter: (req, res, next) => next(),
+  authLimiter: (req, res, next) => next(),
+  registerLimiter: (req, res, next) => next(),
+  passwordResetLimiter: (req, res, next) => next(),
+  tripCreationLimiter: (req, res, next) => next(),
+  messageLimiter: (req, res, next) => next(),
+  geocodeLimiter: (req, res, next) => next(),
+}));
+
 const { resetMockData, seedUser, seedTrip, mockDb } = require('../mocks/database');
 const { generateTestToken, validTripData } = require('../helpers/testHelpers');
 

@@ -65,6 +65,14 @@ const seedTrip = (tripData) => {
 };
 
 /**
+ * Crée une Promise avec .catch() chainable
+ */
+const createChainablePromise = (value) => {
+  const promise = Promise.resolve(value);
+  return promise;
+};
+
+/**
  * Mock du module database
  */
 const mockDb = {
@@ -104,7 +112,7 @@ const mockDb = {
       return Array.from(mockUsers.values());
     }
     
-    if (lowerQuery.includes('from trips')) {
+    if (lowerQuery.includes('from trips') || lowerQuery.includes('from v_active_trips')) {
       return Array.from(mockTrips.values());
     }
     
@@ -112,41 +120,51 @@ const mockDb = {
   }),
 
   // Simule db.run() - insert/update/delete
-  run: jest.fn(async (query, params) => {
+  run: jest.fn((query, params) => {
     const lowerQuery = query.toLowerCase();
     
     if (lowerQuery.includes('insert into users')) {
-      const user = seedUser({
+      const id = autoIncrementId++;
+      const user = {
+        id,
         email: params[0],
         password: params[1],
         first_name: params[2],
         last_name: params[3],
         phone: params[4],
-      });
-      return { id: user.id, affectedRows: 1 };
+        is_active: 1,
+        is_admin: 0,
+        created_at: new Date().toISOString(),
+      };
+      mockUsers.set(id, user);
+      return createChainablePromise({ id, affectedRows: 1 });
     }
     
     if (lowerQuery.includes('insert into trips')) {
-      const trip = seedTrip({
+      const id = autoIncrementId++;
+      const trip = {
+        id,
         driver_id: params[0],
         departure_location: params[1],
         arrival_location: params[2],
         departure_datetime: params[3],
         available_seats: params[4],
         price_per_seat: params[5],
-      });
-      return { id: trip.id, affectedRows: 1 };
+        status: 'active',
+      };
+      mockTrips.set(id, trip);
+      return createChainablePromise({ id, affectedRows: 1 });
     }
     
     if (lowerQuery.includes('update')) {
-      return { affectedRows: 1 };
+      return createChainablePromise({ affectedRows: 1 });
     }
     
     if (lowerQuery.includes('delete')) {
-      return { affectedRows: 1 };
+      return createChainablePromise({ affectedRows: 1 });
     }
     
-    return { affectedRows: 0 };
+    return createChainablePromise({ affectedRows: 0 });
   }),
 
   // Connexion mock
