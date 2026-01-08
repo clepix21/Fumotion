@@ -1,0 +1,90 @@
+<mxfile host="Electron" modified="2024-01-08T16:00:00.000Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.6.8 Chrome/114.0.5735.289 Electron/25.5.0 Safari/537.36" etag="stack_tech_fixed" version="21.6.8" type="device">
+  <diagram id="fumotion_stack" name="Stack Technique">
+    <mxGraphModel dx="1000" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- FRONTEND CONTAINER -->
+        <mxCell id="grp_front" value="FRONTEND" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="180" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="item_react" value="React.js" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontStyle=1;fontSize=14;" vertex="1" parent="grp_front">
+          <mxGeometry y="30" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="item_leaflet" value="Leaflet (Cartographie)" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="grp_front">
+          <mxGeometry y="70" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="item_css" value="CSS Modules / Flexbox" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="grp_front">
+          <mxGeometry y="110" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="item_spa" value="Single Page App (SPA)" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontStyle=2;" vertex="1" parent="grp_front">
+          <mxGeometry y="150" width="180" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- BACKEND CONTAINER -->
+        <mxCell id="grp_back" value="BACKEND API" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="260" y="40" width="180" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="item_node" value="Node.js" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontStyle=1;fontSize=14;" vertex="1" parent="grp_back">
+          <mxGeometry y="30" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="item_express" value="Express.js" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="grp_back">
+          <mxGeometry y="70" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="item_jwt" value="JWT (Authentification)" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="grp_back">
+          <mxGeometry y="110" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="item_bcrypt" value="Bcrypt (Sécurité)" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontStyle=2;" vertex="1" parent="grp_back">
+          <mxGeometry y="150" width="180" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- DATA CONTAINER -->
+        <mxCell id="grp_data" value="DONNÉES" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="480" y="40" width="180" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="item_sqlite" value="SQLite" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontStyle=1;fontSize=14;" vertex="1" parent="grp_data">
+          <mxGeometry y="30" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="item_file" value="Fichier Local" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="grp_data">
+          <mxGeometry y="70" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="item_sql" value="SQL Standard" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="grp_data">
+          <mxGeometry y="110" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="item_light" value="Léger &amp; Portable" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontStyle=2;" vertex="1" parent="grp_data">
+          <mxGeometry y="150" width="180" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- TOOLS CONTAINER -->
+        <mxCell id="grp_tools" value="OUTILS &amp; DEVOPS" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="280" width="620" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="grp_tools_row" value="" style="group" vertex="1" connectable="0" parent="grp_tools">
+           <mxGeometry y="30" width="620" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="tool_docker" value="Docker &amp; Compose" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="grp_tools">
+          <mxGeometry x="20" y="45" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="tool_git" value="Git &amp; GitHub" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="grp_tools">
+          <mxGeometry x="160" y="45" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="tool_vscode" value="VS Code" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="grp_tools">
+          <mxGeometry x="300" y="45" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="tool_postman" value="Postman" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="grp_tools">
+          <mxGeometry x="440" y="45" width="120" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ARROWS / LINKS -->
+        <mxCell id="arrow_1" value="API REST" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="grp_front" target="grp_back">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow_2" value="SQL" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="grp_back" target="grp_data">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

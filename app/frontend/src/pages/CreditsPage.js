@@ -22,6 +22,8 @@ import nginxLogo from '../assets/images/logos/nginx.png';
 import leafletLogo from '../assets/images/logos/leaflet.png';
 import jwtLogo from '../assets/images/logos/jwt.png';
 import traefikLogo from '../assets/images/logos/traefik.svg';
+import nodemailerLogo from '../assets/images/logos/nodemailer.png';
+import multerLogo from '../assets/images/logos/multer.png';
 
 // Logos des APIs
 import osmLogo from '../assets/images/logos/openstreetmap.png';
@@ -49,6 +51,8 @@ export default function CreditsPage() {
         { name: 'Nginx', category: 'Infrastructure', logo: nginxLogo, description: 'Serveur web haute performance' },
         { name: 'Leaflet', category: 'Frontend', logo: leafletLogo, description: 'Bibliothèque de cartes interactives' },
         { name: 'JWT', category: 'Sécurité', logo: jwtLogo, description: 'Authentification sécurisée par tokens' },
+        { name: 'Nodemailer', category: 'Backend', logo: nodemailerLogo, description: 'Envoi d\'emails transactionnels' },
+        { name: 'Multer', category: 'Backend', logo: multerLogo, description: 'Gestion des fichiers et uploads' },
         { name: 'Traefik', category: 'Infrastructure', logo: traefikLogo, description: 'Reverse proxy moderne avec SSL automatique' }
     ];
 
