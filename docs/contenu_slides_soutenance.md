@@ -285,14 +285,14 @@
 ## 💡 CONSEILS POUR LA PRÉSENTATION
 
 ### Organisation du temps (~4 min par personne)
-| Ordre | Membre | Slides | Thème |
-|-------|--------|--------|-------|
-| 1 | Membre A | 1-4 | Introduction, Contexte |
-| 2 | Membre B | 5-8 | Analyse, Acteurs, Fonctionnalités |
-| 3 | Membre C | 9-10 | Conception graphique, BDD |
-| 4 | Membre D | 11-14 | Technologies, Architecture, Carte |
-| 5 | Membre E | 15-17 | Gestion projet, Méthodologie, Retour d'XP |
-| 6 | Membre F | 18-19 | Bilan, Perspectives, Conclusion |
+| Ordre | Membre   | Slides | Thème |
+|-------|----------|--------|-------|
+| 1     | Membre A | 1-4    | Introduction, Contexte |
+| 2     | Membre B | 5-8    | Analyse, Acteurs, Fonctionnalités |
+| 3     | Membre C | 9-10   | Conception graphique, BDD |
+| 4     | Membre D | 11-14  | Technologies, Architecture, Carte |
+| 5     | Membre E | 15-17  | Gestion projet, Méthodologie, Retour d'XP |
+| 6     | Membre F | 18-19  | Bilan, Perspectives, Conclusion |
 
 ### Points importants
 - ❌ Pas de lecture des slides
