@@ -32,14 +32,14 @@ class Database {
         // Tester la connexion
         await this.pool.query("SELECT 1")
         console.log(" Connecté à la base de données MySQL")
-        console.log(`📍 Host: ${dbConfig.host}, Database: ${dbConfig.database}`)
+        console.log(`Host: ${dbConfig.host}, Database: ${dbConfig.database}`)
         await this.initTables()
       } catch (err) {
         if (retries === 0) {
           console.error(" Impossible de se connecter à la base de données après plusieurs tentatives:", err)
           throw err
         }
-        console.log(`⚠️ Échec de connexion à MySQL. Nouvelle tentative dans ${delay / 1000}s... (${retries} restants)`)
+        console.log(`Échec de connexion à MySQL. Nouvelle tentative dans ${delay / 1000}s... (${retries} restants)`)
         await new Promise((resolve) => setTimeout(resolve, delay))
         await connectWithRetry(retries - 1, delay)
       }

@@ -24,6 +24,10 @@ const reviewRoutes = require('./routes/reviews');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Faire confiance au reverse proxy (Traefik/Docker)
+// Cela permet de récupérer la vraie IP du client et évite l'erreur "X-Forwarded-For"
+app.set('trust proxy', 1);
+
 // ========== CONFIGURATION CORS ==========
 // Liste des origines autorisées selon l'environnement
 const allowedOrigins = [

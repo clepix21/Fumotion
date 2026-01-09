@@ -6,7 +6,7 @@ import { useState, useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { tripsAPI, bookingsAPI } from "../services/api"
-import MapComponent from "../components/common/MapComponent"
+import MapComponent, { AddressSearch } from "../components/common/MapComponent"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
 import voiture from "../assets/icons/voiture.svg"
@@ -15,6 +15,7 @@ import warningCircle from "../assets/icons/warning-circle.svg"
 import usersIcon from "../assets/icons/users.svg"
 import moneyIcon from "../assets/icons/money.svg"
 import chatIcon from "../assets/icons/chat.svg"
+import { formatAddressShort } from "../utils/geocoding"
 import "../styles/Search.css"
 import "../styles/HomePage.css"
 import Footer from "../components/common/Footer"
@@ -124,6 +125,24 @@ export default function SearchPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  // Handler pour la sélection d'adresse de départ via recherche
+  const handleDepartureSelect = (suggestion) => {
+    const formatted = formatAddressShort(suggestion) || suggestion.display_name.split(',').slice(0, 2).join(',')
+    setSearchParams(prev => ({
+      ...prev,
+      departure: formatted
+    }))
+  }
+
+  // Handler pour la sélection d'adresse d'arrivée via recherche
+  const handleArrivalSelect = (suggestion) => {
+    const formatted = formatAddressShort(suggestion) || suggestion.display_name.split(',').slice(0, 2).join(',')
+    setSearchParams(prev => ({
+      ...prev,
+      arrival: formatted
+    }))
   }
 
   const handleBooking = async (tripId) => {
@@ -299,23 +318,21 @@ export default function SearchPage() {
               <div className="form-row">
                 <div className="form-group">
                   <label className="form-label">Départ</label>
-                  <input
-                    type="text"
-                    placeholder="Rue de Midgard, Amiens"
-                    className="form-input"
+                  <AddressSearch
                     value={searchParams.departure}
-                    onChange={(e) => setSearchParams({ ...searchParams, departure: e.target.value })}
+                    onChange={(value) => setSearchParams({ ...searchParams, departure: value })}
+                    onSelect={handleDepartureSelect}
+                    placeholder="Rue de Midgard, Amiens"
                   />
                 </div>
 
                 <div className="form-group">
                   <label className="form-label">Destination</label>
-                  <input
-                    type="text"
-                    placeholder="TP11, Amiens"
-                    className="form-input"
+                  <AddressSearch
                     value={searchParams.arrival}
-                    onChange={(e) => setSearchParams({ ...searchParams, arrival: e.target.value })}
+                    onChange={(value) => setSearchParams({ ...searchParams, arrival: value })}
+                    onSelect={handleArrivalSelect}
+                    placeholder="TP11, Amiens"
                   />
                 </div>
 
@@ -328,6 +345,7 @@ export default function SearchPage() {
                     onChange={(e) => setSearchParams({ ...searchParams, date: e.target.value })}
                   />
                 </div>
+
 
                 <div className="form-group">
                   <label className="form-label">passager</label>

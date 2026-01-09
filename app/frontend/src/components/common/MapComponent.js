@@ -180,7 +180,6 @@ function AddressSearch({ onSelect, placeholder, value, onChange }) {
               onClick={() => handleSelect(suggestion)}
               className="address-suggestion-item"
             >
-              <span className="suggestion-icon">📍</span>
               <div className="suggestion-text">
                 <span className="suggestion-main">{formatShortAddress(suggestion)}</span>
                 <span className="suggestion-detail">{suggestion.display_name}</span>
