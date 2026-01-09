@@ -50,12 +50,15 @@
 
 ---
 
-## 📑 SLIDE 7 - Les Acteurs du Système ✅
-**Contenu actuel correct** - Garder tel quel
+## 📑 SLIDE 7 - Parties Prenantes & Acteurs ✅
+**Contenu actuel correct** - Garder tel quel mais préciser :
+- **Commanditaire** : IUT Amiens (Enseignants)
+- **Équipe Projet** : Le groupe (6 étudiants)
+- **Utilisateurs Finaux** : Étudiants & Personnels IUT
 
 ---
 
-## 📑 SLIDE 8 - Périmètre Fonctionnel ✅
+## 📑 SLIDE 8 - Périmètre Fonctionnel (Besoins) ✅
 **Contenu actuel correct** - Garder tel quel
 
 ---
@@ -195,15 +198,16 @@
 
 ### Approche Agile
 - Sprints de 2 semaines
-- Daily meetings (Discord)
-- Répartition des tâches par fonctionnalité
+- **Réunion de lancement (Kick-off)** : Définition des objectifs et répartition initiale
+- **Daily meetings (Discord)** : Suivi quotidien
+- **Comptes-rendus** : Trace écrite des décisions importantes
 
 ### Outils de collaboration
 | Outil | Usage |
 |-------|-------|
 | **Git/GitHub** | Versioning du code, branches feature |
-| **Discord** | Communication quotidienne |
-| **Trello/Notion** | Suivi des tâches (Kanban) |
+| **Discord** | Communication quotidienne & Réunions |
+| **Trello/Notion** | Suivi des tâches (Kanban) & Comptes-rendus |
 | **Figma** | Maquettes UI/UX |
 
 ### Répartition des rôles
@@ -217,7 +221,8 @@
 | Loïc | Documentation, Carte |
 
 ### Planning respecté
-- Semaine 1-2 : Analyse & Conception
+- **Semaine 1** : Réunion de lancement, Analyse & Conception
+- Semaine 2 : Maquettes & Initialisation projet
 - Semaine 3-4 : Développement Backend
 - Semaine 5-6 : Développement Frontend
 - Semaine 7 : Intégration & Tests
