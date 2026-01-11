@@ -5,7 +5,7 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { useNavigate, Link, useParams } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
-import { authAPI } from "../services/api"
+import { authAPI, apiRequest } from "../services/api"
 import { reviewAPI } from "../services/reviewApi"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
@@ -191,15 +191,10 @@ export default function DashboardPage() {
       const formData = new FormData()
       formData.append('banner', file)
 
-      const response = await fetch("/api/auth/profile/banner", {
+      const data = await apiRequest("/api/auth/profile/banner", {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
         body: formData,
       })
-
-      const data = await response.json()
       if (data.success) {
         setProfileUser(prev => ({ ...prev, banner_picture: data.data.banner_picture }))
       } else {
@@ -227,15 +222,10 @@ export default function DashboardPage() {
       const formData = new FormData()
       formData.append('avatar', file)
 
-      const response = await fetch("/api/auth/profile/avatar", {
+      const data = await apiRequest("/api/auth/profile/avatar", {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
         body: formData,
       })
-
-      const data = await response.json()
       if (data.success) {
         const newProfilePicture = data.data.profile_picture;
         setProfileUser(prev => ({ ...prev, profile_picture: newProfilePicture }))
@@ -353,16 +343,11 @@ export default function DashboardPage() {
 
     setSaving(true)
     try {
-      const response = await fetch(`/api/trips/${selectedTrip.id}`, {
+      const data = await apiRequest(`/api/trips/${selectedTrip.id}`, {
         method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(editFormData),
       })
 
-      const data = await response.json()
       if (data.success) {
         // Mettre à jour la liste des trajets
         setMyTrips(prev => prev.map(t =>
@@ -388,14 +373,10 @@ export default function DashboardPage() {
     }
 
     try {
-      const response = await fetch(`/api/trips/${tripId}`, {
+      const data = await apiRequest(`/api/trips/${tripId}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       })
 
-      const data = await response.json()
       if (data.success) {
         setMyTrips(prev => prev.map(t =>
           t.id === tripId ? { ...t, status: 'cancelled' } : t
