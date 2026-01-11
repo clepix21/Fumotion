@@ -153,6 +153,8 @@ export const authAPI = {
   getPublicProfile: (id) => get(`/api/auth/users/${id}`),
   updateProfile: (userData) => put('/api/auth/profile', userData),
   verifyToken: () => get('/api/auth/verify-token'),
+  forgotPassword: (email) => post('/api/auth/forgot-password', { email }),
+  resetPassword: (data) => post('/api/auth/reset-password', data),
 };
 
 // Fonctions spécifiques pour les trajets
