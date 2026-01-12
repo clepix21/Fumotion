@@ -1,0 +1,147 @@
+name: Déploiement en Production
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  DOCKER_REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository_owner }}/fumotion
+
+jobs:
+  Build_and_Push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Récupération du code source
+        uses: actions/checkout@v4
+
+      - name: Configuration Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Connexion au registre GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extraction métadonnées Backend
+        id: meta-backend
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}-backend
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Construction et publication image Backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./app/backend
+          push: true
+          tags: ${{ steps.meta-backend.outputs.tags }}
+          labels: ${{ steps.meta-backend.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Extraction métadonnées Frontend
+        id: meta-frontend
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}-frontend
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Construction et publication image Frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./app/frontend
+          push: true
+          tags: ${{ steps.meta-frontend.outputs.tags }}
+          labels: ${{ steps.meta-frontend.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
+
+  Deployment:
+    needs: Build_and_Push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Déploiement sur le serveur via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          script: |
+            #!/bin/bash
+            set -e
+            
+            # Aller dans le répertoire du projet
+            cd /opt/Fumotion || exit 1
+            
+            # Vérifier quelle version de Docker Compose est disponible
+            if command -v docker-compose &> /dev/null; then
+                COMPOSE_CMD="docker-compose"
+            elif docker compose version &> /dev/null; then
+                COMPOSE_CMD="docker compose"
+            else
+                echo "Docker Compose n'est pas installé!"
+                exit 1
+            fi
+            
+            echo "Utilisation de: $COMPOSE_CMD"
+            
+            # Charger les variables d'environnement
+            if [ -f .env.production ]; then
+                export $(cat .env.production | grep -v '^#' | xargs)
+            fi
+            
+            # Pull la dernière version du code
+            echo "Récupération du code..."
+            git pull || echo "Impossible de pull le code"
+            
+            # Pull les nouvelles images Docker
+            echo "Récupération des nouvelles images..."
+            $COMPOSE_CMD pull || echo "Images non disponibles, construction locale..."
+            
+            # Arrêter les anciens conteneurs
+            echo "Arrêt des anciens conteneurs..."
+            $COMPOSE_CMD down
+            
+            # Démarrer les nouveaux conteneurs
+            echo "Démarrage des nouveaux conteneurs..."
+            $COMPOSE_CMD up -d --build
+            
+            # Attendre le démarrage
+            echo "Attente du démarrage des services..."
+            sleep 15
+            
+            # Vérifier la santé des conteneurs
+            echo "Vérification de la santé des services..."
+            $COMPOSE_CMD ps
+            
+            # Nettoyer les anciennes images
+            echo "Nettoyage des anciennes images..."
+            docker image prune -af
+            
+            # Afficher les logs récents
+            echo "Logs récents du backend:"
+            $COMPOSE_CMD logs --tail=20 backend
+            echo "Logs récents du frontend:"
+            $COMPOSE_CMD logs --tail=20 frontend
+            
+            echo "Déploiement terminé!"
+          
