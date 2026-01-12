@@ -175,7 +175,7 @@ export default function UsersTab({
                                                         className="action-btn"
                                                         title={u.is_active ? "Désactiver" : "Activer"}
                                                     >
-                                                        {u.is_active ? "Pause" : "Play"}
+                                                        {u.is_active ? "Désactiver" : "Activer"}
                                                     </button>
                                                     <button
                                                         onClick={() => handleUpdateUser(u.id, { is_verified: !u.is_verified })}
