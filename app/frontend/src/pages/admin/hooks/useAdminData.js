@@ -215,6 +215,14 @@ export default function useAdminData() {
     // ========== ACTIONS UTILISATEURS ==========
 
     const handleUpdateUser = async (userId, updates) => {
+        if (updates.hasOwnProperty('is_admin')) {
+            const message = updates.is_admin
+                ? "Êtes-vous sûr de vouloir promouvoir cet utilisateur administrateur ?"
+                : "Êtes-vous sûr de vouloir retirer les droits administrateur de cet utilisateur ?"
+
+            if (!window.confirm(message)) return
+        }
+
         try {
             const response = await adminAPI.updateUser(userId, updates)
             if (response.success) {

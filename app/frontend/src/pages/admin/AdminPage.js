@@ -114,8 +114,8 @@ export default function AdminPage() {
                             onClick={() => setActiveTab("bookings")}
                         >
                             <span className="sidebar-icon">Réservations</span>
-                            {statistics?.bookings?.pending > 0 && (
-                                <span className="sidebar-badge warning">{statistics.bookings.pending}</span>
+                            {statistics?.bookings?.total && (
+                                <span className="sidebar-badge">{statistics.bookings.total}</span>
                             )}
                         </button>
                     </div>
@@ -137,12 +137,6 @@ export default function AdminPage() {
                                     <h1 className="admin-title">Tableau de bord</h1>
                                     <p className="admin-subtitle">Vue d'ensemble de votre plateforme</p>
                                 </div>
-                                <button
-                                    className="admin-btn admin-btn-secondary"
-                                    onClick={loadStatistics}
-                                    disabled={loading}
-                                >
-                                </button>
                             </div>
                             <DashboardTab
                                 statistics={statistics}

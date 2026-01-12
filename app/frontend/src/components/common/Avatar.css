@@ -42,9 +42,9 @@
 }
 
 .avatar-xlarge .avatar {
-  width: 80px;
-  height: 80px;
-  font-size: 1.25rem;
+  width: 150px;
+  height: 150px;
+  font-size: 2rem;
 }
 
 /* État clickable */

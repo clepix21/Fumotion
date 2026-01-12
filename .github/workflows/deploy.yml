@@ -10,7 +10,7 @@ env:
   IMAGE_NAME: ${{ github.repository_owner }}/fumotion
 
 jobs:
-  construction-et-publication:
+  Build_and_Push:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -72,8 +72,8 @@ jobs:
           build-args: |
             REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
 
-  deploiement:
-    needs: construction-et-publication
+  Deployment:
+    needs: Build_and_Push
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
 
