@@ -748,7 +748,17 @@ export default function DashboardPage() {
                   <div className="stat-content">
                     <div className="stat-header-row">
                       <span className="stat-label">Note moyenne</span>
-                      <span className="stat-badge rating">Top conducteur</span>
+                      <span className="stat-badge rating">
+                        {(() => {
+                          const rating = parseFloat(displayUser?.driver_rating) || 0;
+                          if (rating >= 4.5) return 'Excellent conducteur';
+                          if (rating >= 4) return 'Très bon conducteur';
+                          if (rating >= 3) return 'Bon conducteur';
+                          if (rating >= 2) return 'Conducteur à améliorer';
+                          if (rating > 0) return 'Conducteur débutant';
+                          return 'Pas encore noté';
+                        })()}
+                      </span>
                     </div>
                     <h3>{displayUser?.driver_rating ? parseFloat(displayUser.driver_rating).toFixed(1) : '-'}</h3>
                     <div className="star-display">
