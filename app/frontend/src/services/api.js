@@ -35,10 +35,6 @@ const fetchCsrfToken = async () => {
   return null;
 };
 
-/**
- * Initialise l'API en pré-chargeant le token CSRF
- * À appeler au démarrage de l'application
- */
 export const initializeApi = async () => {
   try {
     await fetchCsrfToken();

@@ -883,7 +883,7 @@ export default function DashboardPage() {
                             className="trip-btn success"
                             onClick={() => handleCompleteTrip(trip.id)}
                           >
-                            ✓ Trajet effectué
+                            Trajet effectué
                           </button>
                         )}
                         <button
@@ -954,7 +954,7 @@ export default function DashboardPage() {
                             onClick={() => navigate(`/chat/${booking.driver_id}`)}
                             className="contact-driver-btn"
                           >
-                            <span>💬</span> Contacter le conducteur
+                            Contacter le conducteur
                           </button>
                         )}
                       </div>
@@ -1056,7 +1056,10 @@ export default function DashboardPage() {
               <br />
               {/* Mes notes */}
               <div className="my-ratings-section">
-                <h2><img src={statsIcon} alt="stats" className="icon-svg-heading" /> Mes notes</h2>
+                <h2 style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <img src={statsIcon} alt="stats" className="icon-svg-heading" />
+                  Mes notes
+                </h2>
                 <div className="ratings-grid">
                   <div className="rating-card">
                     <div className="rating-icon"><img src={voiture} alt="" className="icon-svg-rating" /></div>
@@ -1348,7 +1351,7 @@ export default function DashboardPage() {
                       className="btn-success"
                       onClick={() => handleCompleteTrip(selectedTrip.id)}
                     >
-                      ✓ Trajet effectué
+                      Trajet effectué
                     </button>
                   )}
                   <button
