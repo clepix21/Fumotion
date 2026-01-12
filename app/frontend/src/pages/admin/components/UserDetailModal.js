@@ -1,7 +1,4 @@
-/**
- * Composant UserDetailModal - Modal détails utilisateur
- * Affiche les informations complètes d'un utilisateur
- */
+import { useState, useEffect } from "react"
 import Avatar from "../../../components/common/Avatar"
 
 export default function UserDetailModal({
@@ -10,6 +7,36 @@ export default function UserDetailModal({
     formatDate,
     handleUpdateUser
 }) {
+    const [isEditing, setIsEditing] = useState(false)
+    const [formData, setFormData] = useState({})
+
+    useEffect(() => {
+        if (user) {
+            setFormData({
+                first_name: user.first_name || '',
+                last_name: user.last_name || '',
+                email: user.email || '',
+                phone: user.phone || '',
+                student_id: user.student_id || '',
+                university: user.university || ''
+            })
+            setIsEditing(false)
+        }
+    }, [user])
+
+    const handleChange = (e) => {
+        const { name, value } = e.target
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }))
+    }
+
+    const handleSubmit = async () => {
+        await handleUpdateUser(user.id, formData)
+        setIsEditing(false)
+    }
+
     if (!user) return null
 
     return (
@@ -33,7 +60,28 @@ export default function UserDetailModal({
                             <Avatar user={user} size="large" />
                         </div>
                         <div className="admin-modal-title" style={{ marginTop: '12px', textAlign: 'center' }}>
-                            <h2>{user.first_name} {user.last_name}</h2>
+                            {isEditing ? (
+                                <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                                    <input
+                                        type="text"
+                                        name="first_name"
+                                        value={formData.first_name}
+                                        onChange={handleChange}
+                                        className="admin-input-sm"
+                                        placeholder="Prénom"
+                                    />
+                                    <input
+                                        type="text"
+                                        name="last_name"
+                                        value={formData.last_name}
+                                        onChange={handleChange}
+                                        className="admin-input-sm"
+                                        placeholder="Nom"
+                                    />
+                                </div>
+                            ) : (
+                                <h2>{user.first_name} {user.last_name}</h2>
+                            )}
                             <p>{user.email}</p>
                         </div>
                     </div>
@@ -46,16 +94,60 @@ export default function UserDetailModal({
                             <span>{user.id}</span>
                         </div>
                         <div className="detail-item">
+                            <label>Email</label>
+                            {isEditing ? (
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    className="admin-input"
+                                />
+                            ) : (
+                                <span>{user.email}</span>
+                            )}
+                        </div>
+                        <div className="detail-item">
                             <label>Téléphone</label>
-                            <span>{user.phone || "Non renseigné"}</span>
+                            {isEditing ? (
+                                <input
+                                    type="text"
+                                    name="phone"
+                                    value={formData.phone}
+                                    onChange={handleChange}
+                                    className="admin-input"
+                                />
+                            ) : (
+                                <span>{user.phone || "Non renseigné"}</span>
+                            )}
                         </div>
                         <div className="detail-item">
                             <label>Numéro étudiant</label>
-                            <span>{user.student_id || "Non renseigné"}</span>
+                            {isEditing ? (
+                                <input
+                                    type="text"
+                                    name="student_id"
+                                    value={formData.student_id}
+                                    onChange={handleChange}
+                                    className="admin-input"
+                                />
+                            ) : (
+                                <span>{user.student_id || "Non renseigné"}</span>
+                            )}
                         </div>
                         <div className="detail-item">
                             <label>Université</label>
-                            <span>{user.university || "Non renseigné"}</span>
+                            {isEditing ? (
+                                <input
+                                    type="text"
+                                    name="university"
+                                    value={formData.university}
+                                    onChange={handleChange}
+                                    className="admin-input"
+                                />
+                            ) : (
+                                <span>{user.university || "Non renseigné"}</span>
+                            )}
                         </div>
                         <div className="detail-item">
                             <label>Inscrit le</label>
@@ -79,21 +171,46 @@ export default function UserDetailModal({
                 </div>
 
                 <div className="admin-modal-footer">
-                    <button
-                        className="admin-btn admin-btn-secondary"
-                        onClick={() => {
-                            handleUpdateUser(user.id, { is_active: !user.is_active })
-                            onClose()
-                        }}
-                    >
-                        {user.is_active ? 'Désactiver' : 'Activer'}
-                    </button>
-                    <button
-                        className="admin-btn admin-btn-primary"
-                        onClick={onClose}
-                    >
-                        Fermer
-                    </button>
+                    {isEditing ? (
+                        <>
+                            <button
+                                className="admin-btn admin-btn-secondary"
+                                onClick={() => setIsEditing(false)}
+                            >
+                                Annuler
+                            </button>
+                            <button
+                                className="admin-btn admin-btn-primary"
+                                onClick={handleSubmit}
+                            >
+                                Sauvegarder
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <button
+                                className="admin-btn admin-btn-secondary"
+                                onClick={() => setIsEditing(true)}
+                            >
+                                Modifier
+                            </button>
+                            <button
+                                className="admin-btn admin-btn-secondary"
+                                onClick={() => {
+                                    handleUpdateUser(user.id, { is_active: !user.is_active })
+                                    if (false) onClose() // Garder modal ouverte après action rapide
+                                }}
+                            >
+                                {user.is_active ? 'Désactiver' : 'Activer'}
+                            </button>
+                            <button
+                                className="admin-btn admin-btn-primary"
+                                onClick={onClose}
+                            >
+                                Fermer
+                            </button>
+                        </>
+                    )}
                 </div>
             </div>
         </div>
