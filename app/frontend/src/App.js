@@ -13,7 +13,7 @@ import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 
 // Pages principales
 import HomePage from "./pages/HomePage";
-import DashboardPage from './pages/DashboardPage';
+import DashboardPage from './pages/dashboard';
 import CreateTripPage from './pages/CreateTripPage';
 import SearchPage from './pages/SearchPage';
 import AdminPage from './pages/admin';
