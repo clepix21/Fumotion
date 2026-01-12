@@ -35,6 +35,15 @@ const fetchCsrfToken = async () => {
   return null;
 };
 
+export const initializeApi = async () => {
+  try {
+    await fetchCsrfToken();
+    console.log('Token CSRF initialisé avec succès');
+  } catch (error) {
+    console.warn('Impossible d\'initialiser le token CSRF:', error);
+  }
+};
+
 /**
  * Retourne le token CSRF, le récupère si nécessaire
  */
@@ -91,24 +100,33 @@ export async function apiRequest(path, options = {}) {
         return;
       }
 
-      // Token CSRF invalide : le renouveler et réessayer une fois
-      if (res.status === 403 && data?.message?.includes('CSRF')) {
+      // Token CSRF invalide ou manquant : le renouveler et réessayer une fois
+      if (res.status === 403 && (data?.message?.includes('CSRF') || data?.message?.includes('csrf'))) {
+        console.log('Token CSRF invalide, renouvellement...');
         csrfToken = null; // Invalider le token actuel
         const newCsrf = await fetchCsrfToken();
         if (newCsrf) {
           // Réessayer la requête avec le nouveau token
-          headers['X-CSRF-Token'] = newCsrf;
+          const retryHeaders = {
+            ...headers,
+            'X-CSRF-Token': newCsrf,
+          };
           const retryRes = await fetch(url, {
             ...options,
-            headers,
+            headers: retryHeaders,
             credentials: 'include',
           });
+          const retryIsJson = retryRes.headers.get('content-type')?.includes('application/json');
+          const retryData = retryIsJson ? await retryRes.json() : await retryRes.text();
+
           if (retryRes.ok) {
-            const retryData = retryRes.headers.get('content-type')?.includes('application/json')
-              ? await retryRes.json()
-              : await retryRes.text();
             return retryData;
           }
+          // Si le retry échoue aussi, on lance l'erreur
+          const retryError = new Error((retryData && retryData.message) || retryRes.statusText || 'Erreur requête API');
+          retryError.response = retryRes;
+          retryError.data = retryData;
+          throw retryError;
         }
       }
 

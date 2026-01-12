@@ -140,11 +140,11 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
 .stat-card.trips::before {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
 .stat-card.bookings::before {
@@ -162,12 +162,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+  background: linear-gradient(135deg, #4facfe15 0%, #00f2fe15 100%);
   flex-shrink: 0;
 }
 
 .stat-card.trips .stat-icon-wrapper {
-  background: linear-gradient(135deg, #f093fb15 0%, #f5576c15 100%);
+  background: linear-gradient(135deg, #4facfe15 0%, #00f2fe15 100%);
 }
 
 .stat-card.bookings .stat-icon-wrapper {

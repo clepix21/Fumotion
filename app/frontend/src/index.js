@@ -9,8 +9,12 @@ import './styles/index.css';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { initializeApi } from './services/api';
 
 import reportWebVitals from './utils/reportWebVitals';
+
+// Initialiser l'API (notamment le token CSRF) au démarrage
+initializeApi();
 
 // Création de la racine React et rendu de l'application
 const root = ReactDOM.createRoot(document.getElementById('root'));

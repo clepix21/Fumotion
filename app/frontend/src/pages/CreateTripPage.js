@@ -452,7 +452,6 @@ export default function CreateTripPage() {
               {/* Section Itinéraire */}
               <div className="form-section">
                 <div className="section-title">
-                  <span className="section-icon">📍</span>
                   <h2>Itinéraire</h2>
                 </div>
 
@@ -594,7 +593,6 @@ export default function CreateTripPage() {
               {/* Section Détails */}
               <div className="form-section">
                 <div className="section-title">
-                  <span className="section-icon">⚙️</span>
                   <h2>Détails du trajet</h2>
                 </div>
 
