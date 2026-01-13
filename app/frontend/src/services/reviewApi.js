@@ -2,58 +2,40 @@
  * Service d'évaluation
  * Appels API pour noter les conducteurs/passagers
  */
-const API_URL = '/api';
-
-const getToken = () => localStorage.getItem('token');
-
-const authHeaders = () => ({
-  'Content-Type': 'application/json',
-  'Authorization': `Bearer ${getToken()}`
-});
+import { apiRequest } from './api';
 
 export const reviewAPI = {
   /** Créer une évaluation après un trajet */
   async createReview(bookingId, reviewData) {
-    const response = await fetch(`${API_URL}/reviews/bookings/${bookingId}`, {
+    return apiRequest(`/api/reviews/bookings/${bookingId}`, {
       method: 'POST',
-      headers: authHeaders(),
       body: JSON.stringify(reviewData)
     });
-    return response.json();
   },
 
   /** Récupérer les évaluations non effectuées */
   async getPendingReviews() {
-    const response = await fetch(`${API_URL}/reviews/pending`, {
-      headers: authHeaders()
-    });
-    return response.json();
+    return apiRequest('/api/reviews/pending');
   },
 
   /** Récupérer les notes d'un utilisateur */
   async getUserReviews(userId, type = null) {
-    const url = type 
-      ? `${API_URL}/reviews/user/${userId}?type=${type}`
-      : `${API_URL}/reviews/user/${userId}`;
-    const response = await fetch(url);
-    return response.json();
+    const url = type
+      ? `/api/reviews/user/${userId}?type=${type}`
+      : `/api/reviews/user/${userId}`;
+    return apiRequest(url);
   },
 
   /** Vérifier si déjà noté */
   async checkReviewExists(bookingId, type) {
-    const response = await fetch(`${API_URL}/reviews/check/${bookingId}?type=${type}`, {
-      headers: authHeaders()
-    });
-    return response.json();
+    return apiRequest(`/api/reviews/check/${bookingId}?type=${type}`);
   },
 
   /** Marquer un trajet comme terminé */
   async completeTrip(tripId) {
-    const response = await fetch(`${API_URL}/trips/${tripId}/complete`, {
-      method: 'PUT',
-      headers: authHeaders()
+    return apiRequest(`/api/trips/${tripId}/complete`, {
+      method: 'PUT'
     });
-    return response.json();
   }
 };
 

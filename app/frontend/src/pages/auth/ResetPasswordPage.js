@@ -4,6 +4,7 @@
  */
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { authAPI } from '../../services/api';
 import '../../styles/auth.css';
 
 export default function ResetPasswordPage() {
@@ -41,23 +42,15 @@ export default function ResetPasswordPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, password: formData.password }),
-      });
+      const data = await authAPI.resetPassword({ token, password: formData.password });
 
-      const data = await response.json();
-
-      if (response.ok && data.success) {
+      if (data.success) {
         alert('Mot de passe réinitialisé avec succès !');
         navigate('/login');
-      } else {
-        setError(data.message || 'Erreur lors de la réinitialisation du mot de passe');
       }
     } catch (err) {
-      console.error('Erreur réseau:', err);
-      setError('Erreur de connexion au serveur. Vérifiez que le serveur backend est démarré.');
+      console.error('Erreur reset mdp:', err);
+      setError(err.message || 'Erreur lors de la réinitialisation du mot de passe');
     } finally {
       setLoading(false);
     }

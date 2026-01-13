@@ -4,6 +4,7 @@
  */
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { authAPI } from '../../services/api';
 import '../../styles/auth.css';
 
 export default function ForgotPasswordPage() {
@@ -19,22 +20,15 @@ export default function ForgotPasswordPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/forgot-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
+      const data = await authAPI.forgotPassword(email);
 
-      const data = await response.json();
-
-      if (response.ok && data.success) {
+      if (data.success) {
         setMessage('Si un compte est associé à cet email, un lien de réinitialisation vous a été envoyé.');
-      } else {
-        setError(data.message || 'Erreur lors de la demande');
       }
     } catch (err) {
-      console.error('Erreur réseau:', err);
-      setError('Erreur de connexion au serveur.');
+      console.error('Erreur oubli mdp:', err);
+      // apiRequest throw l'erreur
+      setError(err.message || 'Erreur lors de la demande');
     } finally {
       setLoading(false);
     }

@@ -5,6 +5,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { authAPI } from '../../services/api';
 import '../../styles/auth.css';
 
 export default function RegisterPage() {
@@ -52,26 +53,19 @@ export default function RegisterPage() {
     try {
       console.log('Envoi des données:', formData);
 
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-          phone: formData.phone,
-          studentId: formData.studentId,
-          university: formData.university
-        }),
+      const data = await authAPI.register({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
+        studentId: formData.studentId,
+        university: formData.university
       });
 
-      const data = await response.json();
       console.log('Réponse du serveur:', data);
 
-      if (response.ok && data.success) {
+      if (data.success) {
         // Connecter automatiquement l'utilisateur après l'inscription
         if (data.data && data.data.token && data.data.user) {
           login(data.data.user, data.data.token);
@@ -81,23 +75,23 @@ export default function RegisterPage() {
           alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
           navigate('/login');
         }
-      } else {
-        // Gérer les erreurs de validation du backend
-        if (data.errors && Array.isArray(data.errors)) {
-          const errors = {};
-          data.errors.forEach(err => {
-            const field = err.path || err.param;
-            errors[field] = err.msg;
-          });
-          setFieldErrors(errors);
-          setError('Veuillez corriger les erreurs dans le formulaire');
-        } else {
-          setError(data.message || 'Erreur lors de l\'inscription');
-        }
       }
     } catch (err) {
-      console.error('Erreur réseau:', err);
-      setError('Erreur de connexion au serveur. Vérifiez que le serveur backend est démarré.');
+      console.error('Erreur inscription:', err);
+      // apiRequest throw l'erreur avec les détails
+      const data = err.data || {};
+
+      if (data.errors && Array.isArray(data.errors)) {
+        const errors = {};
+        data.errors.forEach(err => {
+          const field = err.path || err.param;
+          errors[field] = err.msg;
+        });
+        setFieldErrors(errors);
+        setError('Veuillez corriger les erreurs dans le formulaire');
+      } else {
+        setError(err.message || 'Erreur lors de l\'inscription');
+      }
     } finally {
       setLoading(false);
     }
