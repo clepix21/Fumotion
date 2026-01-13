@@ -304,7 +304,7 @@ class Database {
          (SELECT COUNT(*) FROM bookings) AS total_bookings,
          (SELECT COUNT(*) FROM bookings WHERE status = 'confirmed') AS confirmed_bookings,
          (SELECT COUNT(*) FROM bookings WHERE status = 'pending') AS pending_bookings,
-         COALESCE((SELECT SUM(total_price) FROM bookings WHERE payment_status = 'paid'), 0) AS total_revenue`,
+         COALESCE((SELECT SUM(b.total_price) FROM bookings b JOIN trips t ON b.trip_id = t.id WHERE t.status = 'completed' AND b.status != 'cancelled'), 0) AS total_revenue`,
 
       // VUE 5: v_active_trips - Trajets actifs pour recherche
       `CREATE OR REPLACE VIEW v_active_trips AS
