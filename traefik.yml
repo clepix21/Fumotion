@@ -5,6 +5,9 @@ api:
   dashboard: true
   insecure: false
 
+ping:
+  entryPoint: "traefik"
+
 entryPoints:
   web:
     address: ":80"
@@ -15,6 +18,8 @@ entryPoints:
           scheme: https
   websecure:
     address: ":443"
+  traefik:
+    address: ":8080"
 
 certificatesResolvers:
   letsencrypt:

@@ -109,7 +109,6 @@ export default function RegisterPage() {
           <form onSubmit={handleSubmit} className="auth-form-modern">
             {error && (
               <div className="error-message-modern">
-                <span className="error-icon">⚠️</span>
                 {error}
               </div>
             )}
