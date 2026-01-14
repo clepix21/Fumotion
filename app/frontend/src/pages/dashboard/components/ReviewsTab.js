@@ -47,7 +47,7 @@ export default function ReviewsTab({
                                     </span>
                                 </div>
                                 <button className="review-now-btn" onClick={() => openReviewModal(item)}>
-                                    <img src={starIcon} alt="star" className="icon-svg-inline" /> Évaluer
+                                    Évaluer
                                 </button>
                             </div>
                         ))}
