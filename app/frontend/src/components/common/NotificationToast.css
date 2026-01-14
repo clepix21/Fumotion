@@ -138,7 +138,6 @@
     color: var(--text-primary, #1e293b);
 }
 
-/* Dark mode overrides if variables aren't enough */
 [data-theme='dark'] .notification-toast {
     background: #1e293b;
     /* Dark card bg */

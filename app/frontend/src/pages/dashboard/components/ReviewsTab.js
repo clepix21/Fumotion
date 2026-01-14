@@ -18,7 +18,7 @@ export default function ReviewsTab({
             {/* Évaluations en attente */}
             {(pendingReviews.asPassenger?.length > 0 || pendingReviews.asDriver?.length > 0) && (
                 <div className="pending-reviews-section">
-                    <h2>🔔 Évaluations en attente</h2>
+                    <h2>Évaluations en attente</h2>
                     <p className="section-description">
                         Évaluez les personnes avec qui vous avez voyagé pour aider la communauté !
                     </p>
@@ -75,7 +75,7 @@ export default function ReviewsTab({
                                     </span>
                                 </div>
                                 <button className="review-now-btn" onClick={() => openReviewModal(item)}>
-                                    <img src={starIcon} alt="star" className="icon-svg-inline" /> Évaluer
+                                    Évaluer
                                 </button>
                             </div>
                         ))}

@@ -2751,3 +2751,35 @@
   color: var(--color-gray-400, #94a3b8);
   font-style: italic;
 }
+
+/* Dark mode overrides for pending reviews */
+[data-theme='dark'] .pending-reviews-section {
+  background: #1e293b;
+  border-color: #4b5563;
+  color: #f8fafc;
+}
+
+[data-theme='dark'] .pending-review-card {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+[data-theme='dark'] .pending-review-name {
+  color: #f8fafc;
+}
+
+[data-theme='dark'] .pending-review-role {
+  color: #94a3b8;
+}
+
+[data-theme='dark'] .trip-route-mini {
+  color: #f8fafc;
+}
+
+[data-theme='dark'] .trip-date-mini {
+  color: #94a3b8;
+}
+
+[data-theme='dark'] .pending-review-trip {
+  border-color: #334155;
+}
