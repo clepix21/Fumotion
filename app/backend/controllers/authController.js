@@ -368,7 +368,7 @@ class AuthController {
       // Envoi de l'email
       try {
         await transporter.sendMail(mailOptions)
-        console.log(`📧 Email de réinitialisation envoyé à ${email}`)
+        console.log(`Email de réinitialisation envoyé à ${email}`)
       } catch (emailError) {
         console.error("Erreur d'envoi d'email:", emailError)
         // On ne bloque pas la réponse pour autant

@@ -5,6 +5,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
+import { useNotification } from "../context/NotificationContext"
 import { tripsAPI, bookingsAPI } from "../services/api"
 import MapComponent, { AddressSearch } from "../components/common/MapComponent"
 import Avatar from "../components/common/Avatar"
@@ -25,6 +26,7 @@ export default function SearchPage() {
   const navigate = useNavigate()
   const [searchParamsURL] = useSearchParams()
   const { user, isAuthenticated, logout } = useAuth()
+  const notification = useNotification()
 
   // Critères de recherche
   const [searchParams, setSearchParams] = useState({
@@ -164,16 +166,16 @@ export default function SearchPage() {
       })
 
       if (data.success) {
-        alert("Réservation effectuée avec succès!")
+        notification.success("Réservation effectuée avec succès!")
         // Recharger les résultats de recherche
         handleSearch({ preventDefault: () => { } })
       } else {
-        alert(data.message || "Erreur lors de la réservation")
+        notification.error(data.message || "Erreur lors de la réservation")
       }
     } catch (error) {
       console.error("Erreur:", error)
       const errorMessage = error.message || "Erreur lors de la réservation"
-      alert(errorMessage)
+      notification.error(errorMessage)
     }
   }
 
