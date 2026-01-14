@@ -36,10 +36,10 @@ export default function CreditsPage() {
     const teamMembers = [
         { name: 'Clément', role: 'Product Owner (Chef de projet)', image: membre1, color: '#3498db' },
         { name: 'Noa', role: 'Développeur Backend', image: membre2, color: '#9b59b6' },
-        { name: 'Maxence', role: 'QA Engineer (Testeur)', image: membre3, color: '#e74c3c' },
+        { name: 'Maxence', role: 'Database Administrator', image: membre3, color: '#e74c3c' },
         { name: 'Louka', role: 'Développeur Frontend', image: membre4, color: '#2ecc71' },
         { name: 'Léanne', role: 'UI/UX Designer', image: membre5, color: '#f39c12' },
-        { name: 'Loïc', role: 'Database Administrator', image: membre6, color: '#1abc9c' }
+        { name: 'Loïc', role: 'QA Engineer (Testeur)', image: membre6, color: '#1abc9c' }
     ];
 
     const technologies = [
