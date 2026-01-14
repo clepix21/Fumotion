@@ -34,7 +34,13 @@ const ChatPage = () => {
     const loadConversations = useCallback(async () => {
         try {
             const response = await messageService.getConversations();
-            if (response.success) setConversations(response.data);
+            if (response.success) {
+                // Trier par date de dernier message (plus récent en premier)
+                const sorted = response.data.sort((a, b) =>
+                    new Date(b.last_message_date) - new Date(a.last_message_date)
+                );
+                setConversations(sorted);
+            }
         } catch (error) {
             console.error("Erreur chargement conversations", error);
         } finally {
