@@ -195,6 +195,15 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 0;
   }
+
+  .form-group {
+    border-right: 1px solid var(--border-color);
+    padding: 0 1rem;
+  }
+
+  .form-group:last-child {
+    border-right: none;
+  }
 }
 
 [data-theme='dark'] .search-card input[type="date"] {

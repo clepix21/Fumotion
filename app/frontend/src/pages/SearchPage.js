@@ -337,7 +337,7 @@ export default function SearchPage() {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Aujourd'hui</label>
+                  <label className="form-label">Date</label>
                   <input
                     type="date"
                     className="form-input"
@@ -348,7 +348,7 @@ export default function SearchPage() {
 
 
                 <div className="form-group">
-                  <label className="form-label">passager</label>
+                  <label className="form-label">Passagers</label>
                   <select
                     className="form-input"
                     value={searchParams.passengers}
