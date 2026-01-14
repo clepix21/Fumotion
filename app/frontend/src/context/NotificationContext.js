@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import '../components/common/NotificationToast.css';
 
@@ -34,6 +34,17 @@ export const NotificationProvider = ({ children }) => {
     // Génère un ID unique pour chaque notif
     const generateId = () => Math.random().toString(36).substr(2, 9);
 
+    const removeNotification = useCallback((id) => {
+        setNotifications(prev => prev.map(n =>
+            n.id === id ? { ...n, exiting: true } : n
+        ));
+
+        // Wait for animation
+        setTimeout(() => {
+            setNotifications(prev => prev.filter(n => n.id !== id));
+        }, 300);
+    }, []);
+
     const addNotification = useCallback((type, message, title = '') => {
         const id = generateId();
         const newNotification = {
@@ -51,18 +62,7 @@ export const NotificationProvider = ({ children }) => {
         }, 5000);
 
         return id;
-    }, []);
-
-    const removeNotification = useCallback((id) => {
-        setNotifications(prev => prev.map(n =>
-            n.id === id ? { ...n, exiting: true } : n
-        ));
-
-        // Wait for animation
-        setTimeout(() => {
-            setNotifications(prev => prev.filter(n => n.id !== id));
-        }, 300);
-    }, []);
+    }, [removeNotification]);
 
     // Helper functions for easier usage
     const success = useCallback((message, title) => addNotification('success', message, title || 'Succès'), [addNotification]);
