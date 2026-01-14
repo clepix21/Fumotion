@@ -252,14 +252,12 @@
 }
 
 
-
-
 .stat-progress-fill.active {
   background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
 }
 
-/* Disable animation for users stat card */
-.stat-card.users .stat-progress-fill.active {
+.stat-card.users,
+.stat-card.users * {
   transition: none !important;
   animation: none !important;
 }
