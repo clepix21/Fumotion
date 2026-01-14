@@ -5,6 +5,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useNotification } from '../context/NotificationContext';
 import ConversationList from '../components/Chat/ConversationList';
 import ChatWindow from '../components/Chat/ChatWindow';
 import Avatar from '../components/common/Avatar';
@@ -17,6 +18,7 @@ const ChatPage = () => {
     const { userId } = useParams();
     const navigate = useNavigate();
     const { user: currentUser, logout } = useAuth();
+    const notification = useNotification();
 
     // États de la messagerie
     const [conversations, setConversations] = useState([]);
@@ -126,7 +128,7 @@ const ChatPage = () => {
             }
         } catch (error) {
             console.error("Erreur envoi message", error);
-            alert("Erreur lors de l'envoi du message");
+            notification.error("Erreur lors de l'envoi du message");
         } finally {
             setSending(false);
         }
