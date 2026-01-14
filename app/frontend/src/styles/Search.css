@@ -192,9 +192,38 @@
   }
 
   .form-row {
-    grid-template-columns: 2fr 2fr 1.5fr 1.2fr;
+    grid-template-columns: repeat(4, 1fr);
     gap: 0;
   }
+
+  .form-group {
+    border-right: 1px solid var(--border-color);
+    border-top: none !important;
+    padding-top: 0.5rem !important;
+    margin-top: 0 !important;
+    padding: 0 1rem;
+    text-align: center;
+  }
+
+  .form-group:last-child {
+    border-right: none;
+  }
+}
+
+[data-theme='dark'] .search-card input[type="date"] {
+  color-scheme: dark;
+  color: white;
+}
+
+[data-theme='dark'] .search-card input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+[data-theme='dark'] .search-card input[type="date"].form-input::-webkit-datetime-edit-text,
+[data-theme='dark'] .search-card input[type="date"].form-input::-webkit-datetime-edit-month-field,
+[data-theme='dark'] .search-card input[type="date"].form-input::-webkit-datetime-edit-day-field,
+[data-theme='dark'] .search-card input[type="date"].form-input::-webkit-datetime-edit-year-field {
+  color: white;
 }
 
 .form-group {
@@ -204,12 +233,10 @@
 }
 
 .form-group label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  display: block;
   font-weight: 600;
   color: var(--text-primary);
-  font-size: 0.9375rem;
+  margin-bottom: 0.25rem;
 }
 
 
@@ -219,8 +246,9 @@
 
 .form-input {
   border: 2px solid var(--border-color);
-  border-radius: 0.75rem;
+  border-radius: 8px;
   font-size: 1rem;
+  height: 44px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: var(--bg-input);
   color: var(--text-primary);

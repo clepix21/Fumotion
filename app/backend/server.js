@@ -129,7 +129,7 @@ app.get('/api/geocode/search', geocodeLimiter, async (req, res) => {
       `https://nominatim.openstreetmap.org/search?${params.toString()}`,
       {
         headers: {
-          'User-Agent': 'Fumotion/1.0 (contact@fumotion.com)',
+          'User-Agent': 'Fumotion/1.0 (contact@fumotion.tech)',
         },
       }
     );
@@ -165,7 +165,7 @@ app.get('/api/geocode/reverse', geocodeLimiter, async (req, res) => {
       `https://nominatim.openstreetmap.org/reverse?${params.toString()}`,
       {
         headers: {
-          'User-Agent': 'Fumotion/1.0 (contact@fumotion.com)',
+          'User-Agent': 'Fumotion/1.0 (contact@fumotion.tech)',
         },
       }
     );
@@ -224,9 +224,9 @@ async function startServer() {
     console.log('Base de données initialisée avec succès');
 
     app.listen(PORT, () => {
-      console.log(`🚀 Backend server is running on http://localhost:${PORT}`);
-      console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
-      console.log(`🔧 Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`Backend server is running on http://localhost:${PORT}`);
+      console.log(`Health check: http://localhost:${PORT}/api/health`);
+      console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
     });
   } catch (error) {
     console.error('Erreur lors du démarrage du serveur:', error);
@@ -236,13 +236,13 @@ async function startServer() {
 
 // Gestion propre de l'arrêt du serveur
 process.on('SIGINT', () => {
-  console.log('\n📴 Arrêt du serveur...');
+  console.log('\nArrêt du serveur...');
   db.close();
   process.exit(0);
 });
 
 process.on('SIGTERM', () => {
-  console.log('\n📴 Arrêt du serveur...');
+  console.log('\nArrêt du serveur...');
   db.close();
   process.exit(0);
 });

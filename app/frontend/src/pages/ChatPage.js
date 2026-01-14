@@ -5,6 +5,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useNotification } from '../context/NotificationContext';
 import ConversationList from '../components/Chat/ConversationList';
 import ChatWindow from '../components/Chat/ChatWindow';
 import Avatar from '../components/common/Avatar';
@@ -17,6 +18,7 @@ const ChatPage = () => {
     const { userId } = useParams();
     const navigate = useNavigate();
     const { user: currentUser, logout } = useAuth();
+    const notification = useNotification();
 
     // États de la messagerie
     const [conversations, setConversations] = useState([]);
@@ -32,7 +34,13 @@ const ChatPage = () => {
     const loadConversations = useCallback(async () => {
         try {
             const response = await messageService.getConversations();
-            if (response.success) setConversations(response.data);
+            if (response.success) {
+                // Trier par date de dernier message (plus récent en premier)
+                const sorted = response.data.sort((a, b) =>
+                    new Date(b.last_message_date) - new Date(a.last_message_date)
+                );
+                setConversations(sorted);
+            }
         } catch (error) {
             console.error("Erreur chargement conversations", error);
         } finally {
@@ -126,7 +134,7 @@ const ChatPage = () => {
             }
         } catch (error) {
             console.error("Erreur envoi message", error);
-            alert("Erreur lors de l'envoi du message");
+            notification.error("Erreur lors de l'envoi du message");
         } finally {
             setSending(false);
         }

@@ -9,6 +9,7 @@ import './styles/index.css';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { NotificationProvider } from './context/NotificationContext';
 import { initializeApi } from './services/api';
 
 import reportWebVitals from './utils/reportWebVitals';
@@ -23,7 +24,9 @@ root.render(
     <BrowserRouter>
       <AuthProvider>
         <ThemeProvider>
-          <App />
+          <NotificationProvider>
+            <App />
+          </NotificationProvider>
         </ThemeProvider>
       </AuthProvider>
     </BrowserRouter>

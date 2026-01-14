@@ -443,7 +443,6 @@ export default function CreateTripPage() {
 
             {error && (
               <div className="error-message">
-                <span className="error-icon">⚠️</span>
                 {error}
               </div>
             )}

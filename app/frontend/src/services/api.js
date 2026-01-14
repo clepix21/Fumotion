@@ -38,7 +38,6 @@ const fetchCsrfToken = async () => {
 export const initializeApi = async () => {
   try {
     await fetchCsrfToken();
-    console.log('Token CSRF initialisé avec succès');
   } catch (error) {
     console.warn('Impossible d\'initialiser le token CSRF:', error);
   }

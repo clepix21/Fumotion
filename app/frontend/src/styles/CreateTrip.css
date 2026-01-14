@@ -348,7 +348,7 @@
 .form-textarea:focus {
   outline: none;
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
 }
 
 .form-input:disabled,
@@ -380,7 +380,7 @@
 .map-container.selection-mode {
   border-color: #3b82f6;
   border-width: 3px;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
 }
 
 .selection-mode-indicator {
@@ -412,7 +412,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(59, 130, 246, 0.05);
+  background: rgba(79, 172, 254, 0.05);
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -533,12 +533,12 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 6px -1px rgba(79, 172, 254, 0.3);
 }
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px -1px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 6px 12px -1px rgba(79, 172, 254, 0.4);
 }
 
 .submit-btn:active:not(:disabled) {

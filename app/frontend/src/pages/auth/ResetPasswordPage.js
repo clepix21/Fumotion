@@ -6,11 +6,13 @@ import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { authAPI } from '../../services/api';
 import '../../styles/auth.css';
+import { useNotification } from '../../context/NotificationContext';
 
 export default function ResetPasswordPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token'); // Token de réinitialisation depuis l'URL
+  const notification = useNotification();
 
   const [formData, setFormData] = useState({ password: '', confirmPassword: '' });
   const [loading, setLoading] = useState(false);
@@ -45,7 +47,7 @@ export default function ResetPasswordPage() {
       const data = await authAPI.resetPassword({ token, password: formData.password });
 
       if (data.success) {
-        alert('Mot de passe réinitialisé avec succès !');
+        notification.success('Mot de passe réinitialisé avec succès !');
         navigate('/login');
       }
     } catch (err) {

@@ -12,7 +12,7 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  z-index: 1000;
+  z-index: 2000;
   box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.04));
   transition: all var(--transition-base, 0.3s ease);
 }
@@ -777,6 +777,15 @@
   min-height: 44px;
 }
 
+[data-theme='dark'] .search-card input[type="date"] {
+  color-scheme: dark;
+  color: white;
+}
+
+[data-theme='dark'] .search-card input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
 /* Fix pour iOS/Safari - afficher le placeholder quand vide */
 .search-card input[type="date"].form-input:not(:valid)::-webkit-datetime-edit {
   color: transparent;
@@ -787,6 +796,13 @@
 .search-card input[type="date"].form-input::-webkit-datetime-edit-day-field,
 .search-card input[type="date"].form-input::-webkit-datetime-edit-year-field {
   color: #1e293b;
+}
+
+[data-theme='dark'] .search-card input[type="date"].form-input::-webkit-datetime-edit-text,
+[data-theme='dark'] .search-card input[type="date"].form-input::-webkit-datetime-edit-month-field,
+[data-theme='dark'] .search-card input[type="date"].form-input::-webkit-datetime-edit-day-field,
+[data-theme='dark'] .search-card input[type="date"].form-input::-webkit-datetime-edit-year-field {
+  color: white;
 }
 
 /* Icône calendrier sur iOS */

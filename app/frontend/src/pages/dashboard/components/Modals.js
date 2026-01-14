@@ -45,7 +45,6 @@ export function TripDetailsModal({
                                             <span className="point-address">{selectedTrip.departure_location}</span>
                                         </div>
                                     </div>
-                                    <div className="route-line"></div>
                                     <div className="route-point arrival-point">
                                         <div className="point-marker arrival-marker"></div>
                                         <div className="point-info">

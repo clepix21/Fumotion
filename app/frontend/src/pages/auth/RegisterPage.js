@@ -7,10 +7,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { authAPI } from '../../services/api';
 import '../../styles/auth.css';
+import { useNotification } from '../../context/NotificationContext';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const notification = useNotification();
   // Données du formulaire d'inscription
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', email: '', password: '',
@@ -69,10 +71,10 @@ export default function RegisterPage() {
         // Connecter automatiquement l'utilisateur après l'inscription
         if (data.data && data.data.token && data.data.user) {
           login(data.data.user, data.data.token);
-          alert('Inscription réussie ! Bienvenue sur Fumotion.');
+          notification.success('Inscription réussie ! Bienvenue sur Fumotion.');
           navigate('/dashboard');
         } else {
-          alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
+          notification.success('Inscription réussie ! Vous pouvez maintenant vous connecter.');
           navigate('/login');
         }
       }
