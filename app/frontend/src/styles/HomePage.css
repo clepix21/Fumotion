@@ -798,6 +798,13 @@
   color: #1e293b;
 }
 
+[data-theme='dark'] .search-card input[type="date"].form-input::-webkit-datetime-edit-text,
+[data-theme='dark'] .search-card input[type="date"].form-input::-webkit-datetime-edit-month-field,
+[data-theme='dark'] .search-card input[type="date"].form-input::-webkit-datetime-edit-day-field,
+[data-theme='dark'] .search-card input[type="date"].form-input::-webkit-datetime-edit-year-field {
+  color: white;
+}
+
 /* Icône calendrier sur iOS */
 .search-card input[type="date"].form-input::-webkit-calendar-picker-indicator {
   cursor: pointer;

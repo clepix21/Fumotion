@@ -198,6 +198,9 @@
 
   .form-group {
     border-right: 1px solid var(--border-color);
+    border-top: none !important;
+    padding-top: 0.5rem !important;
+    margin-top: 0 !important;
     padding: 0 1rem;
   }
 
@@ -227,7 +230,6 @@
   gap: 0.5rem;
   font-weight: 600;
   color: var(--text-primary);
-  font-size: 0.9375rem;
 }
 
 
@@ -237,7 +239,7 @@
 
 .form-input {
   border: 2px solid var(--border-color);
-  border-radius: 0.75rem;
+  border-radius: 8px;
   font-size: 1rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: var(--bg-input);
