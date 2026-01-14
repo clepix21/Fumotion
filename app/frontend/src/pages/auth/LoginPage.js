@@ -111,6 +111,11 @@ export default function LoginPage() {
                   placeholder="******"
                   required
                   disabled={loading}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSubmit(e)
+                    }
+                  }}
                 />
                 <button
                   type="button"
