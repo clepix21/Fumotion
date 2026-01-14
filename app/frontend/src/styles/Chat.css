@@ -192,6 +192,10 @@
     border-right: 4px solid #3b82f6;
 }
 
+[data-theme='dark'] .conversation-item.active {
+    background-color: rgba(59, 130, 246, 0.15);
+}
+
 .conversation-item.unread {
     background-color: #fef3c7;
 }
