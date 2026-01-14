@@ -1282,13 +1282,13 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  background: #f8fafc;
+  background: var(--bg-surface-hover);
   border-radius: 0.5rem;
   transition: all 0.2s ease;
 }
 
 .trip-card:hover .route-location {
-  background: #e0f2fe;
+  background: var(--color-primary-alpha-10);
 }
 
 .location-icon {
@@ -2474,10 +2474,10 @@
 }
 
 .my-ratings-section {
-  background: white;
+  background: var(--bg-card);
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
 }
 
 .ratings-grid {
@@ -2487,13 +2487,13 @@
 }
 
 .rating-card {
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  background: var(--color-primary-alpha-10);
   border-radius: 0.75rem;
   padding: 1.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  border: 1px solid #bae6fd;
+  border: 1px solid var(--color-primary-alpha-20);
 }
 
 .rating-icon {
@@ -2508,12 +2508,12 @@
 .rating-value-large {
   font-size: 2rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 .rating-label {
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 /* Bouton trajet effectué */
