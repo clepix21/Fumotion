@@ -5,6 +5,8 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
+import { AddressSearch } from "../components/common/MapComponent"
+import { formatAddressShort } from "../utils/geocoding"
 import Avatar from "../components/common/Avatar"
 import logo from "../assets/images/logo.png"
 import voiture from "../assets/icons/voiture.svg"
@@ -68,6 +70,16 @@ export default function HomePage() {
     if (searchData.passengers) params.append("passengers", searchData.passengers)
     // Rediriger vers la page de recherche avec les paramètres
     navigate(`/search?${params.toString()}`)
+  }
+
+  const handleDepartureSelect = (suggestion) => {
+    const formatted = formatAddressShort(suggestion) || suggestion.display_name.split(',').slice(0, 2).join(',')
+    setSearchData(prev => ({ ...prev, departure: formatted }))
+  }
+
+  const handleArrivalSelect = (suggestion) => {
+    const formatted = formatAddressShort(suggestion) || suggestion.display_name.split(',').slice(0, 2).join(',')
+    setSearchData(prev => ({ ...prev, arrival: formatted }))
   }
 
   return (
@@ -216,23 +228,21 @@ export default function HomePage() {
                 <div className="form-row">
                   <div className="form-group">
                     <label className="form-label">Départ</label>
-                    <input
-                      type="text"
-                      placeholder="Amiens, Gare du Nord"
-                      className="form-input"
+                    <AddressSearch
                       value={searchData.departure}
-                      onChange={(e) => setSearchData({ ...searchData, departure: e.target.value })}
+                      onChange={(value) => setSearchData({ ...searchData, departure: value })}
+                      onSelect={handleDepartureSelect}
+                      placeholder="Amiens, Gare du Nord"
                     />
                   </div>
 
                   <div className="form-group">
                     <label className="form-label">Destination</label>
-                    <input
-                      type="text"
-                      placeholder="IUT Amiens"
-                      className="form-input"
+                    <AddressSearch
                       value={searchData.arrival}
-                      onChange={(e) => setSearchData({ ...searchData, arrival: e.target.value })}
+                      onChange={(value) => setSearchData({ ...searchData, arrival: value })}
+                      onSelect={handleArrivalSelect}
+                      placeholder="IUT Amiens"
                     />
                   </div>
 

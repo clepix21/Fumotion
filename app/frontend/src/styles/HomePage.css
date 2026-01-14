@@ -777,6 +777,15 @@
   min-height: 44px;
 }
 
+[data-theme='dark'] .search-card input[type="date"] {
+  color-scheme: dark;
+  color: white;
+}
+
+[data-theme='dark'] .search-card input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
 /* Fix pour iOS/Safari - afficher le placeholder quand vide */
 .search-card input[type="date"].form-input:not(:valid)::-webkit-datetime-edit {
   color: transparent;
