@@ -1966,7 +1966,7 @@
 
 .departure-marker {
   background: #3b82f6;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.2);
 }
 
 .arrival-marker {
@@ -2129,7 +2129,7 @@
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
 }
 
 .btn-primary:disabled {
@@ -2244,7 +2244,7 @@
 .modal-form-group textarea:focus {
   outline: none;
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
 }
 
 .modal-form-group textarea {
@@ -2744,7 +2744,7 @@
 .profile-bio-edit:focus {
   outline: none;
   border-color: var(--color-primary-dark, #2563eb);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
 }
 
 .profile-bio-edit::placeholder {
